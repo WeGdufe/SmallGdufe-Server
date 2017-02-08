@@ -75,7 +75,6 @@ $config = [
     ],
     'params' => $params,
     'modules'=> require(__DIR__.'/modules.php'),
-
 ];
 
 if (YII_ENV_DEV) {

@@ -5,6 +5,7 @@ $baseUrls = [
     'jw' => 'http://jwxt.gdufe.edu.cn/jsxsd/',
     'info' => 'http://my.gdufe.edu.cn',
     'sztz'=>'http://sztz.gdufe.edu.cn/sztz/index.jsp',
+    'opac'=>'http://opac.library.gdufe.edu.cn/opac',
 
 ];
 return $urlConst = [
@@ -12,10 +13,16 @@ return $urlConst = [
     'jw' => [
         'login' => $baseUrls['jw'] .'xk/LoginToXkLdap',
         'grade' => $baseUrls['jw'] . 'kscj/cjcx_list',
-        'schedule' => '',
+        'schedule' => $baseUrls['jw'] . 'xskb/xskb_list.do',
         'cet' => '',
     ],
     'info' => [
         'login' => $baseUrls['ids'] . $baseUrls['info'],
+        'sztz' => $baseUrls['info']. '/index.portal?.pn=p501',
+        'tips' => $baseUrls['info']. '/pnull.portal?.f=f385&.pmn=view&action=informationCenterAjax&.ia=false&.pen=pe344',
+    ],
+    'opac' =>[
+        'search' => $baseUrls['opac'].'/openlink.php',
+
     ]
 ];
