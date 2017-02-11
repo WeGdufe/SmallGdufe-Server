@@ -2,6 +2,7 @@
 
 $baseUrls = [
     'ids' => 'http://ids.gdufe.edu.cn/amserver/UI/Login?goto=',
+    // 'ids_nologin' => 'http://ids.gdufe.edu.cn/amserver/UI/Login',
     'jw' => 'http://jwxt.gdufe.edu.cn/jsxsd/',
     'info' => 'http://my.gdufe.edu.cn',
     'sztz'=>'http://sztz.gdufe.edu.cn/sztz/index.jsp',
@@ -17,7 +18,7 @@ return $urlConst = [
         'cet' => '',
     ],
     'info' => [
-        'login' => $baseUrls['ids'] . $baseUrls['info'],
+        'idsLogin' => $baseUrls['ids'] . $baseUrls['info'],
         'sztz' => $baseUrls['info']. '/index.portal?.pn=p501',
         'tips' => $baseUrls['info']. '/pnull.portal?.f=f385&.pmn=view&action=informationCenterAjax&.ia=false&.pen=pe344',
     ],

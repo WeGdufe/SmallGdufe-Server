@@ -18,9 +18,9 @@
         "yiisoft/yii2": "~2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "maxwen/yii2-curl": "^1.0",
         "yiisoft/yii2-redis": "^2.0",
-        "paquettg/php-html-parser": "^1.7"
+        "paquettg/php-html-parser": "^1.7",
+        "php-curl-class/php-curl-class": "^7.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

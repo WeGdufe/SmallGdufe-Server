@@ -26,22 +26,22 @@ class InfoController  extends Controller
     //     return Yii::$app->runAction('api/info/', $data);
     // }
 
-    //http://localhost:81/index.php?r=info/few-sztz
+    //http://localhost:82/index.php?r=info/few-sztz
     public function actionFewSztz()
     {
         $data = [
-            'sno' => '1325',
-            'pwd' => 'qq',
+            'sno' => 'xeuhao',
+            'pwd' => 'mima',
         ];
         return Yii::$app->runAction('api/info/few-sztz', $data);
     }
 
-    //http://localhost:81/index.php?r=info/info-tips
+    //http://localhost:82/index.php?r=info/info-tips
     public function actionInfoTips()
     {
         $data = [
-            'sno' => '1325',
-            'pwd' => 'qq',
+            'sno' => 'xeuhao',
+            'pwd' => 'mima',
         ];
         return Yii::$app->runAction('api/info/info-tips', $data);
     }

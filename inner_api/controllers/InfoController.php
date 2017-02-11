@@ -5,6 +5,7 @@
  */
 
 namespace app\inner_api\controllers;
+
 use app\inner_api\utils\InfoParser;
 use yii;
 
@@ -35,11 +36,15 @@ class InfoController extends BaseController
             'inputCode' => '',
             'gx_charset' => 'UTF-8',
         ];
-        // $curl->follow_redirects = true;
-        $curl->headers['Cookie'] = '';
-        $response = $curl->post($this->urlConst['info']['login'], $data);
-        preg_match('/(iPlanetDirectoryPro=.+?);/',$response->headers['Set-Cookie'],$matches);
-        return $matches[1];
+        $curl->setOpt(CURLOPT_FOLLOWLOCATION, false);
+        // $curl->setCookieString('');
+        $curl->post($this->urlConst['info']['idsLogin'], $data);
+        $idsCookie = $curl->getCookie($this->idsCookieKey);
+        if($idsCookie == null){
+            return null;
+            //账号或密码错误
+        }
+        return $idsCookie;
     }
 
     /**
@@ -48,8 +53,9 @@ class InfoController extends BaseController
      * @param $pwd
      * @return mixed|null|string json格式信息（直接来源官方接口）
      */
-    public function actionInfoTips($sno, $pwd){
-        $idsCookie = $this->getCookie($sno,$pwd);
+    public function actionInfoTips($sno, $pwd)
+    {
+        $idsCookie = $this->getIdsCookie($sno, $pwd);
         return $this->getInfoTips($idsCookie,$sno);
     }
 
@@ -59,60 +65,59 @@ class InfoController extends BaseController
      * @param $pwd
      * @return array|null
      */
-    public function actionFewSztz($sno, $pwd){
-        return $this->parseFewSztz( file_get_contents('F:\\Desktop\\3.html') );
-        // $idsCookie = $this->getCookie($sno,$pwd);
-        // return $this->getFewSztz($idsCookie);
+    public function actionFewSztz($sno, $pwd)
+    {
+        // return $this->parseFewSztz( file_get_contents('F:\\Desktop\\3.html') );
+        $idsCookie = $this->getIdsCookie($sno, $pwd);
+        return $this->getFewSztz($idsCookie);
     }
+
     public function test()
     {
-        $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcxcelHi0ZcyW1NXNukLvDZ9G%2FgnNTJRlAs%3D%40AAJTSQACMDI%3D%23;dddddd=xxxxx';
-        $response = $curl->get('http://localhost/1.php');
-        echo $response;
+
     }
 
-    private function getInfoTips($idsCookie,$sno)
+    private function getInfoTips($idsCookie, $sno)
     {
-        if(empty($idsCookie)) return null;
+        if (empty($idsCookie)) return null;
+        $curl = $this->newCurl();
         $cache = Yii::$app->cache->get(self::REDIS_INFO_PRE . $sno);
         if ($cache) {
-            $idsCookie = $idsCookie . "; " . $cache;
+            echo "ca ".$cache."\n";
+            $curl->setCookie($this->comCookieKey,$cache);
         }
-        $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = $idsCookie;
-        $curl->referer = $this->urlConst['base']['info'];
-        $response = $curl->post($this->urlConst['info']['tips']);
-
-        if(isset($response->headers['Set-Cookie'])&&!empty($response->headers['Set-Cookie'])){
-            $infoCookie = explode(";", $response->headers['Set-Cookie'])[0];
-            Yii::$app->cache->set(self::REDIS_INFO_PRE. $sno, $infoCookie, $this->expire);
+        $curl->setCookie($this->idsCookieKey,$idsCookie);
+        $curl->setReferer($this->urlConst['base']['info']);
+        $curl->post($this->urlConst['info']['tips']);
+        $infoCookie = $curl->getCookie($this->comCookieKey);
+        if(null == $infoCookie){
+            echo "=========不科学";
         }
-        return $response->body;
+        Yii::$app->cache->set(self::REDIS_INFO_PRE . $sno, $infoCookie, $this->expire);
+        return $curl->response;
     }
 
     private function getFewSztz($idsCookie)
     {
-        if(empty($idsCookie)) return null;
+        if (empty($idsCookie)) return null;
         $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = $idsCookie;
-        $curl->referer = $this->urlConst['base']['info'];
-        $html = $curl->get($this->urlConst['info']['sztz']);
-        return $this->parseFewSztz($html);
+        $curl->setCookie($this->idsCookieKey,$idsCookie);
+        $curl->setReferer($this->urlConst['base']['info']);
+        $curl->get($this->urlConst['info']['sztz']);
+        return $this->parseFewSztz($curl->response);
     }
 
-    protected function getCookie($sno, $pwd)
+    protected function getIdsCookie($sno, $pwd)
     {
-        if(empty($sno) || empty($pwd)) return '';
+        if (empty($sno) || empty($pwd)) return '';
         $cache = Yii::$app->cache->get(self::REDIS_IDS_PRE . $sno);
         if ($cache) {
             echo "由redis获取cookie,为" . $cache . "\n\n";
             return $cache;
         }
-        $strCookie = $this->loginIdsSys($sno, $pwd);
-        Yii::$app->cache->set(self::REDIS_IDS_PRE . $sno, $strCookie, $this->expire);
-        return $strCookie;
+        $idsCookie = $this->loginIdsSys($sno, $pwd);
+        Yii::$app->cache->set(self::REDIS_IDS_PRE . $sno, $idsCookie, $this->expire);
+        return $idsCookie;
     }
-
 
 }

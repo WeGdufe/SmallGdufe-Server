@@ -2,7 +2,7 @@
 namespace app\inner_api\controllers;
 use yii\web\Controller;
 use Yii;
-use maxwen\yii\curl;
+use Curl\Curl;
 
 /**
  * User: xiaoguang
@@ -11,6 +11,8 @@ use maxwen\yii\curl;
 class BaseController extends Controller
 {
     protected $urlConst;
+    protected $comCookieKey = 'JSESSIONID';
+    protected $idsCookieKey = 'iPlanetDirectoryPro';
 
     public function beforeAction($action)
     {
@@ -24,19 +26,9 @@ class BaseController extends Controller
 
     public function newCurl()
     {
+        $curl = new Curl();
         $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36';
-
-        $curl = new curl\Curl();
-        $curlOptions = [
-            'CURLOPT_SSL_VERIFYPEER' => false,
-            'CURLOPT_RETURNTRANSFER' => true,
-            'CURLOPT_TIMEOUT' => 2,
-            // 'CURLOPT_FOLLOWLOCATION' => false,
-            'CURLOPT_COOKIESESSION' => true,
-        ];
-        $curl->options = $curlOptions;
-        $curl->cookie_file = '';    //关闭库默认的cookie存文件，因多人登陆需要
-        $curl->user_agent = $userAgent;
+        $curl->setUserAgent($userAgent);
         return $curl;
     }
 }

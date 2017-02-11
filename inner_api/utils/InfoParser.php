@@ -23,8 +23,12 @@ trait InfoParser
 
         $scoreList = array();
 
-        // $pattern = '(<td.+>(.+)<\/td>\s+){7}';
-        $pattern = '<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>';
+        // $pattern = '<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>';
+        // $pattern = '(<td.+>(.+)<\/td>\s+){7}';   //这招不可行，无解故用for https://www.v2ex.com/t/339115
+        $pattern = '';
+        for ($i = 0; $i < 7; $i++) {
+            $pattern .= '<td.+>(.+)<\/td>\s+';
+        }
         preg_match_all('/' . $pattern . '/', $html, $matches);
         for ($i = 0; $i < count($matches[0]); $i++) {
             $name = $matches[1][$i];

@@ -28,7 +28,6 @@ $config = [
         //http://stackoverflow.com/questions/28924672/how-to-convert-an-array-to-json-in-yii2
 
         'cache' => [
-            // 'class' => 'yii\caching\FileCache',
             'class' => 'yii\redis\Cache',
             'keyPrefix' => 'G',
         ],
@@ -68,7 +67,7 @@ $config = [
         // ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
+            'hostname' => '127.0.0.1',
             'port' => 6379,
             'database' => 0,
         ],

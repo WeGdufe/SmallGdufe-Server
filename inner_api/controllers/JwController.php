@@ -26,20 +26,13 @@ class JwController extends BaseController
         $cookie = $this->getJWCookie($sno,$pwd);
         return $this->getGrade($cookie,$stu_time);
     }
-    //http://localhost:81/index.php?r=api/main/get-grade&sno=132511022&pwd=&stu_time=2014-2015-2
-    // public function actionGetGrade()
-    // {
-    //     $req = yii::$app->request;
-    //     $cookie = $this->getJWCookie($req->get('sno'), $req->get('pwd'));
-    //     return $this->getGrade($cookie,$req->get('stu_time'));
-    // }
 
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
      * 登教务如果cookie不过期，则多次登陆返回的Set-Cookie是一样的
      * @param $sno
      * @param $pwd
-     * @return
+     * @return string cookie
      */
     private function loginJw($sno, $pwd)
     {
@@ -48,22 +41,13 @@ class JwController extends BaseController
             'USERNAME' => $sno,
             'PASSWORD' => $pwd,
         ];
-        $curl->follow_redirects = false;
-        $curl->headers['Cookie'] = '';
-        $response = $curl->post($this->urlConst['jw']['login'], $data);
-        $curl->follow_redirects = true;
-
-        switch ($response->headers['Status-Code']) {
-            case 200:
-                echo "登陆失败";
-                return null;
-            case 302:
-                $headerVar = explode(";", $response->headers['Set-Cookie']);
-                echo "登陆成功 cookie为" . $headerVar[0] . "\n";
-                return $headerVar[0];
+        $curl->post($this->urlConst['jw']['login'], $data);
+        if(isset($curl->responseHeaders['location'])){
+            return $curl->getCookie($this->comCookieKey);
         }
+        echo "登陆失败";
+        return null;
     }
-
 
     /**
      * 获取教务成绩
@@ -75,11 +59,11 @@ class JwController extends BaseController
     {
         if(empty($jwCookie)) return array();
         $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = $jwCookie;
-        $curl->referer = $this->urlConst['base']['jw'];
+        $curl->setCookie($this->comCookieKey,$jwCookie);
+        $curl->setReferer($this->urlConst['base']['jw']);
 
         if (empty($study_time)) {
-            $html = $curl->get($this->urlConst['jw']['grade']);
+            $curl->get($this->urlConst['jw']['grade']);
         } else {
             $data = [
                 'kksj' => $study_time,
@@ -88,28 +72,28 @@ class JwController extends BaseController
                 'fxkc' => '0',
                 'xsfs' => 'all',
             ];
-            $html = $curl->post($this->urlConst['jw']['grade'], $data);
+            $curl->post($this->urlConst['jw']['grade'], $data);
         }
-        return $this->parseGrade($html);
+        return $this->parseGrade($curl->response);
     }
 
     private function getSchedule($jwCookie, $study_time = '')
     {
         if(empty($jwCookie)) return array();
         $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = $jwCookie;
-        $curl->referer = $this->urlConst['jw']['schedule'];
+        $curl->setCookie($this->comCookieKey,$jwCookie);
+        $curl->setReferer($this->urlConst['jw']['schedule']);
 
         if (empty($study_time)) {
-            $html = $curl->get($this->urlConst['jw']['schedule']);
+            $curl->get($this->urlConst['jw']['schedule']);
         } else {
             $data = [
                 'xnxq01id' => $study_time,
                 'sfFD' => '1',
             ];
-            $html = $curl->post($this->urlConst['jw']['schedule'], $data);
+            $curl->post($this->urlConst['jw']['schedule'], $data);
         }
-        return $this->parseSchedule($html);
+        return $this->parseSchedule($curl->response);
     }
     /**
      * 返回该学号对应的cookie，无则重登录以获取
@@ -125,9 +109,9 @@ class JwController extends BaseController
             echo "由redis获取cookie,为" . $cache . "\n\n";
             return $cache;
         }
-        $strCookie = $this->loginJw($sno, $pwd);
-        Yii::$app->cache->set(self::REDIS_JW_PRE . $sno, $strCookie, $this->jwExpire);
-        return $strCookie;
+        $jwCookie = $this->loginJw($sno, $pwd);
+        Yii::$app->cache->set(self::REDIS_JW_PRE . $sno, $jwCookie, $this->jwExpire);
+        return $jwCookie;
     }
 
     // /**

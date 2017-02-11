@@ -10,8 +10,8 @@ use yii;
 
 class OpacController extends InfoController
 {
-    const REDIS_IDS_PRE = 'in:';
-    const REDIS_Opac_PRE = 'op:';
+    // const REDIS_IDS_PRE = 'in:';
+    // const REDIS_OPAC_PRE = 'op:';
 
     use OpacParser;
 
@@ -29,10 +29,10 @@ class OpacController extends InfoController
 
     public function test()
     {
-        $curl = $this->newCurl();
-        $curl->options['CURLOPT_COOKIE'] = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcxcelHi0ZcyW1NXNukLvDZ9G%2FgnNTJRlAs%3D%40AAJTSQACMDI%3D%23;dddddd=xxxxx';
-        $response = $curl->get('http://localhost/1.php');
-        echo $response;
+        // $curl = $this->newCurl();
+        // $curl->options['CURLOPT_COOKIE'] = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcxcelHi0ZcyW1NXNukLvDZ9G%2FgnNTJRlAs%3D%40AAJTSQACMDI%3D%23;dddddd=xxxxx';
+        // $response = $curl->get('http://localhost/1.php');
+        // echo $response;
     }
 
 
@@ -40,8 +40,7 @@ class OpacController extends InfoController
     {
         $curl = $this->newCurl();
         if(isset($idsCookie)) {
-            // echo "set=====";
-            // $curl->options['CURLOPT_COOKIE'] = $idsCookie;
+            // 开启登陆查询的情况
         }
         $curl->referer = $this->urlConst['base']['opac'];
         $data = [
