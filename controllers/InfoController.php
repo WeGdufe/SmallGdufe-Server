@@ -16,22 +16,22 @@ class InfoController  extends Controller
         return 'InfoController';
     }
 
-    // public function action()
-    // {
-    //     $data = [
-    //         'sno' => '1325',
-    //         'pwd' => 'qq',
-    //         'stu_time' => '2014-2015-2',
-    //     ];
-    //     return Yii::$app->runAction('api/info/', $data);
-    // }
+    public function actionTest()
+    {
+        $data = [
+            'sno' => '1325',
+            'pwd' => 'qq',
+            'stu_time' => '2014-2015-2',
+        ];
+        return Yii::$app->runAction('api/info/test', $data);
+    }
 
     //http://localhost:82/index.php?r=info/few-sztz
     public function actionFewSztz()
     {
         $data = [
-            'sno' => 'xeuhao',
-            'pwd' => 'mima',
+            'sno' => '13251102210',
+            'pwd' => 'qq5521140',
         ];
         return Yii::$app->runAction('api/info/few-sztz', $data);
     }
@@ -40,8 +40,8 @@ class InfoController  extends Controller
     public function actionInfoTips()
     {
         $data = [
-            'sno' => 'xeuhao',
-            'pwd' => 'mima',
+            'sno' => '13251102210',
+            'pwd' => 'qq5521140',
         ];
         return Yii::$app->runAction('api/info/info-tips', $data);
     }

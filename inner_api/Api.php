@@ -1,11 +1,11 @@
 <?php
 
 namespace app\inner_api;
-
+use yii\base\Module;
 /**
- * api module definition class
+ * api module 入口文件
  */
-class Api extends \yii\base\Module
+class Api extends Module
 {
     /**
      * @inheritdoc
@@ -18,6 +18,7 @@ class Api extends \yii\base\Module
     public function init()
     {
         parent::init();
+        date_default_timezone_set("Asia/Shanghai");
         // custom initialization code goes here
     }
 }

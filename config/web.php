@@ -48,10 +48,13 @@ $config = [
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
+            'flushInterval' => YII_DEBUG ? 1 : 1000,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logVars' => ['_REQUEST'],
+                    'exportInterval' => YII_DEBUG ? 1 : 1000,
                 ],
             ],
         ],

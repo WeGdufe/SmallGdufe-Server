@@ -24,15 +24,12 @@ class OpacController extends InfoController
      */
     public function actionSearchBook($sno='', $pwd='',$bookName=''){
         // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\fdbook.html') );
-        return $this->getSearchBook('',$bookName);
+        return $this->getReturn(Error::success,$this->getSearchBook('',$bookName));
     }
 
     public function test()
     {
-        // $curl = $this->newCurl();
-        // $curl->options['CURLOPT_COOKIE'] = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcxcelHi0ZcyW1NXNukLvDZ9G%2FgnNTJRlAs%3D%40AAJTSQACMDI%3D%23;dddddd=xxxxx';
-        // $response = $curl->get('http://localhost/1.php');
-        // echo $response;
+
     }
 
 
@@ -42,7 +39,7 @@ class OpacController extends InfoController
         if(isset($idsCookie)) {
             // 开启登陆查询的情况
         }
-        $curl->referer = $this->urlConst['base']['opac'];
+        $curl->setReferer($this->urlConst['base']['opac']);
         $data = [
             's2_type' => 'title',
             's2_text' => $bookName,
@@ -54,8 +51,8 @@ class OpacController extends InfoController
             'showmode' => 'list',
             'location' => 'ALL',
         ];
-        $html = $curl->get($this->urlConst['opac']['search'],$data);
-        return $this->parseSearchBookList($html->body);
+        $curl->get($this->urlConst['opac']['search'],$data);
+        return $this->parseSearchBookList($curl->response);
     }
 
     private function getOpacCookie($sno, $pwd)

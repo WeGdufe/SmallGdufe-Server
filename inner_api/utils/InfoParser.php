@@ -9,12 +9,17 @@ use yii\web\Response;
 use yii;
 use PHPHtmlParser\Dom;
 
+/**
+ * 信息门户HTML解析器，返回均json格式
+ * Class InfoParser
+ * @package app\inner_api\utils
+ */
 trait InfoParser
 {
     /**
      * 解析信息门户处的素拓信息 因返回的html不规范标签不闭合等 只能正则
      * @param $html
-     * @return array|string
+     * @return array
      */
     public function parseFewSztz($html)
     {

@@ -21,8 +21,8 @@ class JwController  extends Controller
     public function actionGetGrade()
     {
         $data = [
-            'sno' => 'xeuhao',
-            'pwd' => 'mima',
+            'sno' => '13251102210',
+            'pwd' => 'qq5521140',
             'stu_time' => '2014-2015-2',
         ];
         return Yii::$app->runAction('api/jw/get-grade', $data);
@@ -32,8 +32,8 @@ class JwController  extends Controller
     public function actionGetSchedule()
     {
         $data = [
-            'sno' => 'xeuhao',
-            'pwd' => 'mima',
+            'sno' => '13251102210',
+            'pwd' => 'qq5521140',
             'stu_time' => '2014-2015-2',
         ];
         return Yii::$app->runAction('api/jw/get-schedule', $data);

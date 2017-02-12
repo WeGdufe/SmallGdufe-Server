@@ -36,7 +36,7 @@ trait JwParser
         if(empty($html)) return '';
         $dom = new Dom;
         $dom->loadStr($html,[]);
-        return $html;
+        return ['kb'=>'待解析'];
         //TODO 解析课表
         $contents = $dom->find('table[id=kbtable] div');
         $scoreList = array();
