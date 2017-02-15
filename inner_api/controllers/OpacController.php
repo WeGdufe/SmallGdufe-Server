@@ -10,8 +10,12 @@ use yii;
 
 class OpacController extends InfoController
 {
-    // const REDIS_IDS_PRE = 'in:';
-    // const REDIS_OPAC_PRE = 'op:';
+    const REDIS_OPAC_PRE = 'op:';
+    private $opacCookieKey = 'PHPSESSID';
+    private $opacExpire = 86400; //1天，实际上web是一年
+
+    const METHOD_GET = 'get';
+    const METHOD_POST = 'post';
 
     use OpacParser;
 
@@ -23,23 +27,43 @@ class OpacController extends InfoController
      * @return array|string
      */
     public function actionSearchBook($sno='', $pwd='',$bookName=''){
-        // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\fdbook.html') );
-        return $this->getReturn(Error::success,$this->getSearchBook('',$bookName));
+        return $this->getReturn(Error::success,$this->getSearchBook($bookName));
+    }
+    public function actionCurrentBook($sno, $pwd){
+        $cookies = $this->beforeOpacAction($sno, $pwd);
+        if(!is_array($cookies))  return $cookies;
+        return $this->getReturn(Error::success,$this->getCurrentBook($cookies[0],$cookies[1]));
+    }
+    public function actionBorrowedBook($sno, $pwd){
+        $cookies = $this->beforeOpacAction($sno, $pwd);
+        if(!is_array($cookies))  return $cookies;
+        return $this->getReturn(Error::success,$this->getBorrowedBook($cookies[0],$cookies[1]));
     }
 
-    public function test()
+
+    public function actionTest()
     {
-
+        // return $this->parseBorrowedBookList( file_get_contents('F:\\Desktop\\2.html') );
+        // return $this->parseHistoryBorrowedBookList( file_get_contents('F:\\Desktop\\bo.html') );
     }
 
+    private function getCurrentBook($idsCookie,$opacCookie)
+    {
+        $response = $this->runOpacCurl(OpacController::METHOD_GET,
+            $this->urlConst['opac']['currentBook'], '',$idsCookie,$opacCookie);
+        return $this->parseCurrentBookList($response);
+    }
+    private function getBorrowedBook($idsCookie,$opacCookie)
+    {
+        $response = $this->runOpacCurl(OpacController::METHOD_GET,
+            $this->urlConst['opac']['borrowedBook'], '',$idsCookie,$opacCookie);
+        return $this->parseBorrowedBookList($response);
+    }
 
-    private function getSearchBook($idsCookie='',$bookName)
+    // 搜索(不登录状态)
+    private function getSearchBook($bookName,$idsCookie='',$opacCookie='')
     {
         $curl = $this->newCurl();
-        if(isset($idsCookie)) {
-            // 开启登陆查询的情况
-        }
-        $curl->setReferer($this->urlConst['base']['opac']);
         $data = [
             's2_type' => 'title',
             's2_text' => $bookName,
@@ -51,13 +75,79 @@ class OpacController extends InfoController
             'showmode' => 'list',
             'location' => 'ALL',
         ];
+        $curl->setReferer($this->urlConst['base']['opac']);
         $curl->get($this->urlConst['opac']['search'],$data);
         return $this->parseSearchBookList($curl->response);
     }
 
-    private function getOpacCookie($sno, $pwd)
-    {
+    /**
+     * 返回图书馆系统的cookie
+     * 先获取缓存，无则用idscookie获取opacCookie，若无idscookie则返回空
+     * @param $sno
+     * @param $pwd string 目前不需要
+     * @param $idsCookie string 必须
+     * @return mixed|null
+     */
+    private function getOpacCookie($sno,$pwd='',$idsCookie){
+        $cache = Yii::$app->cache->get(self::REDIS_OPAC_PRE . $sno);
+        if ($cache) return $cache;
+        if(empty($idsCookie))   return null;
+
+        $curl = $this->newCurl();
+        $curl->setCookie($this->idsCookieKey,$idsCookie);
+        $curl->setReferer($this->urlConst['base']['info']);
+        $curl->get($this->urlConst['opac']['login']);
+        $opacCookie = $curl->getCookie($this->opacCookieKey);
+        if(empty($opacCookie)) return null;
+        Yii::$app->cache->set(self::REDIS_OPAC_PRE . $sno, $opacCookie, $this->opacExpire);
+        return $opacCookie;
     }
 
+
+    //////////////////////////////////////////////
+    //                  ↓工具函数↓                 //
+    //////////////////////////////////////////////
+
+    /**
+     * OPAC图书馆Action实际操作的通用预处理，判断和获取cookie
+     * @param $sno
+     * @param $pwd
+     * @return string 报错内容 |array [idsCookie,opacCookie]
+     */
+    private function beforeOpacAction($sno,$pwd){
+        if (empty($sno) || empty($pwd)) {
+            return $this->getReturn(Error::accountEmpty);
+        }
+        $idsCookie = $this->getIdsCookie($sno,$pwd);
+        $opacCookie = $this->getOpacCookie($sno,$pwd,$idsCookie);
+        if (empty($opacCookie)) {
+            return $this->getReturn(Error::passwordError);
+        }
+        return [$idsCookie,$opacCookie];
+    }
+    /**
+     * OPAC的通用CURL代码
+     * @param $method string OpacController::METHOD_GET | OpacController::METHOD_POST
+     * @param $url
+     * @param $data
+     * @param $idsCookie
+     * @param $opacCookie
+     * @return null | string curl返回的结果
+     */
+    private function runOpacCurl($method,$url,$data,$idsCookie,$opacCookie){
+        $curl = $this->newCurl();
+        if(empty($opacCookie)) {//idsCookie可以没有
+            return null;
+        }
+        $curl->setCookie($this->idsCookieKey,$idsCookie);
+        $curl->setCookie($this->opacCookieKey,$opacCookie);
+        $curl->setReferer($url);
+        if(isset($data) && is_array($data)) {
+            $curl->$method($url, $data);
+        }else{
+            $curl->$method($url);
+        }
+        return $curl->response;
+    }
 
 }

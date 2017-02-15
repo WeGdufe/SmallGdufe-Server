@@ -24,7 +24,10 @@ trait JwParser
             $name = $content->find('td', 3)->innerHtml;
             $score = $content->find('td a')->innerHtml;
             $credit = $content->find('td', 5)->innerHtml;
-            $item = ['name' => $name, 'score' => $score, 'credit' => $credit];
+            $item = compact(
+                'name', 'score', 'credit'
+                // 'xueqi'
+            );
             $scoreList [] = $item;
         }
         unset($dom);

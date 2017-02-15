@@ -6,7 +6,7 @@ $baseUrls = [
     'jw' => 'http://jwxt.gdufe.edu.cn/jsxsd/',
     'info' => 'http://my.gdufe.edu.cn',
     'sztz'=>'http://sztz.gdufe.edu.cn/sztz/index.jsp',
-    'opac'=>'http://opac.library.gdufe.edu.cn/opac',
+    'opac'=>'http://opac.library.gdufe.edu.cn',
 
 ];
 return $urlConst = [
@@ -18,12 +18,14 @@ return $urlConst = [
         'cet' => '',
     ],
     'info' => [
-        'idsLogin' => $baseUrls['ids'] . $baseUrls['info'],
+        'ids' => $baseUrls['ids'] . $baseUrls['info'],
         'sztz' => $baseUrls['info']. '/index.portal?.pn=p501',
         'tips' => $baseUrls['info']. '/pnull.portal?.f=f385&.pmn=view&action=informationCenterAjax&.ia=false&.pen=pe344',
     ],
     'opac' =>[
-        'search' => $baseUrls['opac'].'/openlink.php',
-
+        'login' => $baseUrls['opac'].'/reader/hwthau.php',
+        'search' => $baseUrls['opac'].'/opac/openlink.php',
+        'currentBook' => $baseUrls['opac'].'/reader/book_lst.php',
+        'borrowedBook' => $baseUrls['opac'].'/reader/book_hist.php',
     ]
 ];

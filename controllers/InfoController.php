@@ -19,8 +19,8 @@ class InfoController  extends Controller
     public function actionTest()
     {
         $data = [
-            'sno' => '1325',
-            'pwd' => 'qq',
+            'sno' => '13251102210',
+            'pwd' => 'qq5521140',
             'stu_time' => '2014-2015-2',
         ];
         return Yii::$app->runAction('api/info/test', $data);

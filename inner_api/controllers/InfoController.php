@@ -23,7 +23,7 @@ class InfoController extends BaseController
      * @param $pwd
      * @return null|string 返回cookie的value: iPlanetDirectoryPro 或 null[密码错误]
      */
-    protected function loginIdsSys($sno, $pwd)
+    private function loginIdsSys($sno, $pwd)
     {
         $curl = $this->newCurl();
         $data = [
@@ -36,9 +36,14 @@ class InfoController extends BaseController
             'inputCode' => '',
             'gx_charset' => 'UTF-8',
         ];
+        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
         $curl->setOpt(CURLOPT_FOLLOWLOCATION, false);
-        $curl->post($this->urlConst['info']['idsLogin'], $data);
+        // $curl->post('http://localhost/2.php', $data);
+        $curl->post($this->urlConst['info']['ids'], $data);
         $idsCookie = $curl->getCookie($this->idsCookieKey);
+        // echo $this->urlConst['info']['idsLogin'];
+        // var_dump($curl->responseCookies);
+        // var_dump($curl->response);
         return $idsCookie;
     }
 
@@ -80,6 +85,11 @@ class InfoController extends BaseController
 
     public function actionTest()
     {
+        Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
+        Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
+
+        // $idsCookie = $this->getIdsCookie('13251102210', 'qq5521140');
+        // var_dump( $idsCookie);
         // $curl = $this->newCurl();
         // $curl->get('http://localhost/2.php');
         // echo $curl->getCookie($this->comCookieKey);
@@ -91,6 +101,7 @@ class InfoController extends BaseController
     /**
      * 实际请求信息门户首页的提醒信息，暂不解析，返回官方原生json
      * @param $idsCookie
+     * @param $sno
      * @return string
      */
     private function getInfoTips($idsCookie, $sno)
