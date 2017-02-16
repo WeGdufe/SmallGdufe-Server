@@ -18,7 +18,7 @@ trait OpacParser
      */
     public function parseSearchBookList($html)
     {
-        if (empty($html)) return '';
+        if (empty($html)) return null;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('ol[id=search_book_list] li');
@@ -49,7 +49,7 @@ trait OpacParser
      */
     public function parseCurrentBookList($html)
     {
-        if (empty($html)) return '';
+        if (empty($html)) return null;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[class=table_line] tr');
@@ -83,7 +83,7 @@ trait OpacParser
      */
     public function parseBorrowedBookList($html)
     {
-        if (empty($html)) return '';
+        if (empty($html)) return null;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[class=table_line] tr');

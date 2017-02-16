@@ -30,12 +30,12 @@ class OpacController extends InfoController
         return $this->getReturn(Error::success,$this->getSearchBook($bookName));
     }
     public function actionCurrentBook($sno, $pwd){
-        $cookies = $this->beforeOpacAction($sno, $pwd);
+        $cookies = $this->beforeBusinessAction($sno, $pwd);
         if(!is_array($cookies))  return $cookies;
         return $this->getReturn(Error::success,$this->getCurrentBook($cookies[0],$cookies[1]));
     }
     public function actionBorrowedBook($sno, $pwd){
-        $cookies = $this->beforeOpacAction($sno, $pwd);
+        $cookies = $this->beforeBusinessAction($sno, $pwd);
         if(!is_array($cookies))  return $cookies;
         return $this->getReturn(Error::success,$this->getBorrowedBook($cookies[0],$cookies[1]));
     }
@@ -114,7 +114,7 @@ class OpacController extends InfoController
      * @param $pwd
      * @return string 报错内容 |array [idsCookie,opacCookie]
      */
-    private function beforeOpacAction($sno,$pwd){
+    protected function beforeBusinessAction($sno,$pwd){
         if (empty($sno) || empty($pwd)) {
             return $this->getReturn(Error::accountEmpty);
         }

@@ -13,7 +13,7 @@ trait JwParser
 {
     public function parseGrade($html)
     {
-        if(empty($html)) return '';
+        if(empty($html)) return null;
         $dom = new Dom;
         $dom->loadStr($html,[]);
         $contents = $dom->find('table[id=dataList] tr');
@@ -34,9 +34,50 @@ trait JwParser
         return $scoreList;
     }
 
+    /**
+     * 解析教务处网获取的个人基本信息
+     * @param $html
+     * @return array|null
+     */
+    public function parseBasicInfo($html)
+    {
+        if (empty($html)) return null;
+        $dom = new Dom;
+        $dom->loadStr($html, []);
+        $contents = $dom->find('table[id=xjkpTable] tr');
+        $scoreList = array();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $department = explode('：',$contents[2]->find('td', 0)->innerHtml)[1];
+        $major = explode('：',$contents[2]->find('td',1)->innerHtml)[1];
+        $class = explode('：',$contents[2]->find('td',3)->innerHtml)[1];
+
+        $name = str_replace('&nbsp;','',$contents[3]->find('td', 1)->innerHtml);
+        $sex = str_replace('&nbsp;','',$contents[3]->find('td',3)->innerHtml);
+        //姓名拼音
+        $namePy = str_replace('&nbsp;','',$contents[3]->find('td',5)->innerHtml);
+
+        $birthday = str_replace('&nbsp;','',$contents[4]->find('td', 1)->innerHtml);
+        $party = str_replace('&nbsp;','',$contents[5]->find('td',3)->innerHtml);
+        $nation = str_replace('&nbsp;','',$contents[7]->find('td',3)->innerHtml);
+        $education = str_replace('&nbsp;','',$contents[8]->find('td',3)->innerHtml);
+
+        //身份证
+        // $idNum = str_replace('&nbsp;','',$contents[43]->find('td',3)->innerHtml);
+
+        $item = compact(
+            'department', 'major', 'class',
+            'name', 'sex', 'namePy',
+            'birthday','party','nation',
+            'education'
+        );
+        $scoreList [] = $item;
+        return $scoreList;
+    }
+
     public function parseSchedule($html)
     {
-        if(empty($html)) return '';
+        if(empty($html)) return null;
         $dom = new Dom;
         $dom->loadStr($html,[]);
         return ['kb'=>'待解析'];

@@ -8,50 +8,36 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 
-class OpacController  extends Controller
+class OpacController  extends BaseController
 {
+
 
     public function actionAppLogin()
     {
         return 'OpacController';
     }
 
-    //  http://localhost:81/index.php?r=opac/search-book
+// http://localhost:82/index.php?r=opac/search-book&sno=13251102217&pwd=118118&bookName=%E8%A7%A3%E5%BF%A7
     public function actionSearchBook()
     {
-        $data = [
-            'sno' => '目前可空',
-            'pwd' => '目前可空',
-            'bookName' => '解忧',
-        ];
-        return Yii::$app->runAction('api/opac/search-book', $data);
+        $this->data['bookName'] = Yii::$app->request->get('bookName');
+        return Yii::$app->runAction('api/opac/search-book',  $this->data);
     }
 
-    //  http://localhost:82/index.php?r=opac/current-book
+    //  http://localhost:82/index.php?r=opac/current-book&sno=13251102217&pwd=118118
     public function actionCurrentBook()
     {
-        $data = [
-            'sno' => '13251102217',
-            'pwd' => '118118',
-            // 'sno' => '13251102210',
-            // 'pwd' => 'qq5521140',
-        ];
-        return Yii::$app->runAction('api/opac/current-book', $data);
+        return Yii::$app->runAction('api/opac/current-book', $this->data);
     }
 
-    //  http://localhost:82/index.php?r=opac/borrowed-book
+    //  http://localhost:82/index.php?r=opac/borrowed-book&sno=13251102217&pwd=118118
     public function actionBorrowedBook(){
-        $data = [
-            'sno' => '13251102217',
-            'pwd' => '118118',
-        ];
-        return Yii::$app->runAction('api/opac/borrowed-book', $data);
+        return Yii::$app->runAction('api/opac/borrowed-book', $this->data);
     }
 
-    //  http://localhost:81/index.php?r=opac/search-book
+    //  http://localhost:82/index.php?r=opac/search-book&sno=13251102217&pwd=118118
     public function actionTest()
     {
-
         return Yii::$app->runAction('api/opac/test');
     }
 }

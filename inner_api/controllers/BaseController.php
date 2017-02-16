@@ -27,6 +27,15 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * 各业务网站根据自己需求的处理cookie和账号密码判异常部分
+     * 在实际发起业务get/post之前调用
+     * @param $sno
+     * @param $pwd
+     */
+    protected function beforeBusinessAction($sno,$pwd){
+    }
+
     public function newCurl()
     {
         $curl = new Curl();
@@ -44,6 +53,7 @@ class BaseController extends Controller
      */
     public function getReturn($code,$data='')
     {
+        if($data == null) $data = '';
         $msg = Error::$errorMsg[$code];
         return \Yii::createObject([
             'class' => 'yii\web\Response',
