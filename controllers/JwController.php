@@ -5,13 +5,19 @@
  */
 namespace app\controllers;
 
+use Faker\Provider\Base;
 use Yii;
 use yii\web\Controller;
 
-class JwController  extends Controller
+class JwController  extends BaseController
 {
 
 
+    public function actionTest()
+    {
+        $this->data['stu_time'] = '2014-2015-2';
+        return Yii::$app->runAction('api/jw/test', $this->data);
+    }
     public function actionIndex()
     {
         return 'JwController';
@@ -20,23 +26,20 @@ class JwController  extends Controller
     //http://localhost:82/index.php?r=jw/get-grade
     public function actionGetGrade()
     {
-        $data = [
-            'sno' => '13251102210',
-            'pwd' => 'qq5521140',
-            'stu_time' => '2014-2015-2',
-        ];
-        return Yii::$app->runAction('api/jw/get-grade', $data);
+        $this->data['stu_time'] = '2014-2015-2';
+        return Yii::$app->runAction('api/jw/get-grade', $this->data);
     }
 
     //http://localhost:82/index.php?r=jw/get-schedule
     public function actionGetSchedule()
     {
-        $data = [
-            'sno' => '13251102210',
-            'pwd' => 'qq5521140',
-            'stu_time' => '2014-2015-2',
-        ];
-        return Yii::$app->runAction('api/jw/get-schedule', $data);
+        $this->data['stu_time'] = '2014-2015-2';
+        return Yii::$app->runAction('api/jw/get-schedule', $this->data);
     }
+    public function actionGetBasic()
+    {
+        return Yii::$app->runAction('api/jw/get-basic', $this->data);
+    }
+
 
 }
