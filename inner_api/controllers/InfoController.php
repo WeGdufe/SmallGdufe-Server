@@ -7,12 +7,14 @@
 namespace app\inner_api\controllers;
 
 use app\inner_api\utils\InfoParser;
+use app\inner_api\utils\JwParser;
 use yii;
 
 class InfoController extends BaseController
 {
     const REDIS_IDS_PRE = 'in:';
     const REDIS_INFO_PRE = 'my:';
+    use JwParser;
 
     protected $expire = 1800;//半小时
     use InfoParser;
@@ -85,16 +87,19 @@ class InfoController extends BaseController
 
     public function actionTest()
     {
+        // return $this->getReturn(Error::success,$this->getInfoTips($idsCookie,$sno));
+
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
-        return $this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html'));
+
+        return $this->getReturn(Error::success,$this->parseFewSztz(file_get_contents('F:\\Desktop\\sutuo.html')));
 
         // $idsCookie = $this->getIdsCookie('13251102210', 'qq5521140');
         // var_dump( $idsCookie);
         // $curl = $this->newCurl();
         // $curl->get('http://localhost/2.php');
         // echo $curl->getCookie($this->comCookieKey);
-        echo time();
+        // echo time();
         // return $this->parseFewSztz( file_get_contents('F:\\Desktop\\3.html') );
 
     }

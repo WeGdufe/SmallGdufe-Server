@@ -15,7 +15,7 @@ class InfoController extends BaseController
     public function actionTest()
     {
         // $stu_time = Yii::$app->request->get('stu_time');
-        $this->data['stu_time'] = '2014-2015-2';
+        // $this->data['stu_time'] = '2014-2015-2';
         return Yii::$app->runAction('api/info/test', $this->data);
     }
 

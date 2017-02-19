@@ -20,7 +20,9 @@ class OpacController  extends BaseController
 // http://localhost:82/index.php?r=opac/search-book&sno=13251102217&pwd=118118&bookName=%E8%A7%A3%E5%BF%A7
     public function actionSearchBook()
     {
-        $this->data['bookName'] = Yii::$app->request->get('bookName');
+        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+        $this->data['bookName'] = $req['bookName'];
+        // $this->data['bookName'] = Yii::$app->request->post('bookName');
         return Yii::$app->runAction('api/opac/search-book',  $this->data);
     }
 

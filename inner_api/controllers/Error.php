@@ -19,9 +19,11 @@ class Error
     const infoSysError = 2002;
     const opacSysError = 2003;
 
+
     //用户错误
     const passwordError = 3000;
     const accountEmpty = 3001;
+    const opacBookEmpty = 3300;
 
     public static $errorMsg = [
         0 => '',
@@ -35,7 +37,7 @@ class Error
 
         3000 => '账号或密码错误',
         3001 => '账号或者密码为空',
-
+        3300 => '书名为空',
     ];
 
 }

@@ -33,8 +33,12 @@ trait OpacParser
             foreach ($matches as &$mItem) {
                 $mItem = trim($this->ncrDecode($mItem));
             }
+
+            //有一些只有书但没入库的没有ID号，馆藏和可借都为0，如搜java
+            if(empty($matches[2])) continue;
+
             $item = [
-                'name' => $matches[1], 'serial' => $matches[2], 'numAll' => $matches[3],
+                'name' => explode(".",$matches[1])[1], 'serial' => $matches[2], 'numAll' => $matches[3],
                 'numCan' => $matches[4], 'author' => $matches[5], 'publisher' => $matches[6],
             ];
             $scoreList [] = $item;
@@ -60,7 +64,8 @@ trait OpacParser
             if ($index == 0) continue;      //标题头
             $barId = $content->find('td', 0)->innerHtml;
             $name = $content->find('td a', 0)->innerHtml;
-            $author = explode('a>', $content->find('td', 1)->innerHtml)[1];
+            $author = explode('/ ', $content->find('td', 1)->innerHtml)[1];
+            // $author = explode('a>', $content->find('td', 1)->innerHtml)[1];
             $borrowedTime = $content->find('td', 2)->innerHtml;
             $returnTime = trim($content->find('font', 0)->innerHtml);
             $location = $content->find('td', 5)->innerHtml;

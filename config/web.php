@@ -19,6 +19,8 @@ $config = [
             // 'parsers' => [
             //     'application/json' => 'yii\web\JsonParser',
             // ]
+            'enableCsrfValidation' => false,
+            //关闭CSRF防范，不然post请求会被404
         ],
         // 'response' => [
         //     'format' => yii\web\Response::FORMAT_JSON,

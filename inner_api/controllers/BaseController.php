@@ -53,7 +53,7 @@ class BaseController extends Controller
      */
     public function getReturn($code,$data='')
     {
-        if($data == null) $data = '';
+        if($data == null) $data = [];
         $msg = Error::$errorMsg[$code];
         return \Yii::createObject([
             'class' => 'yii\web\Response',

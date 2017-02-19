@@ -12,7 +12,7 @@ class OpacController extends InfoController
 {
     const REDIS_OPAC_PRE = 'op:';
     private $opacCookieKey = 'PHPSESSID';
-    private $opacExpire = 86400; //1天，实际上web是一年
+    private $opacExpire = 3600; //web上是一年
 
     const METHOD_GET = 'get';
     const METHOD_POST = 'post';
@@ -26,7 +26,10 @@ class OpacController extends InfoController
      * @param string $bookName
      * @return array|string
      */
-    public function actionSearchBook($sno='', $pwd='',$bookName=''){
+    public function actionSearchBook($sno='', $pwd='',$bookName){
+        if(empty($bookName)){
+            return $this->getReturn(Error::opacBookEmpty);
+        }
         return $this->getReturn(Error::success,$this->getSearchBook($bookName));
     }
     public function actionCurrentBook($sno, $pwd){
@@ -43,7 +46,8 @@ class OpacController extends InfoController
 
     public function actionTest()
     {
-        // return $this->parseBorrowedBookList( file_get_contents('F:\\Desktop\\2.html') );
+        // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\ces.html') );
+        return $this->parseCurrentBookList( file_get_contents('F:\\Desktop\\curbook.html') );
         // return $this->parseHistoryBorrowedBookList( file_get_contents('F:\\Desktop\\bo.html') );
     }
 
