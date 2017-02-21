@@ -14,14 +14,14 @@ class BaseController extends Controller
 {
     protected $sno='';
     protected $pwd='';
-
+    protected $req;
     protected $data=[];
     public function beforeAction($action)
     {
         // Yii::warning(Yii::$app->request->post());
-        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        $this->sno = $req['sno'];
-        $this->pwd = $req['pwd'];
+        $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+        $this->sno = $this->req['sno'];
+        $this->pwd = $this->req['pwd'];
         $this->data = [
             'sno' => $this->sno,
             'pwd' => $this->pwd,

@@ -19,13 +19,14 @@ class JwController extends BaseController
      * @param $sno
      * @param $pwd
      * @param string $stu_time ex. 2014-2015-2 可选，不填则返回目前所有
+     * @param int $split 是否分拆连堂的课程，默认为0代表不拆，若为1则将连堂item拆成多个，避开true/false的类型问题
      * @return array|string
      */
-    public function actionGetSchedule($sno, $pwd, $stu_time = '')
+    public function actionGetSchedule($sno, $pwd, $stu_time = '',$split = 0)
     {
         $jwCookie = $this->beforeBusinessAction($sno,$pwd);
         if(!is_array($jwCookie))  return $jwCookie;
-        return $this->getReturn(Error::success,$this->getSchedule($jwCookie[0], $stu_time));
+        return $this->getReturn(Error::success,$this->getSchedule($jwCookie[0], $stu_time,$split));
     }
 
     public function actionGetGrade($sno, $pwd, $stu_time = '')
@@ -106,7 +107,7 @@ class JwController extends BaseController
         return $this->parseGrade($curl->response);
     }
 
-    private function getSchedule($jwCookie, $study_time = '')
+    private function getSchedule($jwCookie, $study_time = '',$split = 0)
     {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
@@ -122,7 +123,10 @@ class JwController extends BaseController
             ];
             $curl->post($this->urlConst['jw']['schedule'], $data);
         }
-        return $this->parseSchedule($curl->response);
+        if($split) {
+            return $this->parseSchedule($curl->response);
+        }
+        return $this->parseScheduleMergeNext($curl->response);
     }
 
     /**
@@ -163,7 +167,13 @@ class JwController extends BaseController
     {
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
-        // return $this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html'));
+        // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2.html'));
+        // return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\2.html'));
+        // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2-lianxu.html'));
+        return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang4.html'));
+       // return '1';
+       //  return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang6.html'));
+
         // return $this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html'));
         // return $this->getReturn(Error::success,$this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html')));
 

@@ -12,6 +12,8 @@ class Error
     const success = 0;
     //业务错误
     const netError = 1000;
+    const parmError = 1001;
+
 
     //学校系统错误
     const idsSysError = 2000;
@@ -28,6 +30,7 @@ class Error
     public static $errorMsg = [
         0 => '',
         1000 => '网络错误',
+        1001 => '参数错误',
 
         2000 => '统一登陆系统挂了',
         2001 => '教务系统崩啦',
