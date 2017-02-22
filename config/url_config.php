@@ -8,6 +8,7 @@ $baseUrls = [
     'info' => 'http://my.gdufe.edu.cn',
     'sztz' => 'http://sztz.gdufe.edu.cn/sztz/index.jsp',
     'opac' => 'http://opac.library.gdufe.edu.cn',
+    'cet' => 'http://www.chsi.com.cn/cet',
 
 ];
 return $urlConst = [
@@ -21,6 +22,8 @@ return $urlConst = [
     ],
     'jwc' => [
         'xiaoLi' => $baseUrls['jwc'] . '/html/xl/2015/10/12/c1304008-1dcf-4d89-bb58-f945db0bc677.html',
+        'cet' => 'http://www.chsi.com.cn/cet/query',
+        //http://chaxun.neea.edu.cn/cet/query_cet.html也可以查，不过要改代码
     ],
     'info' => [
         'ids' => $baseUrls['ids'] . $baseUrls['info'],

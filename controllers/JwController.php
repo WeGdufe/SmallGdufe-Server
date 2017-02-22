@@ -16,7 +16,7 @@ class JwController  extends BaseController
     public function actionTest()
     {
         $this->data['stu_time'] = '2014-2015-2';
-          if(isset($this->req['split'])){
+        if(isset($this->req['split'])){
             $this->data['split'] = intval($this->req['split']);
         }else{
             $this->data['split'] = 0;
@@ -28,10 +28,10 @@ class JwController  extends BaseController
         return 'JwController';
     }
 
-    //http://localhost:82/index.php?r=jw/get-grade
+    //http://localhost:82/index.php?r=jw/get-grade&sno=13251102210&pwd=qq5521140&stu_time=2013-2014-2
     public function actionGetGrade()
     {
-        $this->data['stu_time'] = '2014-2015-2';
+        $this->data['stu_time'] = $this->req['stu_time'];
         return Yii::$app->runAction('api/jw/get-grade', $this->data);
     }
 
@@ -50,6 +50,7 @@ class JwController  extends BaseController
         }
         return Yii::$app->runAction('api/jw/get-schedule', $this->data);
     }
+
     public function actionGetBasic()
     {
         return Yii::$app->runAction('api/jw/get-basic', $this->data);

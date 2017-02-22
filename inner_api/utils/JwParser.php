@@ -21,12 +21,29 @@ trait JwParser
         Yii::$app->response->format = Response::FORMAT_JSON;
         foreach ($contents as $index => $content) {
             if ($index == 0) continue;      //标题头
+            $time = $content->find('td', 1)->innerHtml;
             $name = $content->find('td', 3)->innerHtml;
             $score = $content->find('td a')->innerHtml;
+            switch ($score) {
+                case '优':
+                    $score = 95;
+                    break;
+                case '良':
+                    $score = 85;
+                    break;
+                case '中':
+                    $score = 75;
+                    break;
+                case '差':
+                    $score = 65;
+                    break;
+                default:
+                    //数值分
+                    break;
+            }
             $credit = $content->find('td', 5)->innerHtml;
             $item = compact(
-                'name', 'score', 'credit'
-            // 'xueqi'
+                'time','name', 'score', 'credit'
             );
             $scoreList [] = $item;
         }
@@ -151,7 +168,7 @@ trait JwParser
 
                 //没有老师信息的蜜汁情况
                 if (2 == count($content->find('font'))) {
-                    $teacher = '';
+                    $teacher = '~没有老师信息喔';
                     $period = $content->find('font', 0)->innerHtml;
                     $location = $content->find('font', 1)->innerHtml;
                 }else{

@@ -18,7 +18,7 @@ class JwController extends BaseController
      * 返回课程表
      * @param $sno
      * @param $pwd
-     * @param string $stu_time ex. 2014-2015-2 可选，不填则返回目前所有
+     * @param string $stu_time ex. 2014-2015-2 可选，不填则返回当前学期
      * @param int $split 是否分拆连堂的课程，默认为0代表不拆，若为1则将连堂item拆成多个，避开true/false的类型问题
      * @return array|string
      */
@@ -48,6 +48,7 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getBasicInfo($jwCookie[0]));
     }
+
 
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
@@ -125,7 +126,6 @@ class JwController extends BaseController
             ];
             $curl->post($this->urlConst['jw']['schedule'], $data);
         }
-        echo $curl->response;
         if ($split) {
             return $this->parseSchedule($curl->response);
         }

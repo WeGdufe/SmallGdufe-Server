@@ -24,7 +24,22 @@ class JwcController extends Controller
         return $this->getReturn(Error::success, $this->parseXiaoLi($curl->response));
     }
 
-    public function newCurl()
+    public function actionGetCet($zkzh, $xm)
+    {
+        $curl = $this->newCurl();
+        $data = compact(
+            'zkzh', 'xm'
+        );
+        $curl->setReferer(Yii::$app->params['base']['cet']);
+        $curl->get(Yii::$app->params['jwc']['cet'], $data);
+        $res = $this->parseCet($curl->response);
+        if (!$res) {
+            return $this->getReturn(Error::cetError);
+        }
+        return $this->getReturn(Error::success, $res);
+    }
+
+    private function newCurl()
     {
         $curl = new Curl();
         $curl->setTimeout(3);
@@ -32,9 +47,10 @@ class JwcController extends Controller
         $curl->setUserAgent($userAgent);
         return $curl;
     }
-    public function getReturn($code,$data='')
+
+    private function getReturn($code, $data = '')
     {
-        if($data == null) $data = '';
+        if ($data == null) $data = '';
         $msg = Error::$errorMsg[$code];
         return \Yii::createObject([
             'class' => 'yii\web\Response',
@@ -46,6 +62,7 @@ class JwcController extends Controller
             ],
         ]);
     }
+
     public function actionIndex()
     {
     }
