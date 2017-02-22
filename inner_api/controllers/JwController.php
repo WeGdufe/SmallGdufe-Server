@@ -22,18 +22,18 @@ class JwController extends BaseController
      * @param int $split 是否分拆连堂的课程，默认为0代表不拆，若为1则将连堂item拆成多个，避开true/false的类型问题
      * @return array|string
      */
-    public function actionGetSchedule($sno, $pwd, $stu_time = '',$split = 0)
+    public function actionGetSchedule($sno, $pwd, $stu_time = '', $split = 0)
     {
-        $jwCookie = $this->beforeBusinessAction($sno,$pwd);
-        if(!is_array($jwCookie))  return $jwCookie;
-        return $this->getReturn(Error::success,$this->getSchedule($jwCookie[0], $stu_time,$split));
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        if (!is_array($jwCookie)) return $jwCookie;
+        return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split));
     }
 
     public function actionGetGrade($sno, $pwd, $stu_time = '')
     {
-        $jwCookie = $this->beforeBusinessAction($sno,$pwd);
-        if(!is_array($jwCookie))  return $jwCookie;
-        return $this->getReturn(Error::success,$this->getGrade($jwCookie[0], $stu_time));
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        if (!is_array($jwCookie)) return $jwCookie;
+        return $this->getReturn(Error::success, $this->getGrade($jwCookie[0], $stu_time));
     }
 
     /**
@@ -44,10 +44,11 @@ class JwController extends BaseController
      */
     public function actionGetBasic($sno, $pwd)
     {
-        $jwCookie = $this->beforeBusinessAction($sno,$pwd);
-        if(!is_array($jwCookie))  return $jwCookie;
-        return $this->getReturn(Error::success,$this->getBasicInfo($jwCookie[0]));
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        if (!is_array($jwCookie)) return $jwCookie;
+        return $this->getReturn(Error::success, $this->getBasicInfo($jwCookie[0]));
     }
+
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
      * 登教务如果cookie不过期，则多次登陆返回的Set-Cookie是一样的
@@ -69,6 +70,7 @@ class JwController extends BaseController
         }
         return null;
     }
+
     private function getBasicInfo($jwCookie)
     {
         if (empty($jwCookie)) return null;
@@ -107,7 +109,7 @@ class JwController extends BaseController
         return $this->parseGrade($curl->response);
     }
 
-    private function getSchedule($jwCookie, $study_time = '',$split = 0)
+    private function getSchedule($jwCookie, $study_time = '', $split = 0)
     {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
@@ -123,7 +125,8 @@ class JwController extends BaseController
             ];
             $curl->post($this->urlConst['jw']['schedule'], $data);
         }
-        if($split) {
+        echo $curl->response;
+        if ($split) {
             return $this->parseSchedule($curl->response);
         }
         return $this->parseScheduleMergeNext($curl->response);
@@ -149,7 +152,8 @@ class JwController extends BaseController
         return $cookie;
     }
 
-    protected function beforeBusinessAction($sno,$pwd){
+    protected function beforeBusinessAction($sno, $pwd)
+    {
         if (empty($sno) || empty($pwd)) {
             return $this->getReturn(Error::accountEmpty);
         }
@@ -163,16 +167,24 @@ class JwController extends BaseController
     public function actionIndex()
     {
     }
-    public function actionTest()
+
+    public function actionTest($split = 0)
     {
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2.html'));
-        // return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\2.html'));
+        // return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\2013-2014-2.html'));
         // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2-lianxu.html'));
-        return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang4.html'));
-       // return '1';
-       //  return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang6.html'));
+        // return  $this->getReturn(Error::success,$this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang4.html')));
+
+        if ($split) {
+            return $this->getReturn(Error::success, $this->parseSchedule(file_get_contents('F:\\Desktop\\kb_liantang6.html')));
+        } else {
+            return $this->getReturn(Error::success, $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_dasanxia.html')));
+        }
+
+        // return '1';
+        //  return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang6.html'));
 
         // return $this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html'));
         // return $this->getReturn(Error::success,$this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html')));

@@ -13,9 +13,9 @@ trait JwParser
 {
     public function parseGrade($html)
     {
-        if(empty($html)) return null;
+        if (empty($html)) return null;
         $dom = new Dom;
-        $dom->loadStr($html,[]);
+        $dom->loadStr($html, []);
         $contents = $dom->find('table[id=dataList] tr');
         $scoreList = array();
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -26,7 +26,7 @@ trait JwParser
             $credit = $content->find('td', 5)->innerHtml;
             $item = compact(
                 'name', 'score', 'credit'
-                // 'xueqi'
+            // 'xueqi'
             );
             $scoreList [] = $item;
         }
@@ -48,19 +48,19 @@ trait JwParser
         $scoreList = array();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $department = explode('：',$contents[2]->find('td', 0)->innerHtml)[1];
-        $major = explode('：',$contents[2]->find('td',1)->innerHtml)[1];
-        $class = explode('：',$contents[2]->find('td',3)->innerHtml)[1];
+        $department = explode('：', $contents[2]->find('td', 0)->innerHtml)[1];
+        $major = explode('：', $contents[2]->find('td', 1)->innerHtml)[1];
+        $class = explode('：', $contents[2]->find('td', 3)->innerHtml)[1];
 
-        $name = str_replace('&nbsp;','',$contents[3]->find('td', 1)->innerHtml);
-        $sex = str_replace('&nbsp;','',$contents[3]->find('td',3)->innerHtml);
+        $name = str_replace('&nbsp;', '', $contents[3]->find('td', 1)->innerHtml);
+        $sex = str_replace('&nbsp;', '', $contents[3]->find('td', 3)->innerHtml);
         //姓名拼音
-        $namePy = str_replace('&nbsp;','',$contents[3]->find('td',5)->innerHtml);
+        $namePy = str_replace('&nbsp;', '', $contents[3]->find('td', 5)->innerHtml);
 
-        $birthday = str_replace('&nbsp;','',$contents[4]->find('td', 1)->innerHtml);
-        $party = str_replace('&nbsp;','',$contents[5]->find('td',3)->innerHtml);
-        $nation = str_replace('&nbsp;','',$contents[7]->find('td',3)->innerHtml);
-        $education = str_replace('&nbsp;','',$contents[8]->find('td',3)->innerHtml);
+        $birthday = str_replace('&nbsp;', '', $contents[4]->find('td', 1)->innerHtml);
+        $party = str_replace('&nbsp;', '', $contents[5]->find('td', 3)->innerHtml);
+        $nation = str_replace('&nbsp;', '', $contents[7]->find('td', 3)->innerHtml);
+        $education = str_replace('&nbsp;', '', $contents[8]->find('td', 3)->innerHtml);
 
         //身份证
         // $idNum = str_replace('&nbsp;','',$contents[43]->find('td',3)->innerHtml);
@@ -68,7 +68,7 @@ trait JwParser
         $item = compact(
             'department', 'major', 'class',
             'name', 'sex', 'namePy',
-            'birthday','party','nation',
+            'birthday', 'party', 'nation',
             'education'
         );
         $scoreList [] = $item;
@@ -80,7 +80,8 @@ trait JwParser
      * @param $html
      * @return array|null
      */
-    public function parseScheduleMergeNext($html){
+    public function parseScheduleMergeNext($html)
+    {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $scheduleArr = $this->parseSchedule2Array($html);
         return $this->mergeScheduleNext($scheduleArr);
@@ -91,7 +92,8 @@ trait JwParser
      * @param $html
      * @return array|null
      */
-    public function parseSchedule($html){
+    public function parseSchedule($html)
+    {
         Yii::$app->response->format = Response::FORMAT_JSON;
         return $this->parseSchedule2Array($html);
     }
@@ -104,9 +106,9 @@ trait JwParser
      */
     private function parseSchedule2Array($html)
     {
-        if(empty($html)) return null;
+        if (empty($html)) return null;
         $dom = new Dom;
-        $dom->loadStr($html,[]);
+        $dom->loadStr($html, []);
         $contents = $dom->find('table[id=kbtable] div');
         unset($dom);
 
@@ -115,7 +117,7 @@ trait JwParser
         $oldSectionId = "根据id和id里的数字判断第几节";
         foreach ($contents as $index => $content) {
 
-            if( 'kbcontent' == $content->getAttribute('class')) {
+            if ('kbcontent' == $content->getAttribute('class')) {
 
                 /** ↓ 解析课程名和课程起始节数 */
                 //="A0510F68580D494A9E7F609059E8DDDF-2-2" style="display: none;" class="kbcontent">计算机网络<br />
@@ -124,34 +126,44 @@ trait JwParser
                  * 故需根据id字符串去判断是第几个行，加上这个第二小节去算
                  */
                 $pattern = "/(\\w{32})-(\\d)-(\\d).+?>(.+?)</"; //&nbsp;也要匹配到 为了计换节数
-                preg_match($pattern,$content,$timeRes);
-                if($timeRes[1] != $oldSectionId){
+                preg_match($pattern, $content, $timeRes);
+                if ($timeRes[1] != $oldSectionId) {
                     //换节了，之前是第一二节，现在是第三四节
-                    $section +=2;
+                    $section += 2;
                 }
                 $oldSectionId = $timeRes[1];
                 $endSec = $section + $timeRes[3];
-                $startSec = $endSec - 1 ;   //两小节为一单位，3个小节的也官方认为是4个小节
+                $startSec = $endSec - 1;   //两小节为一单位，3个小节的也官方认为是4个小节
                 $dayInWeek = intval($timeRes[2]);
                 $name = $timeRes[4];
 
                 /** 解析老师、周等常规数据，去掉了&nbsp;的情况，
                  * 这部分代码和上面代码不能交换顺序，
                  * 否则在5-6节(数字是比如)全空的情况下startSec会少2 */
-                $teacherObj = $content->find('font',0);
-                if(isset($teacherObj)) {
+
+                $teacherObj = $content->find('font', 0);
+                if (isset($teacherObj)) {
                     $teacher = $teacherObj->innerHtml;
-                }else{
+                } else {
                     //&nbsp;的情况 整个不要了，但$section还是有累加到的
                     continue;
                 }
-                $period = $content->find('font',1)->innerHtml;
-                $location = $content->find('font',2)->innerHtml;
+
+                //没有老师信息的蜜汁情况
+                if (2 == count($content->find('font'))) {
+                    $teacher = '';
+                    $period = $content->find('font', 0)->innerHtml;
+                    $location = $content->find('font', 1)->innerHtml;
+                }else{
+                    //正常情况 老师名 由上面$teacherObj解析
+                    $period = $content->find('font', 1)->innerHtml;
+                    $location = $content->find('font', 2)->innerHtml;
+                }
 
                 $item = compact(
                     'name', 'teacher', 'period',
-                    'location','dayInWeek',
-                    'startSec','endSec'
+                    'location', 'dayInWeek',
+                    'startSec', 'endSec'
                 );
                 $scoreList [] = $item;
             }
@@ -166,7 +178,8 @@ trait JwParser
      * @param $scheduleArr
      * @return array
      */
-    private function mergeScheduleNext($scheduleArr){
+    private function mergeScheduleNext($scheduleArr)
+    {
         $mergedArr = array();     //结果数组
         $blackIndex = array();    //黑名单数组，数组里的下标跟以前的可合并，则不添加到结果里
         foreach ($scheduleArr as $indexUp => $itemUp) {
@@ -174,20 +187,20 @@ trait JwParser
 
             foreach ($scheduleArr as $indexDown => $itemDown) {
                 // if($indexUp > $indexDown) continue; //注释原因：连续多堂的情况必须跑n*n
-                if(
+                if (
                     $indexUp != $indexDown
                     && $newItem['dayInWeek'] == $itemDown['dayInWeek']
                     && $newItem['endSec'] + 1 == $itemDown['startSec']
                     && $newItem['location'] == $itemDown['location']
                     && $newItem['name'] == $itemDown['name']
                     && $newItem['period'] == $itemDown['period']
-                ){
-                    $newItem['startSec'] = min($newItem['startSec'],$itemDown['startSec']);
-                    $newItem['endSec'] = max($newItem['endSec'],$itemDown['endSec']);
+                ) {
+                    $newItem['startSec'] = min($newItem['startSec'], $itemDown['startSec']);
+                    $newItem['endSec'] = max($newItem['endSec'], $itemDown['endSec']);
                     $blackIndex [] = $indexDown;
                 }
             }
-            if( in_array($indexUp,$blackIndex) ){
+            if (in_array($indexUp, $blackIndex)) {
                 continue;
             }
             $mergedArr [] = $newItem;        //外层循环里，只加一次
@@ -200,32 +213,33 @@ trait JwParser
      * @param $scheduleArr
      * @return array
      */
-    private function mergeScheduleNext2($scheduleArr){
+    private function mergeScheduleNext2($scheduleArr)
+    {
         $mergedArr = array();     //结果数组
         $blackIndex = array();    //黑名单数组，数组里的下标跟以前的可合并，则不添加到结果里
         foreach ($scheduleArr as $indexUp => $itemUp) {
             $newItem = $itemUp;
 
             foreach ($scheduleArr as $indexDown => $itemDown) {
-                if($indexUp > $indexDown) continue; //n*n矩阵的左上角，避免重复处理
+                if ($indexUp > $indexDown) continue; //n*n矩阵的左上角，避免重复处理
 
-                if(
+                if (
                     $indexUp != $indexDown
                     && $itemUp['dayInWeek'] == $itemDown['dayInWeek']
                     && $itemUp['endSec'] + 1 == $itemDown['startSec']
                     && $itemUp['location'] == $itemDown['location']
                     && $itemUp['name'] == $itemDown['name']
                     && $itemUp['period'] == $itemDown['period']
-                ){
+                ) {
                     //min自己是避免越改越小，当然因为网站的返回是按1-2,3-4小节这种时间顺序的所以不加也没问题
-                    $newItem['startSec'] = min($newItem['startSec'],$itemUp['startSec'],$itemDown['startSec']);
-                    $newItem['endSec'] = max($newItem['endSec'],$itemUp['endSec'],$itemDown['endSec']);
+                    $newItem['startSec'] = min($newItem['startSec'], $itemUp['startSec'], $itemDown['startSec']);
+                    $newItem['endSec'] = max($newItem['endSec'], $itemUp['endSec'], $itemDown['endSec']);
 
                     $blackIndex [] = $indexDown;
                     break;
                 }
             }
-            if( in_array($indexUp,$blackIndex) ){
+            if (in_array($indexUp, $blackIndex)) {
                 continue;
             }
             $mergedArr [] = $newItem;        //外层循环里，只加一次
