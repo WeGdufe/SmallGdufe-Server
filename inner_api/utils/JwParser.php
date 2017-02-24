@@ -5,6 +5,7 @@ namespace app\inner_api\utils;
  * User: xiaoguang
  * Date: 2017/2/3
  */
+use stdClass;
 use yii\web\Response;
 use yii;
 use PHPHtmlParser\Dom;
@@ -13,7 +14,7 @@ trait JwParser
 {
     public function parseGrade($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[id=dataList] tr');
@@ -38,10 +39,10 @@ trait JwParser
                     $score = 65;
                     break;
                 default:
-                    //数值分
+                    $score = intval($score);
                     break;
             }
-            $credit = $content->find('td', 5)->innerHtml;
+            $credit = intval($content->find('td', 5)->innerHtml);
             $item = compact(
                 'time','name', 'score', 'credit'
             );
@@ -54,20 +55,19 @@ trait JwParser
     /**
      * 解析教务处网获取的个人基本信息
      * @param $html
-     * @return array|null
+     * @return object
      */
     public function parseBasicInfo($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return new stdClass;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[id=xjkpTable] tr');
-        $scoreList = array();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $department = explode('：', $contents[2]->find('td', 0)->innerHtml)[1];
         $major = explode('：', $contents[2]->find('td', 1)->innerHtml)[1];
-        $class = explode('：', $contents[2]->find('td', 3)->innerHtml)[1];
+        $classroom = explode('：', $contents[2]->find('td', 3)->innerHtml)[1];
 
         $name = str_replace('&nbsp;', '', $contents[3]->find('td', 1)->innerHtml);
         $sex = str_replace('&nbsp;', '', $contents[3]->find('td', 3)->innerHtml);
@@ -83,13 +83,12 @@ trait JwParser
         // $idNum = str_replace('&nbsp;','',$contents[43]->find('td',3)->innerHtml);
 
         $item = compact(
-            'department', 'major', 'class',
+            'department', 'major', 'classroom',
             'name', 'sex', 'namePy',
             'birthday', 'party', 'nation',
             'education'
         );
-        $scoreList [] = $item;
-        return $scoreList;
+        return $item;
     }
 
     /**
@@ -123,7 +122,7 @@ trait JwParser
      */
     private function parseSchedule2Array($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[id=kbtable] div');

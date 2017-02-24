@@ -6,6 +6,7 @@
 
 namespace app\inner_api\controllers;
 use app\inner_api\utils\OpacParser;
+use stdClass;
 use yii;
 
 class OpacController extends InfoController
@@ -23,22 +24,22 @@ class OpacController extends InfoController
      * 根据书名进行搜索
      * @param string $sno
      * @param string $pwd
-     * @param string $bookName
+     * @param string $bookName   必须
      * @return array|string
      */
-    public function actionSearchBook($sno='', $pwd='',$bookName){
+    public function actionSearchBook($sno='', $pwd='',$bookName=''){
         if(empty($bookName)){
-            return $this->getReturn(Error::opacBookEmpty);
+            return $this->getReturn(Error::opacBookEmpty,[]);
         }
         return $this->getReturn(Error::success,$this->getSearchBook($bookName));
     }
     public function actionCurrentBook($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd);
+        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
         if(!is_array($cookies))  return $cookies;
         return $this->getReturn(Error::success,$this->getCurrentBook($cookies[0],$cookies[1]));
     }
     public function actionBorrowedBook($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd);
+        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
         if(!is_array($cookies))  return $cookies;
         return $this->getReturn(Error::success,$this->getBorrowedBook($cookies[0],$cookies[1]));
     }
@@ -116,16 +117,19 @@ class OpacController extends InfoController
      * OPAC图书馆Action实际操作的通用预处理，判断和获取cookie
      * @param $sno
      * @param $pwd
+     * @param bool $isRetArray 返回数组还是对象
      * @return string 报错内容 |array [idsCookie,opacCookie]
      */
-    protected function beforeBusinessAction($sno,$pwd){
+    protected function beforeBusinessAction($sno,$pwd,$isRetArray){
+        if($isRetArray) $ret = []; //空数组
+        else  $ret = new stdClass; //空对象
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty);
+            return $this->getReturn(Error::accountEmpty,$ret);
         }
         $idsCookie = $this->getIdsCookie($sno,$pwd);
         $opacCookie = $this->getOpacCookie($sno,$pwd,$idsCookie);
         if (empty($opacCookie)) {
-            return $this->getReturn(Error::passwordError);
+            return $this->getReturn(Error::passwordError,$ret);
         }
         return [$idsCookie,$opacCookie];
     }

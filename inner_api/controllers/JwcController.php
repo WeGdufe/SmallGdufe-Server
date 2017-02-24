@@ -3,6 +3,7 @@
 namespace app\inner_api\controllers;
 
 use Curl\Curl;
+use stdClass;
 use Yii;
 use yii\web\Controller;
 use app\inner_api\utils\JwcParser;
@@ -24,8 +25,11 @@ class JwcController extends Controller
         return $this->getReturn(Error::success, $this->parseXiaoLi($curl->response));
     }
 
-    public function actionGetCet($zkzh, $xm)
+    public function actionGetCet($zkzh='', $xm='')
     {
+        if(empty($zkzh) || empty($xm)){
+            return $this->getReturn(Error::cetAccountEmpty);
+        }
         $curl = $this->newCurl();
         $data = compact(
             'zkzh', 'xm'
@@ -48,9 +52,9 @@ class JwcController extends Controller
         return $curl;
     }
 
-    private function getReturn($code, $data = '')
+    private function getReturn($code, $data=null)
     {
-        if ($data == null) $data = '';
+        if ($data == null) $data = new stdClass;
         $msg = Error::$errorMsg[$code];
         return \Yii::createObject([
             'class' => 'yii\web\Response',

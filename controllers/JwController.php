@@ -31,7 +31,9 @@ class JwController  extends BaseController
     //http://localhost:82/index.php?r=jw/get-grade&sno=13251102210&pwd=qq5521140&stu_time=2013-2014-2
     public function actionGetGrade()
     {
-        $this->data['stu_time'] = $this->req['stu_time'];
+        if(isset($this->req['stu_time'])){
+            $this->data['stu_time'] = $this->req['stu_time'];
+        }
         return Yii::$app->runAction('api/jw/get-grade', $this->data);
     }
 

@@ -19,11 +19,11 @@ trait InfoParser
     /**
      * 解析信息门户处的素拓信息 因返回的html不规范标签不闭合等 只能正则
      * @param $html
-     * @return array | null
+     * @return array
      */
     public function parseFewSztz($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $scoreList = array();
@@ -37,8 +37,8 @@ trait InfoParser
         preg_match_all('/' . $pattern . '/', $html, $matches);
         for ($i = 0; $i < count($matches[0]); $i++) {
             $name = $matches[1][$i];
-            $requireScore = $matches[6][$i];
-            $score = $matches[7][$i];
+            $requireScore = sprintf("%.1f",floatval($matches[6][$i]));
+            $score = sprintf("%.1f",floatval($matches[7][$i]));
             $item = ['name' => $name, 'requireScore' => $requireScore, 'score' => $score];
             $scoreList [] = $item;
         }

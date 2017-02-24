@@ -58,11 +58,11 @@ class InfoController extends BaseController
     public function actionInfoTips($sno, $pwd)
     {
         if (empty($sno) || empty($pwd)){
-            return $this->getReturn(Error::accountEmpty);
+            return $this->getReturn(Error::accountEmpty,[]);
         }
         $idsCookie = $this->getIdsCookie($sno, $pwd);
         if(empty($idsCookie)){
-            return $this->getReturn(Error::passwordError);
+            return $this->getReturn(Error::passwordError,[]);
         }
         return $this->getReturn(Error::success,$this->getInfoTips($idsCookie,$sno));
     }
@@ -76,11 +76,11 @@ class InfoController extends BaseController
     public function actionFewSztz($sno, $pwd)
     {
         if (empty($sno) || empty($pwd)){
-            return $this->getReturn(Error::accountEmpty);
+            return $this->getReturn(Error::accountEmpty,[]);
         }
         $idsCookie = $this->getIdsCookie($sno, $pwd);
         if(empty($idsCookie)){
-            return $this->getReturn(Error::passwordError);
+            return $this->getReturn(Error::passwordError,[]);
         }
         return $this->getReturn(Error::success,$this->getFewSztz($idsCookie));
     }

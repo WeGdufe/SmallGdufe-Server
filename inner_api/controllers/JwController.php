@@ -2,6 +2,7 @@
 
 namespace app\inner_api\controllers;
 
+use stdClass;
 use Yii;
 use app\inner_api\utils\JwParser;
 
@@ -24,14 +25,14 @@ class JwController extends BaseController
      */
     public function actionGetSchedule($sno, $pwd, $stu_time = '', $split = 0)
     {
-        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split));
     }
 
     public function actionGetGrade($sno, $pwd, $stu_time = '')
     {
-        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getGrade($jwCookie[0], $stu_time));
     }
@@ -44,7 +45,7 @@ class JwController extends BaseController
      */
     public function actionGetBasic($sno, $pwd)
     {
-        $jwCookie = $this->beforeBusinessAction($sno, $pwd);
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getBasicInfo($jwCookie[0]));
     }
@@ -152,14 +153,18 @@ class JwController extends BaseController
         return $cookie;
     }
 
-    protected function beforeBusinessAction($sno, $pwd)
+    //$isRetArray为true 则返回数组 否则返回对象
+    protected function beforeBusinessAction($sno, $pwd,$isRetArray=true)
     {
+        if($isRetArray) $ret = []; //空数组
+        else  $ret = new stdClass; //空对象
+
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty);
+            return $this->getReturn(Error::accountEmpty,$ret);
         }
         $jwCookie = $this->getJWCookie($sno, $pwd);
         if (empty($jwCookie)) {
-            return $this->getReturn(Error::passwordError);
+            return $this->getReturn(Error::passwordError,$ret);
         }
         return [$jwCookie];
     }

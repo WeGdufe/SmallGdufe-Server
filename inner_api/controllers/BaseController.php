@@ -1,6 +1,7 @@
 <?php
 namespace app\inner_api\controllers;
 
+use stdClass;
 use yii\web\Controller;
 use Yii;
 use Curl\Curl;
@@ -32,8 +33,9 @@ class BaseController extends Controller
      * 在实际发起业务get/post之前调用
      * @param $sno
      * @param $pwd
+     * @param bool $isRetArray  为1则失败的时候返回空数组[]，为0则返回空对象{}
      */
-    protected function beforeBusinessAction($sno,$pwd){
+    protected function beforeBusinessAction($sno,$pwd,$isRetArray){
     }
 
     public function newCurl()
@@ -46,14 +48,17 @@ class BaseController extends Controller
     }
 
     /**
+     *
      * 组成json格式返回内容
      * @param $code
-     * @param string $data 可选，出现错误的情况不填
+     * @param object|array|string $data 可选，出现错误的情况填你业务对应正常返回的类型，如是空数组[]还是空对象{}
      * @return string json {"code":0,"data":}
      */
-    public function getReturn($code,$data='')
+    public function getReturn($code,$data)
     {
-        if($data == null) $data = [];
+        // if($data == null) $data = [];
+        // if( $data == null) $data = new stdClass;
+        if(!isset($data)) $data = new stdClass;
         $msg = Error::$errorMsg[$code];
         return \Yii::createObject([
             'class' => 'yii\web\Response',

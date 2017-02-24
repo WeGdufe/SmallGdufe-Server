@@ -8,7 +8,7 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 
-class OpacController  extends BaseController
+class OpacController extends BaseController
 {
 
 
@@ -21,9 +21,11 @@ class OpacController  extends BaseController
     public function actionSearchBook()
     {
         $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        $this->data['bookName'] = $req['bookName'];
+        if (isset($req['bookName'])) {
+            $this->data['bookName'] = $req['bookName'];
+        }
         // $this->data['bookName'] = Yii::$app->request->post('bookName');
-        return Yii::$app->runAction('api/opac/search-book',  $this->data);
+        return Yii::$app->runAction('api/opac/search-book', $this->data);
     }
 
     //  http://localhost:82/index.php?r=opac/current-book&sno=13251102217&pwd=118118
@@ -33,7 +35,8 @@ class OpacController  extends BaseController
     }
 
     //  http://localhost:82/index.php?r=opac/borrowed-book&sno=13251102217&pwd=118118
-    public function actionBorrowedBook(){
+    public function actionBorrowedBook()
+    {
         return Yii::$app->runAction('api/opac/borrowed-book', $this->data);
     }
 

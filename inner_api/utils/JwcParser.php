@@ -6,6 +6,7 @@ namespace app\inner_api\utils;
  * Date: 2017/2/16
  */
 use app\inner_api\controllers\Error;
+use stdClass;
 use Yii;
 use yii\web\Response;
 use PHPHtmlParser\Dom;
@@ -15,13 +16,13 @@ trait JwcParser
     /**
      * 解析校历和上课时间表，返回他们的图片地址
      * @param $html
-     * @return null|string json example:
+     * @return object
      * {"timeTable":"http://jwc.gdufe.edu.cn/attach/2016/10/20/769667.jpg",
      * "xiaoLi":"http://jwc.gdufe.edu.cn/attach/2016/10/20/769666.jpg"}
      */
     public function parseXiaoLi($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return new stdClass;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('div[class=detail_content_display]  img');
@@ -33,7 +34,7 @@ trait JwcParser
 
     public function parseCet($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return new stdClass;
         $dom = new Dom;
         $dom->loadStr($html, []);
         Yii::$app->response->format = Response::FORMAT_JSON;

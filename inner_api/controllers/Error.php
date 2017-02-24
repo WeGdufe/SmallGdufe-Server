@@ -29,6 +29,7 @@ class Error
 
     //四六级考号或名字错误
     const cetError = 5300;
+    const cetAccountEmpty = 5301;
 
     public static $errorMsg = [
         0 => '',
@@ -46,6 +47,7 @@ class Error
         3300 => '书名为空',
 
         5300 => '手抖输错准考证号或者姓名了吧？',
+        5301 => '考号或者名字为空',
 
     ];
 

@@ -14,11 +14,11 @@ trait OpacParser
     /**
      * 搜索书籍的解析 库无法处理无标签的情况，所以用正则
      * @param $html
-     * @return array|string json
+     * @return array
      */
     public function parseSearchBookList($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('ol[id=search_book_list] li');
@@ -38,8 +38,8 @@ trait OpacParser
             if(empty($matches[2])) continue;
 
             $item = [
-                'name' => explode(".",$matches[1])[1], 'serial' => $matches[2], 'numAll' => $matches[3],
-                'numCan' => $matches[4], 'author' => $matches[5], 'publisher' => $matches[6],
+                'name' => explode(".",$matches[1])[1], 'serial' => $matches[2], 'numAll' => intval($matches[3]),
+                'numCan' => intval($matches[4]), 'author' => $matches[5], 'publisher' => $matches[6],
             ];
             $scoreList [] = $item;
         }
@@ -49,11 +49,11 @@ trait OpacParser
     /**
      * 解析当前借阅书列表
      * @param $html
-     * @return array|string
+     * @return array
      */
     public function parseCurrentBookList($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[class=table_line] tr');
@@ -84,11 +84,11 @@ trait OpacParser
     /**
      * 解析历史借阅书列表
      * @param $html
-     * @return array|string
+     * @return array
      */
     public function parseBorrowedBookList($html)
     {
-        if (empty($html)) return null;
+        if (empty($html)) return [];
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[class=table_line] tr');
