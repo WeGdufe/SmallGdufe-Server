@@ -14,8 +14,6 @@ class Feedback extends ActiveRecord
 
         protected  $sno;
         protected  $content;
-        protected  $email;
-        protected  $phone;
     */
     public static function tableName()
     {

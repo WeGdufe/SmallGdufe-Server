@@ -11,6 +11,7 @@ use Yii;
 use yii\base\Controller;
 use yii\web\Response;
 
+//自带学号密码赋值
 class BaseController extends Controller
 {
     protected $sno;

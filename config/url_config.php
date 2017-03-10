@@ -9,7 +9,7 @@ $baseUrls = [
     'sztz' => 'http://sztz.gdufe.edu.cn/sztz/index.jsp',
     'opac' => 'http://opac.library.gdufe.edu.cn',
     'cet' => 'http://www.chsi.com.cn/cet',
-
+    'card' => 'http://cardinfo.gdufe.edu.cn',
 ];
 return $urlConst = [
     'base' => $baseUrls,
@@ -35,5 +35,10 @@ return $urlConst = [
         'search' => $baseUrls['opac'] . '/opac/openlink.php',
         'currentBook' => $baseUrls['opac'] . '/reader/book_lst.php',
         'borrowedBook' => $baseUrls['opac'] . '/reader/book_hist.php',
-    ]
+    ],
+    'card' => [
+        'home' => $baseUrls['card'] . '/gdcjportalHome.action',//获取cookie用
+        'currentCash' => $baseUrls['card'] . '/accountcardUser.action',
+        'consumeToday' => $baseUrls['card'] . '/accounttodatTrjnObject.action',
+    ],
 ];

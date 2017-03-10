@@ -1,0 +1,1 @@
+校园卡系统的cookie必须访问 http://cardinfo.gdufe.edu.cn/gdcjportalHome.action 返回的才是对的，直接访问其他页面返回的是错误cookie,然后跳转302。可能是当时饭卡系统接入信息门户的时候开发人员懒，只改了一个页面。

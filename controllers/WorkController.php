@@ -26,12 +26,14 @@ class WorkController extends Controller
         $feedback = new Feedback();
         $feedback['sno'] = Yii::$app->request->get('sno');
         $feedback['content'] = Yii::$app->request->get('content');
-        $feedback['email'] = Yii::$app->request->get('email');
-        $feedback['phone'] = Yii::$app->request->get('phone');
+        $feedback['contact'] = Yii::$app->request->get('contact');
+        // $feedback['phone'] = Yii::$app->request->get('phone');
+        // $feedback['content'] = mysql_real_escape_string($feedback['content']);
         $feedback['content'] = escapeshellarg($feedback['content']);
         if (strlen($feedback['content']) < 1000) {
             $feedback->save(false);
         }
+        return '{"code":0,"msg":"","data":{}}';
     }
 
 }

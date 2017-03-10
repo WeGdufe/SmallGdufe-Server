@@ -65,19 +65,17 @@ trait JwParser
         $contents = $dom->find('table[id=xjkpTable] tr');
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $department = explode('：', $contents[2]->find('td', 0)->innerHtml)[1];
-        $major = explode('：', $contents[2]->find('td', 1)->innerHtml)[1];
-        $classroom = explode('：', $contents[2]->find('td', 3)->innerHtml)[1];
+        $department = explode('：', $contents[2]->find('td', 0)->innerHtml)[1];  //学院
+        $major = explode('：', $contents[2]->find('td', 1)->innerHtml)[1];       //专业
+        $classroom = explode('：', $contents[2]->find('td', 3)->innerHtml)[1];   //班级
 
-        $name = str_replace('&nbsp;', '', $contents[3]->find('td', 1)->innerHtml);
-        $sex = str_replace('&nbsp;', '', $contents[3]->find('td', 3)->innerHtml);
-        //姓名拼音
-        $namePy = str_replace('&nbsp;', '', $contents[3]->find('td', 5)->innerHtml);
-
-        $birthday = str_replace('&nbsp;', '', $contents[4]->find('td', 1)->innerHtml);
-        $party = str_replace('&nbsp;', '', $contents[5]->find('td', 3)->innerHtml);
-        $nation = str_replace('&nbsp;', '', $contents[7]->find('td', 3)->innerHtml);
-        $education = str_replace('&nbsp;', '', $contents[8]->find('td', 3)->innerHtml);
+        $name = $this->trimNbsp($contents[3]->find('td', 1)->innerHtml);
+        $sex = $this->trimNbsp($contents[3]->find('td', 3)->innerHtml);         //性别
+        $namePy = $this->trimNbsp($contents[3]->find('td', 5)->innerHtml);      //姓名拼音
+        $birthday = $this->trimNbsp($contents[4]->find('td', 1)->innerHtml);    //生日
+        $party = $this->trimNbsp($contents[5]->find('td', 3)->innerHtml);       //党员/群众
+        $nation = $this->trimNbsp($contents[7]->find('td', 3)->innerHtml);      //民族
+        $education = $this->trimNbsp($contents[8]->find('td', 3)->innerHtml);   //本科/研究生
 
         //身份证
         // $idNum = str_replace('&nbsp;','',$contents[43]->find('td',3)->innerHtml);
@@ -89,6 +87,10 @@ trait JwParser
             'education'
         );
         return $item;
+    }
+    //去掉&nbsp;和首尾空格
+    private function trimNbsp($str){
+        return str_replace('&nbsp;', '',trim($str));
     }
 
     /**

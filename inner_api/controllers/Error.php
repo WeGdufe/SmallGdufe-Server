@@ -26,6 +26,7 @@ class Error
     const passwordError = 3000;
     const accountEmpty = 3001;
     const opacBookEmpty = 3300;
+    const cardNumEmpty = 4000;  //查询校园卡记录
 
     //四六级考号或名字错误
     const cetError = 5300;
@@ -45,6 +46,8 @@ class Error
         3000 => '账号或密码错误',
         3001 => '账号或者密码为空',
         3300 => '书名为空',
+
+        4000 => '校园卡卡号为空',
 
         5300 => '手抖输错准考证号或者姓名了吧？',
         5301 => '考号或者名字为空',
