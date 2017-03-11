@@ -94,7 +94,7 @@ trait JwParser
     }
 
     /**
-     * 返回合并连堂后的课表item，多个小节连堂的情况合并成一个item
+     * 返回合并连堂后的课表item，多个小节连堂的情况合并成一个item，优化连堂
      * @param $html
      * @return array|null
      */
@@ -102,7 +102,8 @@ trait JwParser
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $scheduleArr = $this->parseSchedule2Array($html);
-        return $this->mergeScheduleNext($scheduleArr);
+        $mergedArr = $this->mergeScheduleNext($scheduleArr);
+        return $this->mergeScheduleDifferentWeek($mergedArr);
     }
 
     /**
@@ -113,75 +114,66 @@ trait JwParser
     public function parseSchedule($html)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return $this->parseSchedule2Array($html);
+        $scheduleArr = $this->parseSchedule2Array($html);
+        return $this->mergeScheduleDifferentWeek($scheduleArr);
     }
 
     /**
-     * 最核心的解析原生html文本，转成数组，
-     * 是否合并多个小节相同的情况由调用者负责
+     * 最核心的解析原生html文本，转成数组，连堂和形势政策这种不同周的情况都是分开成多个item
+     * 是否合并连堂和形势政策这种跳周的 都由调用者负责
+     * 因页面的小节信息处代码不规范，有</font>却没有<font>故只能手写正则
      * @param $html
-     * @return array|null
+     * @return array
      */
     private function parseSchedule2Array($html)
     {
         if (empty($html)) return [];
-        $dom = new Dom;
-        $dom->loadStr($html, []);
-        $contents = $dom->find('table[id=kbtable] div');
-        unset($dom);
 
-        $scoreList = array();
-        $section = -2;  //这个数字+正则匹配的第二个数字 = 实际第几节，该数字代表有多少个两小节
-        $oldSectionId = "根据id和id里的数字判断第几节";
-        foreach ($contents as $index => $content) {
+        $pattern = '.+?kbcontent1.+?';
+        $pattern .= '<div id="\w{32}(.+?)kbcontent"(.+?)div>';//查找有课程信息的div
+        preg_match_all('/' . $pattern . '/s', $html, $divMat);
 
-            if ('kbcontent' == $content->getAttribute('class')) {
+        $scoreList = [];
+        foreach ($divMat[2] as $index => $content) {
 
-                /** ↓ 解析课程名和课程起始节数 */
-                //="A0510F68580D494A9E7F609059E8DDDF-2-2" style="display: none;" class="kbcontent">计算机网络<br />
-                // <div id="72347173204F4B62B72C84B5867495E4-6-2" style="display: none;" class="kbcontent">&nbsp;</div>
-                /** 如上面的2-2代表星期二，该单元格第二小节 但并不知道实际是第几小节，
-                 * 故需根据id字符串去判断是第几个行，加上这个第二小节去算
-                 */
-                $pattern = "/(\\w{32})-(\\d)-(\\d).+?>(.+?)</"; //&nbsp;也要匹配到 为了计换节数
-                preg_match($pattern, $content, $timeRes);
-                if ($timeRes[1] != $oldSectionId) {
-                    //换节了，之前是第一二节，现在是第三四节
-                    $section += 2;
+            // 求星期几
+            $pattern = '#-(\d)-\d#';
+            $matchContent = $divMat[1][$index];
+            preg_match($pattern, $matchContent, $timeRes);
+            $dayInWeek = intval($timeRes[1]);
+
+            //其他课程信息
+            $matchContent = $content;
+            $pattern = '>(.+?)<br\/>';
+            for ($i = 0; $i < 3; $i++) {
+                $pattern .= '.+?\'>(.+?)<\/font>';
+            }
+            $pattern .= '.+?\[(.+?)\].+?<br\/>';
+            preg_match_all('/' . $pattern . '/', $matchContent, $matches);
+
+            $resCnt = count($matches[0]);
+            if($resCnt == 0){   //忽略空数据情况（就是那个单元格没有课程的情况）
+                continue;
+            }
+            //不管是一个形势政策还是多个不同周的 都循环解决
+            for($ith = 0; $ith < $resCnt; $ith++){
+
+                $name = $matches[1][$ith];
+                $teacher = $matches[2][$ith];
+                $period = $matches[3][$ith];        //周
+                $location = $matches[4][$ith];
+
+                $expArr = explode('-', $matches[5][$ith]);
+                $startSec = intval($expArr[0]);
+                if (1 == count($expArr)) {      //[11]这种单节
+                    $endSec = intval($startSec);
+                } else {                        //[3-4]双节
+                    $endSec = intval($expArr[1]);
                 }
-                $oldSectionId = $timeRes[1];
-                $endSec = $section + $timeRes[3];
-                $startSec = $endSec - 1;   //两小节为一单位，3个小节的也官方认为是4个小节
-                $dayInWeek = intval($timeRes[2]);
-                $name = $timeRes[4];
-
-                /** 解析老师、周等常规数据，去掉了&nbsp;的情况，
-                 * 这部分代码和上面代码不能交换顺序，
-                 * 否则在5-6节(数字是比如)全空的情况下startSec会少2 */
-
-                $teacherObj = $content->find('font', 0);
-                if (isset($teacherObj)) {
-                    $teacher = $teacherObj->innerHtml;
-                } else {
-                    //&nbsp;的情况 整个不要了，但$section还是有累加到的
-                    continue;
-                }
-
-                //没有老师信息的蜜汁情况
-                if (2 == count($content->find('font'))) {
-                    $teacher = '~没有老师信息喔';
-                    $period = $content->find('font', 0)->innerHtml;
-                    $location = $content->find('font', 1)->innerHtml;
-                }else{
-                    //正常情况 老师名 由上面$teacherObj解析
-                    $period = $content->find('font', 1)->innerHtml;
-                    $location = $content->find('font', 2)->innerHtml;
-                }
-
                 $item = compact(
-                    'name', 'teacher', 'period',
-                    'location', 'dayInWeek',
-                    'startSec', 'endSec'
+                    'name','teacher'
+                    ,'period','location','dayInWeek'
+                    ,'startSec', 'endSec'
                 );
                 $scoreList [] = $item;
             }
@@ -202,7 +194,6 @@ trait JwParser
         $blackIndex = array();    //黑名单数组，数组里的下标跟以前的可合并，则不添加到结果里
         foreach ($scheduleArr as $indexUp => $itemUp) {
             $newItem = $itemUp;
-
             foreach ($scheduleArr as $indexDown => $itemDown) {
                 // if($indexUp > $indexDown) continue; //注释原因：连续多堂的情况必须跑n*n
                 if (
@@ -221,6 +212,42 @@ trait JwParser
             if (in_array($indexUp, $blackIndex)) {
                 continue;
             }
+            $mergedArr [] = $newItem;        //外层循环里，只加一次
+        }
+        return $mergedArr;
+    }
+
+    /**
+     * 合并形势政策这种除了周数不同外其他都相同的课程
+     * @param $scheduleArr
+     * @return array
+     */
+    private function mergeScheduleDifferentWeek($scheduleArr)
+    {
+        $mergedArr = array();     //结果数组
+        $blackIndex = array();    //黑名单数组，数组里的下标跟以前的可合并，则不添加到结果里
+        foreach ($scheduleArr as $indexUp => $itemUp) {
+            $newItem = $itemUp;
+            foreach ($scheduleArr as $indexDown => $itemDown) {
+                if (
+                    $indexUp != $indexDown
+                    && $newItem['dayInWeek'] == $itemDown['dayInWeek']
+                    && $newItem['endSec'] == $itemDown['endSec']
+                    && $newItem['startSec'] == $itemDown['startSec']
+                    && $newItem['location'] == $itemDown['location']
+                    && $newItem['name'] == $itemDown['name']
+                    && $newItem['period'] != $itemDown['period']
+                ) {
+                    //先简单合并成 11(单周),15(单周),7(单周)  这样
+                    $newItem['period'] = $newItem['period'] . "," . $itemDown['period'];
+                    $blackIndex [] = $indexDown;
+                }
+            }
+            if (in_array($indexUp, $blackIndex)) {
+                continue;
+            }
+
+            //如需更改结果格式为 7,11,15(单周) 这种则在这写正则
             $mergedArr [] = $newItem;        //外层循环里，只加一次
         }
         return $mergedArr;
@@ -264,4 +291,7 @@ trait JwParser
         }
         return $mergedArr;
     }
+
 }
+
+

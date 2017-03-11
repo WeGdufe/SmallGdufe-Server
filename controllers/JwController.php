@@ -37,8 +37,7 @@ class JwController  extends BaseController
         return Yii::$app->runAction('api/jw/get-grade', $this->data);
     }
 
-    //http://localhost:82/index.php?r=jw/get-schedule&sno=13251102210&pwd=qq5521140
-    //http://192.168.1.106:82/index.php?r=jw/get-schedule&sno=13251102217&pwd=118118&split=0&stu_time=2014-2015-1
+    //http://localhost:82/index.php?r=jw/get-schedule&sno=13251102210&pwd=qq5521140&stu_time=2014-2015-2
     public function actionGetSchedule()
     {
         //没有则查询当前学期

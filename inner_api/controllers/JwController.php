@@ -179,14 +179,14 @@ class JwController extends BaseController
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2.html'));
         // return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\2013-2014-2.html'));
-        // return $this->parseSchedule(file_get_contents('F:\\Desktop\\2-lianxu.html'));
-        // return  $this->getReturn(Error::success,$this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang4.html')));
+        // return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang6.html'));
+        return $this->getReturn(Error::success, $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\new.html')));
 
-        if ($split) {
-            return $this->getReturn(Error::success, $this->parseSchedule(file_get_contents('F:\\Desktop\\kb_liantang6.html')));
-        } else {
-            return $this->getReturn(Error::success, $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_dasanxia.html')));
-        }
+        // if ($split) {
+        //     return $this->getReturn(Error::success, $this->parseSchedule(file_get_contents('F:\\Desktop\\kb_liantang6.html')));
+        // } else {
+        //     return $this->getReturn(Error::success, $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_dasanxia.html')));
+        // }
 
         // return '1';
         //  return $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\kb_liantang6.html'));
