@@ -62,19 +62,26 @@ trait OpacParser
         Yii::$app->response->format = Response::FORMAT_JSON;
         foreach ($contents as $index => $content) {
             if ($index == 0) continue;      //标题头
-            $barId = $content->find('td', 0)->innerHtml;
+            $barId = $content->find('td', 0)->innerHtml;                 //条码号
             $name = $content->find('td a', 0)->innerHtml;
             $author = explode('/ ', $content->find('td', 1)->innerHtml)[1];
             // $author = explode('a>', $content->find('td', 1)->innerHtml)[1];
-            $borrowedTime = $content->find('td', 2)->innerHtml;
-            $returnTime = trim($content->find('font', 0)->innerHtml);
+            $borrowedTime = $content->find('td', 2)->innerHtml;          //借阅时间
+            $returnTime = trim($content->find('font', 0)->innerHtml);    //归还时间
+            $renewTimes = intval($content->find('td', 4)->innerHtml);            //续借次数
             $location = $content->find('td', 5)->innerHtml;
+
+            //获取续借需要的checkId，貌似没其他作用
+            $strTemp = explode(',',$content->find('div', 0)->innerHtml)[1];
+            $checkId = substr($strTemp,1,8);
 
             $name = $this->ncrDecode($name);
             $author = $this->ncrDecode($author);
             $item = compact(
                 'barId', 'name', 'author',
-                'borrowedTime', 'returnTime', 'location'
+                'borrowedTime', 'returnTime',
+                'renewTimes','location'
+                ,'checkId'
             );
             $scoreList [] = $item;
         }

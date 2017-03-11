@@ -5,6 +5,7 @@ namespace app\inner_api\utils;
  * User: xiaoguang
  * Date: 2017/3/10
  */
+use stdClass;
 use yii\web\Response;
 use PHPHtmlParser\Dom;
 use Yii;
@@ -15,11 +16,11 @@ trait CardParser
     /**
      * 解析当前余额和饭卡状态
      * @param $html
-     * @return array
+     * @return object
      */
     public function parseCurrentCash($html)
     {
-        if (empty($html)) return [];
+        if (empty($html)) return new StdClass;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('td[class=neiwen]');

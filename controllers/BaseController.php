@@ -7,6 +7,7 @@
 namespace app\controllers;
 
 
+use stdClass;
 use Yii;
 use yii\base\Controller;
 use yii\web\Response;
@@ -28,22 +29,30 @@ class BaseController extends Controller
             'sno' => $this->sno,
             'pwd' => $this->pwd,
         ];
-        // Yii::warning($this->data);
+        Yii::warning($this->data);
         return parent::beforeAction($action);
     }
 
+    /**
+     * 缺少参数时的返回内容
+     * @return object
+     */
+    public function getParmLeakReturn(){
+        return $this->getReturn(99999,'大佬别闹');
+    }
 
-    // public function getReturn($code,$msg,$data='')
-    // {
-    //     if(empty($data)) $data = [];
-    //     return \Yii::createObject([
-    //         'class' => 'yii\web\Response',
-    //         'format' => Response::FORMAT_JSON,
-    //         'data' => [
-    //             'code' => $code,
-    //             'msg' => $msg,
-    //             'data' => $data,
-    //         ],
-    //     ]);
-    // }
+    public function getReturn($code,$msg,$data='')
+    {
+
+        if(empty($data)) $data = new StdClass;
+        return \Yii::createObject([
+            'class' => 'yii\web\Response',
+            'format' => Response::FORMAT_JSON,
+            'data' => [
+                'code' => $code,
+                'msg' => $msg,
+                'data' => $data,
+            ],
+        ]);
+    }
 }
