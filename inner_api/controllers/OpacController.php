@@ -7,6 +7,7 @@
 namespace app\inner_api\controllers;
 use app\inner_api\utils\OpacParser;
 use stdClass;
+use Yii;
 
 class OpacController extends InfoController
 {

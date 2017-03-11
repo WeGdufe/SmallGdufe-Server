@@ -110,9 +110,11 @@ trait OpacParser
             $borrowedTime = $content->find('td', 4)->innerHtml;
             $returnTime = $content->find('td', 5)->innerHtml;
             $location = $content->find('td', 6)->innerHtml;
+            $renewTimes = 999;    //借阅次数，因客户端统一当前借阅和历史借阅adapter导致需要
             $item = compact(
                 'barId', 'name', 'author',
                 'borrowedTime', 'returnTime', 'location'
+                ,'renewTimes'
             );
             $scoreList [] = $item;
         }
