@@ -27,6 +27,7 @@ class Error
     const accountEmpty = 3001;
     const opacBookEmpty = 3300;
     const opacRenewParmEmpty = 3301;
+    const opacBookDetailIdEmpty = 3302;
     const cardNumEmpty = 4000;  //查询校园卡记录
 
     //四六级考号或名字错误
@@ -48,6 +49,7 @@ class Error
         3001 => '账号或者密码为空',
         3300 => '书名为空',
         3301 => '参数不完整续借无力',
+        3302 => '没有macno参数你也想看书本详情？',
 
         4000 => '校园卡卡号为空',
 

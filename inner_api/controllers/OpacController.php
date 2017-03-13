@@ -24,47 +24,70 @@ class OpacController extends InfoController
      * 根据书名进行搜索
      * @param string $sno
      * @param string $pwd
-     * @param string $bookName   必须
+     * @param string $bookName 必须
      * @return array|string
      */
-    public function actionSearchBook($sno='', $pwd='',$bookName=''){
-        if(empty($bookName)){
-            return $this->getReturn(Error::opacBookEmpty,[]);
+    public function actionSearchBook($sno = '', $pwd = '', $bookName = '')
+    {
+        if (empty($bookName)) {
+            return $this->getReturn(Error::opacBookEmpty, []);
         }
-        return $this->getReturn(Error::success,$this->getSearchBook($bookName));
+        return $this->getReturn(Error::success, $this->getSearchBook($bookName));
     }
-    public function actionCurrentBook($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
-        if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->getCurrentBook($cookies[0],$cookies[1]));
+
+    public function actionCurrentBook($sno, $pwd)
+    {
+        $cookies = $this->beforeBusinessAction($sno, $pwd, true);
+        if (!is_array($cookies)) return $cookies;
+        return $this->getReturn(Error::success, $this->getCurrentBook($cookies[0], $cookies[1]));
     }
-    public function actionBorrowedBook($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
-        if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->getBorrowedBook($cookies[0],$cookies[1]));
+
+    public function actionBorrowedBook($sno, $pwd)
+    {
+        $cookies = $this->beforeBusinessAction($sno, $pwd, true);
+        if (!is_array($cookies)) return $cookies;
+        return $this->getReturn(Error::success, $this->getBorrowedBook($cookies[0], $cookies[1]));
     }
-    public function actionRenewBook($sno, $pwd,$barId,$checkId,$verify){
+
+    public function actionRenewBook($sno, $pwd, $barId, $checkId, $verify)
+    {
         //参数不完整
-        if(!isset($barId)||!isset($checkId)||!isset($verify)
-            || empty($barId)||empty($checkId)||empty($verify)){
-            return $this->getReturn(Error::opacRenewParmEmpty,new StdClass);
+        if (!isset($barId) || !isset($checkId) || !isset($verify)
+            || empty($barId) || empty($checkId) || empty($verify)
+        ) {
+            return $this->getReturn(Error::opacRenewParmEmpty, new StdClass);
         }
-        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
-        if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->doRenewBook($cookies[0],$cookies[1],$barId,$checkId,$verify));
+        $cookies = $this->beforeBusinessAction($sno, $pwd, true);
+        if (!is_array($cookies)) return $cookies;
+        return $this->getReturn(Error::success, $this->doRenewBook($cookies[0], $cookies[1], $barId, $checkId, $verify));
     }
 
     //获取续借的验证码图片，需登陆状态才有效
-    public function actionGetRenewBookVerify($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
-        if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->getRenewBookVerifyCode($cookies[0],$cookies[1]));
+    public function actionGetRenewBookVerify($sno, $pwd)
+    {
+        $cookies = $this->beforeBusinessAction($sno, $pwd, true);
+        if (!is_array($cookies)) return $cookies;
+        return $this->getReturn(Error::success, $this->getRenewBookVerifyCode($cookies[0], $cookies[1]));
     }
+
+    /**
+     * 获取书本借阅情况
+     * @param $macno
+     * @return string
+     */
+    public function actionGetBookStoreDetail($macno){
+        if (empty($macno)) {
+            return $this->getReturn(Error::opacBookDetailIdEmpty, []);
+        }
+        return $this->getReturn(Error::success, $this->getBookStoreDetail($macno));
+    }
+
+
 
     public function actionTest()
     {
         // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\ces.html') );
-        return $this->parseCurrentBookList( file_get_contents('F:\\Desktop\\curbook.html') );
+        return $this->parseBookStoreDetail( file_get_contents('F:\\Desktop\\2333.html') );
         // return $this->parseHistoryBorrowedBookList( file_get_contents('F:\\Desktop\\bo.html') );
     }
 
@@ -87,8 +110,16 @@ class OpacController extends InfoController
         $ret['data'] = base64_encode($response);
         return $ret;
     }
-
-
+    private function getBookStoreDetail($macno)
+    {
+        $curl = $this->newCurl();
+        $data = [
+            'marc_no' => $macno,
+        ];
+        $curl->setReferer($this->urlConst['base']['opac']);
+        $curl->get($this->urlConst['opac']['bookDetail'],$data);
+        return $this->parseBookStoreDetail($curl->response);
+    }
     // 搜索(不登录状态)
     private function getSearchBook($bookName,$idsCookie='',$opacCookie='')
     {
@@ -200,7 +231,7 @@ class OpacController extends InfoController
      * OPAC的通用CURL代码
      * @param $method string OpacController::METHOD_GET | OpacController::METHOD_POST
      * @param $url
-     * @param $data
+     * @param $data array 参数
      * @param $idsCookie
      * @param $opacCookie
      * @return null | string curl返回的结果
@@ -220,5 +251,6 @@ class OpacController extends InfoController
         }
         return $curl->response;
     }
+
 
 }

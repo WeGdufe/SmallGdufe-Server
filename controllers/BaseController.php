@@ -29,7 +29,7 @@ class BaseController extends Controller
             'sno' => $this->sno,
             'pwd' => $this->pwd,
         ];
-        Yii::warning($this->data);
+        Yii::warning($this->req);
         return parent::beforeAction($action);
     }
 
@@ -38,7 +38,7 @@ class BaseController extends Controller
      * @return object
      */
     public function getParmLeakReturn(){
-        return $this->getReturn(99999,'大佬别闹');
+        return $this->getReturn(99999,'大佬别闹，参数少啦');
     }
 
     public function getReturn($code,$msg,$data='')

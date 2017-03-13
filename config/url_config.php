@@ -37,6 +37,7 @@ return $urlConst = [
         'borrowedBook' => $baseUrls['opac'] . '/reader/book_hist.php',
         'renewBookVerify' => $baseUrls['opac'] . '/reader/captcha.php',
         'renewBook' => $baseUrls['opac'] . '/reader/ajax_renew.php',
+        'bookDetail' => $baseUrls['opac'] . '/opac/item.php',
     ],
     'card' => [
         'home' => $baseUrls['card'] . '/gdcjportalHome.action',//获取cookie用
