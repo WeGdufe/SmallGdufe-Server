@@ -29,7 +29,7 @@ class BaseController extends Controller
             'sno' => $this->sno,
             'pwd' => $this->pwd,
         ];
-        Yii::warning($this->req);
+        Yii::info($this->req,'request');
         return parent::beforeAction($action);
     }
 

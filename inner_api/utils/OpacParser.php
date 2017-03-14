@@ -38,8 +38,9 @@ trait OpacParser
             //有一些只有书但没入库的没有ID号，馆藏和可借都为0，如搜java
             if (empty($matches[3])) continue;
 
+            //分割书名，注意 算法竞赛入门经典、算法竞赛入门经典.2版 区分
             $item = [
-                'name' => explode(".", $matches[2])[1], 'serial' => $matches[3], 'numAll' => intval($matches[4]),
+                'name' => preg_split("#\d\.#", $matches[2])[1], 'serial' => $matches[3], 'numAll' => intval($matches[4]),
                 'numCan' => intval($matches[5]), 'author' => $matches[6], 'publisher' => $matches[7],
                 'macno' => $matches[1],
             ];
@@ -179,6 +180,7 @@ trait OpacParser
         return str_replace('&nbsp;', '', trim($str));
     }
 
+    //&#x开头->utf8
     function ncrDecode($str)
     {
         return mb_convert_encoding($str, "utf-8", 'HTML-ENTITIES');

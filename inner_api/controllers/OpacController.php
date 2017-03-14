@@ -87,7 +87,7 @@ class OpacController extends InfoController
     public function actionTest()
     {
         // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\ces.html') );
-        return $this->parseBookStoreDetail( file_get_contents('F:\\Desktop\\2333.html') );
+        return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\search.html') );
         // return $this->parseHistoryBorrowedBookList( file_get_contents('F:\\Desktop\\bo.html') );
     }
 

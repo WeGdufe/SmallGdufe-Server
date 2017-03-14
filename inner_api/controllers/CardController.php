@@ -30,7 +30,9 @@ class CardController extends InfoController
     public function actionCurrentCash($sno, $pwd){
         $cookies = $this->beforeBusinessAction($sno, $pwd,true);
         if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->getCurrentCash($cookies[0],$cookies[1]));
+        $res = $this->getCurrentCash($cookies[0],$cookies[1]);
+        Yii::info($res,'response');
+        return $this->getReturn(Error::success,$res);
     }
 
     /**
@@ -151,7 +153,6 @@ class CardController extends InfoController
         }else{
             $curl->$method($url);
         }
-        // Yii::warning($curl);
         return $curl->response;
     }
 
