@@ -9,6 +9,7 @@ use app\models\Feedback;
 use Faker\Provider\Base;
 use Yii;
 use yii\web\Controller;
+use yii\web\Response;
 
 class WorkController extends Controller
 {
@@ -35,5 +36,23 @@ class WorkController extends Controller
         }
         return '{"code":0,"msg":"","data":{}}';
     }
+
+    //http://localhost:82/index.php?r=work/check-app-update
+    public function actionCheckAppUpdate()
+    {
+        // var_dump(Yii::$app->params['update']);
+        return \Yii::createObject([
+            'class' => 'yii\web\Response',
+            'format' => Response::FORMAT_JSON,
+            'data' => Yii::$app->params['update'],
+        ]);
+    }
+    //http://localhost:82/index.php?r=work/update
+    public function actionUpdate()
+    {
+        $res = \YII::$app->response;
+        $res->sendFile('../release/app-release.apk');
+    }
+
 
 }

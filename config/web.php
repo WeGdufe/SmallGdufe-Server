@@ -3,9 +3,12 @@
 $params = array_merge(
     require(__DIR__ . '/params.php'),
     require(__DIR__ . '/url_config.php')
+,    require(__DIR__ . '/app_update.php')
+
 );
-// url_config
-// $params = require(__DIR__ . '/params.php');
+$update_info =
+    require(__DIR__ . '/app_update.php')
+;
 
 $config = [
     'id' => 'basic',

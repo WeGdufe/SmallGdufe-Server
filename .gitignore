@@ -1,3 +1,5 @@
+release/*.apk
+
 # phpstorm project files
 .idea
 
