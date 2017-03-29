@@ -9,11 +9,12 @@ namespace app\inner_api\controllers;
 use app\inner_api\utils\InfoParser;
 use app\inner_api\utils\JwParser;
 use yii;
+use yii\web\Response;
 
 class InfoController extends BaseController
 {
-    const REDIS_IDS_PRE = 'in:';
-    const REDIS_INFO_PRE = 'my:';
+    const REDIS_IDS_PRE = 'in:';    //ids通用cookie
+    const REDIS_INFO_PRE = 'my:';   //信息门户的cookie，因信息门户自身部分功能太少，目前保留不用，省内存
     use JwParser;
 
     protected $expire = 1800;//半小时
@@ -90,7 +91,7 @@ class InfoController extends BaseController
     }
 
     /**
-     * 实际请求信息门户首页的提醒信息，暂不解析，返回官方原生json
+     * 实际请求信息门户首页的提醒信息，暂不用信息门户专属cookie
      * @param $idsCookie
      * @param $sno
      * @return string
@@ -98,16 +99,16 @@ class InfoController extends BaseController
     private function getInfoTips($idsCookie, $sno)
     {
         $curl = $this->newCurl();
-        $cache = Yii::$app->cache->get(self::REDIS_INFO_PRE . $sno);
-        if ($cache) {
-            $curl->setCookie($this->comCookieKey,$cache);
-        }
+        // $cache = Yii::$app->cache->get(self::REDIS_INFO_PRE . $sno);
+        // if ($cache) {
+        //     $curl->setCookie($this->comCookieKey,$cache);
+        // }
         $curl->setCookie($this->idsCookieKey,$idsCookie);
         $curl->setReferer($this->urlConst['base']['info']);
         $curl->post($this->urlConst['info']['tips']);
-        $infoCookie = $curl->getCookie($this->comCookieKey);
-        Yii::$app->cache->set(self::REDIS_INFO_PRE . $sno, $infoCookie, $this->expire);
-        return $curl->response;
+        // $infoCookie = $curl->getCookie($this->comCookieKey);
+        // Yii::$app->cache->set(self::REDIS_INFO_PRE . $sno, $infoCookie, $this->expire);
+        return $this->parseInfoTips($curl->response);
     }
 
     /**

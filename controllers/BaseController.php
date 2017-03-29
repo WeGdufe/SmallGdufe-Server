@@ -23,22 +23,16 @@ class BaseController extends Controller
     {
 
         $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        $this->sno = $this->req['sno'];
-        $this->pwd =  $this->req['pwd'];
-        $this->data = [
-            'sno' => $this->sno,
-            'pwd' => $this->pwd,
-        ];
+        if(isset($this->req['sno']) &&  $this->req['pwd']) {
+            $this->sno = $this->req['sno'];
+            $this->pwd = $this->req['pwd'];
+            $this->data = [
+                'sno' => $this->sno,
+                'pwd' => $this->pwd,
+            ];
+        }
         Yii::info($this->req,'request');
         return parent::beforeAction($action);
-    }
-
-    /**
-     * 缺少参数时的返回内容
-     * @return object
-     */
-    public function getParmLeakReturn(){
-        return $this->getReturn(99999,'大佬别闹，参数少啦');
     }
 
     public function getReturn($code,$msg,$data='')

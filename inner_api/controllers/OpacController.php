@@ -71,7 +71,7 @@ class OpacController extends InfoController
     }
 
     /**
-     * 获取书本借阅情况
+     * 获取书本馆藏和借阅状态
      * @param $macno
      * @return string
      */
@@ -143,7 +143,7 @@ class OpacController extends InfoController
      * 实际发起http请求去 续借图书
      * @param $idsCookie
      * @param $opacCookie
-     * @param $barId string 条形码
+     * @param $barId string 条码号
      * @param $checkId string 不知道什么东西，在当前借阅页面里可获取
      * @param $verify string 验证码，通常由客户端输入提供，验证码从actionGetRenewBookVerify获取
      * @return mixed

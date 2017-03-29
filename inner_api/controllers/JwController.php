@@ -194,7 +194,7 @@ class JwController extends BaseController
         // return $this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html'));
         // return $this->getReturn(Error::success,$this->parseBasicInfo(file_get_contents('F:\\Desktop\\4.html')));
 
-        // $idsCookie = $this->getIdsCookie('13251102210', 'qq5521140');
+        // $idsCookie = $this->getIdsCookie('13251102210', '');
         // var_dump( $idsCookie);
         // $curl = $this->newCurl();
         // $curl->get('http://localhost/2.php');

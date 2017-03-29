@@ -117,8 +117,7 @@ trait OpacParser
             $renewTimes = 999;    //借阅次数，因客户端统一当前借阅和历史借阅adapter导致需要
             $item = compact(
                 'barId', 'name', 'author',
-                'borrowedTime', 'returnTime', 'location'
-                , 'renewTimes'
+                'borrowedTime', 'returnTime','renewTimes', 'location'
             );
             $scoreList [] = $item;
         }

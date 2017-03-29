@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+//yii默认的Controller，不使用
 class SiteController extends Controller
 {
     // public function behaviors()
@@ -57,7 +58,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        echo "x15";
+        return '{"code":404,"msg":"走错路啦","data":{}}"';
         // return $this->render('index');
     }
 

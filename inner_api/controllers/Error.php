@@ -13,6 +13,7 @@ class Error
     //业务错误
     const netError = 1000;
     const parmError = 1001;
+    const invalidError = 1002;
 
 
     //学校系统错误
@@ -23,8 +24,8 @@ class Error
 
 
     //用户错误
-    const passwordError = 3000;
-    const accountEmpty = 3001;
+    const accountEmpty = 3000;
+    const passwordError = 3001;
     const opacBookEmpty = 3300;
     const opacRenewParmEmpty = 3301;
     const opacBookDetailIdEmpty = 3302;
@@ -38,15 +39,16 @@ class Error
         0 => '',
         1000 => '网络错误',
         1001 => '参数错误',
+        1002 => '非法操作',
 
         2000 => '统一登陆系统挂了',
         2001 => '教务系统崩啦',
         2002 => '信息门户崩啦',
         2003 => '图书馆系统崩啦',
-        2004 => ' 崩啦',
+        2004 => '崩啦',
 
-        3000 => '账号或密码错误',
-        3001 => '账号或者密码为空',
+        3000 => '账号或者密码为空',
+        3001 => '账号或密码错误',
         3300 => '书名为空',
         3301 => '参数不完整续借无力',
         3302 => '没有macno参数你也想看书本详情？',

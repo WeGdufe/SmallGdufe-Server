@@ -83,14 +83,26 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-
+        //url美化，可从
+        //http://localhost:82/index.php?r=work/check-app-update
+        //变到
+        //http://localhost:82/work/check-app-update
+        //暂时放弃，客户端的默认参数不好修改..服务器端的捕获又需要一个个写
         // 'urlManager' => [
         //     'enablePrettyUrl' => true,
-        //     'enableStrictParsing' => true,
         //     'showScriptName' => false,
+        //     'enableStrictParsing' => false,
         //     'rules' => [
-        //         ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
-        //     ],
+        //         '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+        //         // '<controller:\w+>/<action:\w+>/<sno:\w+>/<pwd:\w+>'=>'<controller>/<action>',
+        //         // '<controller:\w+>/<action:\w+>/<sno:\w+>'=>'<controller>/<action>',
+        //         // '<controller:\w+>/<action:\w+>/sno/\d+/content/.+/contact/.+'=>'<controller>/<action>',
+        //         '<controller:\w+>/<action:\w+>/sno/<sno:\d+>/content/<content:.+>/contact/<contact:.+>'=>'<controller>/<action>',
+        //         '<controller:\w+>/<action:\w+>/zkzh/<zkzh:\d+>/xm/<xm:.+>'=>'<controller>/<action>',
+        //         '<controller:\w+>/<action:\w+>/zkzh/<zkzh:\d+>/xm/<xm:.+>'=>'<controller>/<action>',
+        //         '<controller:\w+>/<action:\w+>/zkzh/<zkzh:\d+>/xm/<xm:.+>'=>'<controller>/<action>',
+        //         // '<controller:\w+>/<action:\w+>/<sno:\d+>/<content:.+>/<contact:.+>'=>'<controller>/<action>',
+        //     ]
         // ],
         'redis' => [
             'class' => 'yii\redis\Connection',
