@@ -1392,20 +1392,6 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "sno",
-            "description": "<p>学号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "pwd",
-            "description": "<p>信息门户密码</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "macno",
             "description": "<p>查看书本详细信息时用到的id</p>"
           }

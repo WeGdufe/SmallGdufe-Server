@@ -191,8 +191,6 @@ class OpacController extends BaseController
      *
      * @apiDescription 返回书本馆藏和借阅状态，从详细信息页获取的
      *
-     * @apiParam {String} sno           学号
-     * @apiParam {String} pwd           信息门户密码
      * @apiParam {String} macno         查看书本详细信息时用到的id
      *
      * @apiSuccess {int}        code      状态码，0为正常返回

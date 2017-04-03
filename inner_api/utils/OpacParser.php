@@ -145,38 +145,41 @@ trait OpacParser
             $serial = trim($content->find('td', 0)->innerHtml);
             $barId = $content->find('td', 1)->innerHtml;
             $volume = $this->trimNbsp($content->find('td', 2)->innerHtml);
-            $location = trim($content->find('td', 3)->innerHtml);
-            // $state = trim($content->find('td', 4)->outerHtml);   //不规范html导致报错
+            $location = $this->trimNbsp($content->find('td', 3)->innerHtml);
+            $state = trim($content->find('td', 4)->innerHtml);
+            // 去除可借状态中的font标签
+            // <font color=green>可借</font>
+            // 借出-应还日期：2017-04-06
+            $match = preg_replace("#<font.+?>#", '', $state);
+            $state = preg_replace("#</font>#", '', $match);
             $item = compact(
                 'barId', 'serial', 'volume', 'location'
-                // ,'state'
+                ,'state'
             );
             $scoreList [] = $item;
         }
 
-        // 获取可借状态，同时去除可借状态中的font标签
-        // <font color=green>可借</font>
-        // 借出-应还日期：2017-04-06
-        $index = 0;
-        $pattern = '{25%"  >(.+?)</td>}';
-        preg_match_all($pattern, $html, $matches);
-        foreach ($matches[1] as $match) {
-            $match = preg_replace("#<font.+?>#", '', $match);
-            $match = preg_replace("#</font>#", '', $match);
-            $scoreList[$index]['state'] = $match;
-            $index++;
-        }
+        // 2017.04之前 老版本不规范代码 获取可借状态，同时去除可借状态中的font标签
+        // $index = 0;
+        // $pattern = '{25%"  >(.+?)</td>}';
+        // preg_match_all($pattern, $html, $matches);
+        // foreach ($matches[1] as $match) {
+                /*
+                $match = preg_replace("#<font.+?>#", '', $match);
+                */
+        //      $match = preg_replace("#</font>#", '', $match);
+        //      $scoreList[$index]['state'] = $match;
+        //      $index++;
+        // }
         return $scoreList;
     }
 
 
-// public function parseBookDetail($html)
-// {
-// }
     //去掉&nbsp;和首尾空格
     private function trimNbsp($str)
     {
-        return str_replace('&nbsp;', '', trim($str));
+        $str = str_replace('&nbsp;', '', trim($str));
+        return trim($str);
     }
 
     //&#x开头->utf8

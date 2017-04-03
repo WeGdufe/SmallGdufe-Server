@@ -106,7 +106,7 @@ $config = [
         // ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '127.0.0.1',
+            'hostname' => '127.0.0.1',  //不要写localhost，会因DNS解析访问变慢的
             'port' => 6379,
             'database' => 0,
         ],

@@ -2,7 +2,6 @@
 
 $baseUrls = [
     'ids' => 'http://ids.gdufe.edu.cn/amserver/UI/Login?goto=',
-    // 'ids_nologin' => 'http://ids.gdufe.edu.cn/amserver/UI/Login',
     'jw' => 'http://jwxt.gdufe.edu.cn/jsxsd',
     'jwc' => 'http://jwc.gdufe.edu.cn',
     'info' => 'http://my.gdufe.edu.cn',
