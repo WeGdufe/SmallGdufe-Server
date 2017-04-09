@@ -21,7 +21,6 @@ class BaseController extends Controller
     protected $data=[];
     public function beforeAction($action)
     {
-
         $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
         if(isset($this->req['sno']) &&  $this->req['pwd']) {
             $this->sno = $this->req['sno'];
@@ -30,6 +29,9 @@ class BaseController extends Controller
                 'sno' => $this->sno,
                 'pwd' => $this->pwd,
             ];
+        }else{
+            //无学号密码则赋值为空，给inner_api判断
+            $this->data['sno'] = $this->data['pwd'] = '';
         }
         Yii::info($this->req,'request');
         return parent::beforeAction($action);

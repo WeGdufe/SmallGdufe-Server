@@ -145,4 +145,5 @@ class InfoController extends BaseController
         return $idsCookie;
     }
 
+
 }

@@ -21,6 +21,7 @@ class Error
     const jwSysError = 2001;
     const infoSysError = 2002;
     const opacSysError = 2003;
+    const cardSysError = 2004;
 
 
     //用户错误
@@ -45,7 +46,7 @@ class Error
         2001 => '教务系统崩啦',
         2002 => '信息门户崩啦',
         2003 => '图书馆系统崩啦',
-        2004 => '崩啦',
+        2004 => '一卡通系统崩啦',
 
         3000 => '账号或者密码为空',
         3001 => '账号或密码错误',
