@@ -162,7 +162,7 @@ class JwController extends BaseController
     {
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
-        if($this->isSystemCrashed()) {
+        if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
             return $this->getReturn(Error::jwSysError,$ret);
         }
         if (empty($sno) || empty($pwd)) {
@@ -175,22 +175,6 @@ class JwController extends BaseController
         return [$jwCookie];
     }
 
-    /**
-     * get一下教务首页看是不是教务系统崩溃了
-     * 教务系统崩溃了返回true
-     * @return bool
-     */
-    private function isSystemCrashed(){
-        $curl = $this->newCurl();
-        $curl->setTimeout(1);
-        $curl->setConnectTimeout(1);
-        $curl->setOpt(CURLOPT_NOBODY,true);
-        $curl->get($this->urlConst['base']['jw']);
-        // $curl->get('http://my.gdufe.edu.cn'); //测试下正常情况
-        return $curl->error;
-        // $httpCode = $curl->getInfo(CURLINFO_HTTP_CODE);
-        // if($httpCode != 200){ 也行
-    }
 
     public function actionIndex()
     {
@@ -200,7 +184,9 @@ class JwController extends BaseController
     {
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
-       if($this->isSystemCrashed()){
+        if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
+
+            // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){
            return $this->getReturn(Error::jwSysError,new stdClass);
 
        }else{

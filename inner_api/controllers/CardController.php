@@ -118,7 +118,7 @@ class CardController extends InfoController
     protected function beforeBusinessAction($sno,$pwd,$isRetArray){
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
-        if($this->isSystemCrashed()) {
+        if($this->isSystemCrashed($this->urlConst['base']['card'])) {
             return $this->getReturn(Error::cardSysError,$ret);
         }
         if (empty($sno) || empty($pwd)) {
@@ -130,19 +130,6 @@ class CardController extends InfoController
             return $this->getReturn(Error::passwordError,$ret);
         }
         return [$idsCookie,$cardCookie];
-    }
-
-    /**
-     * get一下看一卡通系统崩溃没
-     * @return bool 崩溃了返回true
-     */
-    private function isSystemCrashed(){
-        $curl = $this->newCurl();
-        $curl->setTimeout(1);
-        $curl->setConnectTimeout(1);
-        $curl->setOpt(CURLOPT_NOBODY,true);
-        $curl->get($this->urlConst['base']['card']);
-        return $curl->error;
     }
 
     /**

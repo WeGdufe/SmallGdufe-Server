@@ -17,7 +17,7 @@ class OpacController extends BaseController
      * @apiName search-book
      * @apiGroup Opac
      *
-     * @apiDescription 返回书籍搜索结果，目前只返回一页的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况
+     * @apiDescription 返回书籍搜索结果，目前只返回一页(最多20个)的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况
      *
      * @apiParam {String} bookName 书名
      *
@@ -88,7 +88,7 @@ class OpacController extends BaseController
      * @apiName borrowed-book
      * @apiGroup Opac
      *
-     * @apiDescription 历史借阅书籍，目前只返回一页的结果
+     * @apiDescription 历史借阅书籍
      *
      * @apiParam {String} sno 学号
      * @apiParam {String} pwd 信息门户密码

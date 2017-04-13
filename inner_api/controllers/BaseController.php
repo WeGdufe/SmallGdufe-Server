@@ -29,6 +29,25 @@ class BaseController extends Controller
     }
 
     /**
+     * get一下各系统首页看是不是系统崩溃了，通常在beforeBusinessAction里被调用
+     * 教务系统崩溃了返回true
+     * @param $url string 首页地址，注意地址最后有没有/，如教务就需要有，否则跳302
+     * @return bool
+     */
+    protected function isSystemCrashed($url){
+        $curl = $this->newCurl();
+        $curl->setTimeout(1);
+        $curl->setConnectTimeout(1);
+        $curl->setOpt(CURLOPT_NOBODY,true);
+        $curl->get($url);
+        if($curl->error) return true;       //响应超时之类，不过貌似404也被归到这里？
+        $httpCode = $curl->getInfo(CURLINFO_HTTP_CODE);
+        if($httpCode != 200 && $httpCode != 302){  //404等情况也认为是系统崩溃
+            return true;
+        }
+        return false;
+    }
+    /**
      * 各业务网站根据自己需求的处理cookie和账号密码判异常部分
      * 在实际发起业务get/post之前调用
      * @param $sno
@@ -70,4 +89,6 @@ class BaseController extends Controller
             ],
         ]);
     }
+
+
 }

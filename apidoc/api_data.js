@@ -1113,7 +1113,7 @@ define({ "api": [
     "version": "1.0.0",
     "name": "borrowed_book",
     "group": "Opac",
-    "description": "<p>历史借阅书籍，目前只返回一页的结果</p>",
+    "description": "<p>历史借阅书籍</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1708,7 +1708,7 @@ define({ "api": [
     "version": "1.0.0",
     "name": "search_book",
     "group": "Opac",
-    "description": "<p>返回书籍搜索结果，目前只返回一页的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况</p>",
+    "description": "<p>返回书籍搜索结果，目前只返回一页(最多20个)的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况</p>",
     "parameter": {
       "fields": {
         "Parameter": [
