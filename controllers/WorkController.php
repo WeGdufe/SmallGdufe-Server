@@ -11,7 +11,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 
-class WorkController extends Controller
+class WorkController extends BaseController
 {
 
     public function actionTest()
@@ -93,6 +93,34 @@ class WorkController extends Controller
             'data' => Yii::$app->params['update'],
         ]);
     }
+
+    /**
+     * @api {post} work/get-app-tips 获取每日启动Tips
+     * @apiVersion 1.1.0
+     * @apiName get-app-tips
+     * @apiGroup Work
+     * @apiDescription 获取每日启动Tips内容
+     *
+     * @apiSuccess {int}      code      状态码，0为正常返回
+     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {Object}   data      基本信息
+     * @apiSuccess {String}     data.version             Tips版本，用于区分Tips
+     * @apiSuccess {boolean}    data.enable              是否启用
+     * @apiSuccess {String}     data.title               Tips标题
+     * @apiSuccess {String}     data.message             Tips内容
+     * @apiSuccess {String}     data.startTime           Tips有效时间（开始），格式：yyyy-MM-dd HH:mm:ss
+     * @apiSuccess {String}     data.endTime             Tips有效时间（截止）
+     * @apiSuccess {String}     data.openUrl             http等浏览器支持的地址，非空的情况会在app多一个按钮用于调用浏览器打开
+     *
+     * @apiSuccessExample {json} 正常返回
+     * {"code":0,"msg":"","data":{"version":1,"enable":true,"title":"你的反馈是我更新的动力","message":"有功能需求的话可以提下反馈，不过近期毕设答辩，会晚一点更新，另无薪招聘技术大佬呀~","startTime":"2017-04-17 20:58:22","endTime":"2017-04-17 22:59:28","openUrl":"http://www.wintercoder.com:8080/"}}
+     *
+     */
+    public function actionGetAppTips()
+    {
+        return $this->getReturn(0,'',Yii::$app->params['appTips']);
+    }
+
 
     //http://localhost:82/index.php?r=work/update
     /**

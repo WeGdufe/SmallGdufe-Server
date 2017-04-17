@@ -2,8 +2,9 @@
 
 $params = array_merge(
     require(__DIR__ . '/params.php'),
-    require(__DIR__ . '/url_config.php')
-,    require(__DIR__ . '/app_update.php')
+    require(__DIR__ . '/url_config.php'),
+    require(__DIR__ . '/app_update.php'),
+    require(__DIR__ . '/app_tips.php')
 
 );
 $update_info =
@@ -115,6 +116,8 @@ $config = [
     'modules'=> require(__DIR__.'/modules.php'),
 ];
 
+defined('YII_DEBUG') or define('YII_DEBUG', $_SERVER['SERVER_NAME'] == 'www.wintercoder.com' ? true : false);
+defined('YII_ENV') or define('YII_ENV', $_SERVER['SERVER_NAME'] == 'www.wintercoder.com' ? 'dev' : 'prod');
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
