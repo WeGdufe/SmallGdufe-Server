@@ -1986,6 +1986,100 @@
   },
   {
     "type": "post",
+    "url": "work/get-app-tips",
+    "title": "获取每日启动Tips",
+    "version": "1.1.0",
+    "name": "get_app_tips",
+    "group": "Work",
+    "description": "<p>获取每日启动Tips内容</p>",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>状态码，0为正常返回</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "msg",
+            "description": "<p>错误信息，code非0时有错误信息提示</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>基本信息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.version",
+            "description": "<p>Tips版本，用于区分Tips</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "data.enable",
+            "description": "<p>是否启用</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.title",
+            "description": "<p>Tips标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Tips内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.startTime",
+            "description": "<p>Tips有效时间（开始），格式：yyyy-MM-dd HH:mm:ss</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.endTime",
+            "description": "<p>Tips有效时间（截止）</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.openUrl",
+            "description": "<p>http等浏览器支持的地址，非空的情况会在app多一个按钮用于调用浏览器打开</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "正常返回",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":{\"version\":1,\"enable\":true,\"title\":\"你的反馈是我更新的动力\",\"message\":\"有功能需求的话可以提下反馈，不过近期毕设答辩，会晚一点更新，另无薪招聘技术大佬呀~\",\"startTime\":\"2017-04-17 20:58:22\",\"endTime\":\"2017-04-17 22:59:28\",\"openUrl\":\"http://www.wintercoder.com:8080/\"}}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "controllers/WorkController.php",
+    "groupTitle": "Work"
+  },
+  {
+    "type": "post",
     "url": "work/update",
     "title": "最新版apk下载",
     "version": "1.0.0",

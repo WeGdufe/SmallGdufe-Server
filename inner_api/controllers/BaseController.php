@@ -19,6 +19,7 @@ class BaseController extends Controller
 
     public function beforeAction($action)
     {
+        ini_set('max_execution_time','5');
         if (parent::beforeAction($action)) {
             $this->urlConst = Yii::$app->params;
             // Yii::warning("访问");
