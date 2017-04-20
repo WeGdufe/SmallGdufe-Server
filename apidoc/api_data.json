@@ -1621,7 +1621,7 @@
             "type": "String",
             "optional": false,
             "field": "checkId",
-            "description": "<p>不知道什么东西，在当前借阅页面里可获取</p>"
+            "description": "<p>不明字段，在当前借阅页面里可获取</p>"
           },
           {
             "group": "Parameter",
@@ -1822,6 +1822,64 @@
   },
   {
     "type": "post",
+    "url": "work/all-logout",
+    "title": "彻底退出登录",
+    "version": "1.0.2",
+    "name": "all_logout",
+    "group": "Work",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>状态码，为0</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "msg",
+            "description": "<p>错误信息，此处一定为空</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>空Object</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "正常返回",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":{}}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sno",
+            "description": "<p>学号</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>清空服务器中该账号的缓存，达到彻底退出登录</p>",
+    "filename": "controllers/WorkController.php",
+    "groupTitle": "Work"
+  },
+  {
+    "type": "post",
     "url": "work/check-app-update",
     "title": "检查更新",
     "version": "1.0.0",
@@ -1943,14 +2001,14 @@
             "type": "int",
             "optional": false,
             "field": "code",
-            "description": "<p>状态码，0为正常返回</p>"
+            "description": "<p>状态码，为0</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "msg",
-            "description": "<p>错误信息，code非0时有错误信息提示</p>"
+            "description": "<p>错误信息，此处一定为空</p>"
           },
           {
             "group": "Success 200",
@@ -1988,7 +2046,7 @@
     "type": "post",
     "url": "work/get-app-tips",
     "title": "获取每日启动Tips",
-    "version": "1.1.0",
+    "version": "1.0.1",
     "name": "get_app_tips",
     "group": "Work",
     "description": "<p>获取每日启动Tips内容</p>",
@@ -2000,14 +2058,14 @@
             "type": "int",
             "optional": false,
             "field": "code",
-            "description": "<p>状态码，0为正常返回</p>"
+            "description": "<p>状态码，为0</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "msg",
-            "description": "<p>错误信息，code非0时有错误信息提示</p>"
+            "description": "<p>错误信息，此处一定为空</p>"
           },
           {
             "group": "Success 200",

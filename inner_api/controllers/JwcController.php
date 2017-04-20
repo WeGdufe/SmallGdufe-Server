@@ -14,7 +14,7 @@ use yii\web\Response;
  */
 class JwcController extends Controller
 {
-    const REDIS_JW_PRE = 'jwc:';
+    // const REDIS_JWC_PRE = 'jwc:';
     private $jwcExpire = 1800;   //半小时
     use JwcParser;
 

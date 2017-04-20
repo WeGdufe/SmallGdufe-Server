@@ -218,7 +218,7 @@ trait JwParser
     }
 
     /**
-     * 合并形势政策这种除了周数不同外其他都相同的课程
+     * 合并形势政策这种除了周数不同外其他都相同的课程，转成 11,15,7(周) 这种格式
      * @param $scheduleArr
      * @return array
      */
@@ -228,6 +228,7 @@ trait JwParser
         $blackIndex = array();    //黑名单数组，数组里的下标跟以前的可合并，则不添加到结果里
         foreach ($scheduleArr as $indexUp => $itemUp) {
             $newItem = $itemUp;
+            $hasSame = false;
             foreach ($scheduleArr as $indexDown => $itemDown) {
                 if (
                     $indexUp != $indexDown
@@ -238,6 +239,8 @@ trait JwParser
                     && $newItem['name'] == $itemDown['name']
                     && $newItem['period'] != $itemDown['period']
                 ) {
+
+                    $hasSame = true;
                     //先简单合并成 11(单周),15(单周),7(单周)  这样
                     $newItem['period'] = $newItem['period'] . "," . $itemDown['period'];
                     $blackIndex [] = $indexDown;
@@ -246,8 +249,12 @@ trait JwParser
             if (in_array($indexUp, $blackIndex)) {
                 continue;
             }
+            //转成11,15,7(周)
+            if($hasSame){
+                $newItem['period'] = preg_replace('/\\(.*?周\\)/','',$newItem['period'] );
+                $newItem['period'] .= "(周)";
+            }
 
-            //如需更改结果格式为 7,11,15(单周) 这种则在这写正则
             $mergedArr [] = $newItem;        //外层循环里，只加一次
         }
         return $mergedArr;

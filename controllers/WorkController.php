@@ -6,12 +6,14 @@
 namespace app\controllers;
 
 use app\models\Feedback;
+use DateTime;
 use Faker\Provider\Base;
+use stdClass;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 
-class WorkController extends BaseController
+class WorkController extends Controller
 {
 
     public function actionTest()
@@ -39,8 +41,8 @@ class WorkController extends BaseController
      * @apiParam {String} content   反馈内容
      * @apiParam {String} contact   联系方式
      *
-     * @apiSuccess {int}      code      状态码，0为正常返回
-     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {int}      code      状态码，为0
+     * @apiSuccess {String}   msg       错误信息，此处一定为空
      * @apiSuccess {Object}   data      空Object
      *
      * @apiError 1002 反馈内容太长啦
@@ -55,8 +57,11 @@ class WorkController extends BaseController
         $feedback['content'] = Yii::$app->request->get('content');
         $feedback['contact'] = Yii::$app->request->get('contact');
         // $feedback['phone'] = Yii::$app->request->get('phone');
-        // $feedback['content'] = mysql_real_escape_string($feedback['content']);
-        $feedback['content'] = escapeshellarg($feedback['content']);
+        // $feedback['content'] = mysql_real_escape_string($feedback['content']);//有BUG会空字符串
+        // $feedback['content'] = escapeshellarg($feedback['content']);
+        $dt = new DateTime();
+        $feedback['create_time'] = $dt->format('Y-m-d H:i:s');
+
         if (strlen($feedback['content']) < 1000) {
             $feedback->save(false);
             return '{"code":0,"msg":"","data":{}}';
@@ -96,13 +101,13 @@ class WorkController extends BaseController
 
     /**
      * @api {post} work/get-app-tips 获取每日启动Tips
-     * @apiVersion 1.1.0
+     * @apiVersion 1.0.1
      * @apiName get-app-tips
      * @apiGroup Work
      * @apiDescription 获取每日启动Tips内容
      *
-     * @apiSuccess {int}      code      状态码，0为正常返回
-     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {int}      code      状态码，为0
+     * @apiSuccess {String}   msg       错误信息，此处一定为空
      * @apiSuccess {Object}   data      基本信息
      * @apiSuccess {String}     data.version             Tips版本，用于区分Tips
      * @apiSuccess {boolean}    data.enable              是否启用
@@ -138,5 +143,49 @@ class WorkController extends BaseController
         $res->sendFile('../release/app-release.apk');
     }
 
+    /**
+     * @api {post} work/all-logout 彻底退出登录
+     * @apiVersion 1.0.2
+     * @apiName all-logout
+     * @apiGroup Work
+     *
+     * @apiSuccess {int}      code      状态码，为0
+     * @apiSuccess {String}   msg       错误信息，此处一定为空
+     * @apiSuccess {Object}   data      空Object
+     *
+     * @apiParam   {String}   sno       学号
+     *
+     * @apiDescription 清空服务器中该账号的缓存，达到彻底退出登录
+     *
+     * @apiSuccessExample {json} 正常返回
+     * {"code":0,"msg":"","data":{}}
+     */
+    public function actionAllLogout()
+    {
+        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+        if(isset($req['sno'])){
+            $sno = $req['sno'];
+            Yii::$app->cache->delete('in:' . $sno);
+            Yii::$app->cache->delete('op:' . $sno);
+            Yii::$app->cache->delete('jw:' . $sno);
+            Yii::$app->cache->delete('card:' . $sno);
+        }
+        return $this->getReturn(0,'',new StdClass);
+    }
 
+
+
+    private function getReturn($code,$msg,$data='')
+    {
+        if(empty($data)) $data = new StdClass;
+        return \Yii::createObject([
+            'class' => 'yii\web\Response',
+            'format' => Response::FORMAT_JSON,
+            'data' => [
+                'code' => $code,
+                'msg' => $msg,
+                'data' => $data,
+            ],
+        ]);
+    }
 }

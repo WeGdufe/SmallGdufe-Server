@@ -14,7 +14,7 @@ use yii\web\Response;
 class InfoController extends BaseController
 {
     const REDIS_IDS_PRE = 'in:';    //ids通用cookie
-    const REDIS_INFO_PRE = 'my:';   //信息门户的cookie，因信息门户自身部分功能太少，目前保留不用，省内存
+    // const REDIS_INFO_PRE = 'my:';   //信息门户的cookie，因信息门户自身部分功能太少，目前保留不用，省内存
     use JwParser;
 
     protected $expire = 1800;//半小时
@@ -87,7 +87,7 @@ class InfoController extends BaseController
 
     public function actionTest()
     {
-        return $this->getReturn(Error::success,$this->parseFewSztz(file_get_contents('F:\\Desktop\\sutuo.html')));
+        return $this->getReturn(Error::success,$this->parseFewSztz(file_get_contents('F:\\Desktop\\sutuo16.html')));
     }
 
     /**

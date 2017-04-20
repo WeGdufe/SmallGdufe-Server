@@ -1,6 +1,6 @@
 {
   "name": "移动广财",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "服务器端API",
   "title": "移动广财API文档",
   "url": "http://localhost:82/index.php?r=",
@@ -23,7 +23,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-04-17T14:18:52.564Z",
+    "time": "2017-04-20T12:36:55.563Z",
     "url": "http://apidocjs.com",
     "version": "0.17.5"
   }

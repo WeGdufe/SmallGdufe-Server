@@ -58,6 +58,7 @@ trait OpacParser
     public function parseCurrentBookList($html)
     {
         if (empty($html)) return [];
+
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('table[class=table_line] tr');

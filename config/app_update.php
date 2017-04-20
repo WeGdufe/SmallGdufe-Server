@@ -4,15 +4,30 @@ return $update = [
     'update' =>[
         'original' => '',//扩展用的
         'forced' => false,
-        'updateContent' => '1.实现Dr.com
-2.增加自动更新
-3.实现头像图标
+        'updateContent' => '1.New!  新增课程表按周查看，戳课表页右上角
+2.修复默认首页、Dr.com注销功能等Bug
         ',
-        'updateUrl' => 'http://bmob-cdn-315.b0.upaiyun.com/2017/04/13/5baffb3340718e0680e58fd0efd283d1.apk',
+        'updateUrl' => 'http://acm.gdufe.edu.cn/kits/%e7%a7%bb%e5%8a%a8%e5%b9%bf%e8%b4%a2/%e7%a7%bb%e5%8a%a8%e5%b9%bf%e8%b4%a2v1.2.0.apk',
         // 'updateUrl' => 'http://172.25.155.14:82/index.php?r=work/update',
-        'updateTime' => 1490270887, //版本发布的时间戳
-        'versionCode' => 0,
-        'versionName' =>  '0.0.0',
+        'updateTime' => 1492615250, //版本发布的时间戳
+        'versionCode' => 3,
+        'versionName' =>  '1.2.0',
         'ignore' => false,
     ]
 ];
+
+// return $update = [
+//     'update' =>[
+//         'original' => '',//扩展用的
+//         'forced' => false,
+//         'updateContent' => '1.新增课表桌面控件
+// 2.新增App启动通知
+// 3.公历生日当天打开能收到祝福喔
+//         ',
+//         'updateUrl' => 'http://acm.gdufe.edu.cn/kits/%e7%a7%bb%e5%8a%a8%e5%b9%bf%e8%b4%a2/%e7%a7%bb%e5%8a%a8%e5%b9%bf%e8%b4%a2v1.1.0.apk',
+//         'updateTime' => 1492490550, //版本发布的时间戳
+//         'versionCode' => 2,
+//         'versionName' =>  '1.1.0',
+//         'ignore' => false,
+//     ]
+// ];

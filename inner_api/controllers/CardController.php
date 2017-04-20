@@ -13,7 +13,7 @@ class CardController extends InfoController
 {
     const REDIS_CARD_PRE = 'card:';
     // private $comCookieKey = 'JSESSIONID';    //一卡通的cookie也是JSESSIONID
-    private $cardExpire = 3600;
+    private $cardExpire = 1800;
 
     const METHOD_GET = 'get';
     const METHOD_POST = 'post';
@@ -28,10 +28,9 @@ class CardController extends InfoController
      * @return string
      */
     public function actionCurrentCash($sno, $pwd){
-        $cookies = $this->beforeBusinessAction($sno, $pwd,true);
+        $cookies = $this->beforeBusinessAction($sno, $pwd,false);
         if(!is_array($cookies))  return $cookies;
         $res = $this->getCurrentCash($cookies[0],$cookies[1]);
-        Yii::info($res,'response');
         return $this->getReturn(Error::success,$res);
     }
 

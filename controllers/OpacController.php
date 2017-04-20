@@ -126,7 +126,7 @@ class OpacController extends BaseController
      * @apiParam {String} sno       学号
      * @apiParam {String} pwd       信息门户密码
      * @apiParam {String} barId     条码号
-     * @apiParam {String} checkId   不知道什么东西，在当前借阅页面里可获取
+     * @apiParam {String} checkId   不明字段，在当前借阅页面里可获取
      * @apiParam {String} verify    验证码
      *
      * @apiSuccess {int}        code      状态码，0为正常返回

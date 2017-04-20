@@ -18,6 +18,7 @@ trait InfoParser
 {
     /**
      * 解析信息门户处的素拓信息 因返回的html不规范标签不闭合等 只能正则
+     * 16级的在系统上最低学分为0.0，直接输出$scoreArr，数据是信院公众号2017.4.18发的
      * @param $html
      * @return array
      */
@@ -26,8 +27,9 @@ trait InfoParser
         if (empty($html)) return [];
         Yii::$app->response->format = Response::FORMAT_JSON;
 
+        $nameArr = ['身心素质','文化艺术素质','技能素质','思想品德素质','创新创业素质','任选'];
+        $scoreArr = ['1.5','1.5','1.5','2.0','2.5','1.0'];
         $scoreList = array();
-
         // $pattern = '<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>\s+<td.+>(.+)<\/td>';
         // $pattern = '(<td.+>(.+)<\/td>\s+){7}';   //这招不可行，无解故用for https://www.v2ex.com/t/339115
         $pattern = '';
@@ -39,8 +41,12 @@ trait InfoParser
             $name = $matches[1][$i];
             $requireScore = sprintf("%.1f",floatval($matches[6][$i]));
             $score = sprintf("%.1f",floatval($matches[7][$i]));
+            if($requireScore == 0.0){//16级特判
+                $requireScore = $scoreArr[$i];
+            }
             $item = ['name' => $name, 'requireScore' => $requireScore, 'score' => $score];
             $scoreList [] = $item;
+
         }
         return $scoreList;
     }

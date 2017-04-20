@@ -116,8 +116,9 @@ $config = [
     'modules'=> require(__DIR__.'/modules.php'),
 ];
 
-defined('YII_DEBUG') or define('YII_DEBUG', $_SERVER['SERVER_NAME'] == 'www.wintercoder.com' ? true : false);
-defined('YII_ENV') or define('YII_ENV', $_SERVER['SERVER_NAME'] == 'www.wintercoder.com' ? 'dev' : 'prod');
+defined('YII_DEBUG') or define('YII_DEBUG', $_SERVER['SERVER_NAME'] == 'app.wintercoder.com' ? true : false);
+defined('YII_ENV') or define('YII_ENV', $_SERVER['SERVER_NAME'] == 'app.wintercoder.com' ? 'dev' : 'prod');
+
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';

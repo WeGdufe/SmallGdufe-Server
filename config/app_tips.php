@@ -2,21 +2,29 @@
 
 return $appTips = [
     'appTips' =>[
-        'version' => 1,
-        'enable' => true,
-        'title' => '一个人奋斗还是挺累的',
-        'message' => '有功能需求的话可以提下反馈，不过近期毕设答辩，会晚一点更新，另无薪招聘技术大佬呀~关于页面有联系方式',
-        'startTime' => '2017-04-17 20:58:22',
-        'endTime' => '2017-04-26 20:58:22',
+        'version' => 0,
+        'enable' => false,
+        'title' => '新版预告',
+        'message' => ' 1.无薪招聘技术大佬~iOS需求较大
+      
+        ',
+        'startTime' => '2017-04-19 11:14:45',
+        'endTime' => '2017-04-19 23:59:59',
         'openUrl' => ''
     ]
 ];
-//         'openUrl' => 'http://www.wintercoder.com:8080/'
 
-        // "version":3,
-        // "enable":true,
-        // "title":"你的反馈是我更新的动力",
-        // "message":"有功能需求的话可以提下反馈，不过近期毕设答辩，会晚一点更新，另无薪招聘技术大佬呀~",
-        // "startTime":"2017-04-17 20:58:22",
-        // "endTime":"2017-04-17 22:59:28",
-        // "openUrl":""
+// return $appTips = [
+//     'appTips' =>[
+//         'version' => 1,
+//         'enable' => true,
+//         'title' => '公告',
+//         'message' => '        1. 记得给App开通知栏权限
+//         2. 近期毕设答辩+毕业照，更新较慢
+//         4. 无薪招聘技术大佬~iOS需求较大
+//         ',
+//         'startTime' => '2017-04-17 20:58:22',
+//         'endTime' => '2017-04-26 20:58:22',
+//         'openUrl' => ''
+//     ]
+// ];
