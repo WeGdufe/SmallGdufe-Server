@@ -31,7 +31,7 @@ class WorkController extends Controller
     //http://localhost:82/index.php?r=work/feedback&sno=13251102210&content=%E6%B5%8B%E8%AF%95&email=&phone=15692006775
     /**
      * @api {post} work/feedback 反馈
-     * @apiVersion 1.0.0
+     * @apiVersion 1.0.3
      * @apiName feedback
      * @apiGroup Work
      *
@@ -40,6 +40,9 @@ class WorkController extends Controller
      * @apiParam {String} sno       学号
      * @apiParam {String} content   反馈内容
      * @apiParam {String} contact   联系方式
+     * @apiParam {String} devBrand   手机品牌，可选
+     * @apiParam {String} devModel   手机型号，可选
+     * @apiParam {String} osVersion   操作系统版本号，可选
      *
      * @apiSuccess {int}      code      状态码，为0
      * @apiSuccess {String}   msg       错误信息，此处一定为空
@@ -56,13 +59,24 @@ class WorkController extends Controller
         $feedback['sno'] = Yii::$app->request->get('sno');
         $feedback['content'] = Yii::$app->request->get('content');
         $feedback['contact'] = Yii::$app->request->get('contact');
-        // $feedback['phone'] = Yii::$app->request->get('phone');
+
+        $feedback['fix'] = 0;
+
+        $feedback['devBrand'] = Yii::$app->request->get('devBrand');
+        $feedback['devModel'] = Yii::$app->request->get('devModel');
+        $feedback['osVersion'] = Yii::$app->request->get('osVersion');
+        // $feedback['imei'] = Yii::$app->request->get('imei');
+
         // $feedback['content'] = mysql_real_escape_string($feedback['content']);//有BUG会空字符串
         // $feedback['content'] = escapeshellarg($feedback['content']);
         $dt = new DateTime();
-        $feedback['create_time'] = $dt->format('Y-m-d H:i:s');
+        $feedback['createTime'] = $dt->format('Y-m-d H:i:s');
+        if( $feedback['sno'] == Yii::$app->params['schoolMateSnoFlag'] ){
+            $feedback['sno'] = '88888888888';
+        }
 
         if (strlen($feedback['content']) < 1000) {
+
             $feedback->save(false);
             return '{"code":0,"msg":"","data":{}}';
         }
@@ -163,7 +177,8 @@ class WorkController extends Controller
     public function actionAllLogout()
     {
         $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        if(isset($req['sno'])){
+        if(isset($req['sno'])
+            && $req['sno'] != Yii::$app->params['schoolMateSnoFlag'] ){
             $sno = $req['sno'];
             Yii::$app->cache->delete('in:' . $sno);
             Yii::$app->cache->delete('op:' . $sno);

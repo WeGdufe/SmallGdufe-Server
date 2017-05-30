@@ -182,10 +182,12 @@ class JwController extends BaseController
 
     public function actionTest()
     {
+        // echo '233';
         // var_dump($this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\233.html')));
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
-        return $this->getReturn(Error::success, $this->parseScheduleMergeNext(file_get_contents('F:\\Desktop\\233.html')));
+        // echo file_get_contents('F:\\Desktop\\233.html');
+        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\233.html')));
        //  if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
        //
        //      // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){

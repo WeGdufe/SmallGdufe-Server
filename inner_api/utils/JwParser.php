@@ -19,6 +19,7 @@ trait JwParser
         $dom->loadStr($html, []);
         $contents = $dom->find('table[id=dataList] tr');
         $scoreList = array();
+        // var_dump( $contents);
         Yii::$app->response->format = Response::FORMAT_JSON;
         foreach ($contents as $index => $content) {
             if ($index == 0) continue;      //标题头
@@ -42,7 +43,7 @@ trait JwParser
                     $score = intval($score);
                     break;
             }
-            $credit = intval($content->find('td', 5)->innerHtml);
+            $credit = intval($content->find('td', 8)->innerHtml);
             $item = compact(
                 'time','name', 'score', 'credit'
             );

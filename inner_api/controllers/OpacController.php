@@ -223,7 +223,7 @@ class OpacController extends InfoController
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
         if($this->isSystemCrashed($this->urlConst['base']['opac'])) {
-            return $this->getReturn(Error::jwSysError,$ret);
+            return $this->getReturn(Error::opacSysError,$ret);
         }
         if (empty($sno) || empty($pwd)) {
             return $this->getReturn(Error::accountEmpty,$ret);

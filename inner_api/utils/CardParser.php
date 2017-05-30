@@ -71,7 +71,13 @@ trait CardParser
             // $sno = $content->find('td', 1)->innerHtml;           //学号
             // $name = $content->find('td', 2)->innerHtml;          //人名
             $shop = trim($content->find('td', 4)->innerHtml);       //消费商店名 广州校区二饭堂合作方
+            if(empty($shop)){
+                $shop = '充值';
+            }
             $change = $content->find('td', 5)->innerHtml;           //金额变动  -7.00
+            if( $change[0] != '-' &&  $change[0] != '0'){
+                $change = '+'.$change;
+            }
             $cash = $content->find('td', 6)->innerHtml;             //当前余额（消费后）
             $item = compact(
                 'time','shop','change','cash'

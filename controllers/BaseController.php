@@ -22,9 +22,13 @@ class BaseController extends Controller
     public function beforeAction($action)
     {
         $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        if(isset($this->req['sno']) &&  $this->req['pwd']) {
+        if(isset($this->req['sno']) && isset($this->req['pwd'])) {
             $this->sno = $this->req['sno'];
             $this->pwd = $this->req['pwd'];
+            if($this->sno == Yii::$app->params['schoolMateSnoFlag']){
+                $this->sno = Yii::$app->params['schoolMateSno'];
+                $this->pwd = Yii::$app->params['schoolMatePwd'];
+            }
             $this->data = [
                 'sno' => $this->sno,
                 'pwd' => $this->pwd,

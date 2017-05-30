@@ -3,7 +3,7 @@ define({
   "version": "1.0.2",
   "description": "服务器端API",
   "title": "移动广财API文档",
-  "url": "http://localhost:82/index.php?r=",
+  "url": "http://api.wintercoder.com:82/index.php?r=",
   "_url2": "http://www.wintercoder.com:82/index.php?r=",
   "_sampleUrl": "这行的下划线代表是注释 http://www.wintercoder.com:82/index.php?r=",
   "order": [
@@ -23,8 +23,8 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-04-20T12:36:55.563Z",
+    "time": "2017-05-29T08:10:10.275Z",
     "url": "http://apidocjs.com",
-    "version": "0.17.5"
+    "version": "0.17.6"
   }
 });
