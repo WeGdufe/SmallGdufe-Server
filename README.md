@@ -1,4 +1,7 @@
-# 移动广财-服务端安装指南
+# 移动广财服务端-安装指南
+
+**非开源 ** 
+
 requirements: PHP >= 5.4.0  Redis >= 3.x
 
 如果你PHP是5.3的，可参考 [此文](https://www.zerostopbits.com/how-to-install-upgrade-php-5-3-to-php-5-5-on-centos-6-7/) 更新版本到5.5
