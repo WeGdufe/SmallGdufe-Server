@@ -61,6 +61,7 @@ class WorkController extends Controller
         $feedback['contact'] = Yii::$app->request->get('contact');
 
         $feedback['fix'] = 0;
+        $feedback['comment'] = '';
 
         $feedback['devBrand'] = Yii::$app->request->get('devBrand');
         $feedback['devModel'] = Yii::$app->request->get('devModel');
@@ -154,7 +155,7 @@ class WorkController extends Controller
     public function actionUpdate()
     {
         $res = \YII::$app->response;
-        $res->sendFile('../release/app-release.apk');
+        $res->sendFile('../release/移动广财v1.3.0.apk');
     }
 
     /**

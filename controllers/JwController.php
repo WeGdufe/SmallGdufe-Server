@@ -25,7 +25,7 @@ class JwController  extends BaseController
 
     /**
      * @api {post} jw/get-grade 获取成绩
-     * @apiVersion 1.0.0
+     * @apiVersion 1.0.3
      * @apiName get-grade
      * @apiGroup Jw
      * @apiDescription 获取成绩
@@ -41,12 +41,16 @@ class JwController  extends BaseController
      * @apiSuccess {String}     data.time       学年学期，格式：2014-2015-2
      * @apiSuccess {int}        data.score      总分，优良中差对应返回98，85，75，65
      * @apiSuccess {int}        data.credit     学分
+     * @apiSuccess {int}        data.classCode     课程编号
+     * @apiSuccess {int}        data.dailyScore     平时成绩
+     * @apiSuccess {int}        data.expScore       实验成绩
+     * @apiSuccess {int}        data.paperScore     期末卷面成绩
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
      *
      * @apiSuccessExample {json} 正常返回
-     * {"code":0,"msg":"","data":[{"time":"2013-2014-2","name":"大学英语IIb","score":83,"credit":4},{"time":"2013-2014-2","name":"程序设计课程设计","score":95,"credit":2}]}
+     * {"code":0,"msg":"","data":[{"time":"2014-2015-1","name":"离散数学","score":91,"credit":4,"classCode":"110094","dailyScore":99,"expScore":0,"paperScore":87},{"time":"2014-2015-1","name":"数据结构","score":95,"credit":4,"classCode":"110104","dailyScore":94,"expScore":0,"paperScore":95}]}
      * @apiErrorExample  {json} 异常返回
      * {"code":3001,"msg":"学号或密码错误","data":[]}
      */

@@ -26,26 +26,20 @@ trait JwParser
             $time = $content->find('td', 1)->innerHtml;
             $name = $content->find('td', 3)->innerHtml;
             $score = $content->find('td a')->innerHtml;
-            switch ($score) {
-                case '优':
-                    $score = 95;
-                    break;
-                case '良':
-                    $score = 85;
-                    break;
-                case '中':
-                    $score = 75;
-                    break;
-                case '差':
-                    $score = 65;
-                    break;
-                default:
-                    $score = intval($score);
-                    break;
-            }
+
+            $classCode = $content->find('td', 2)->innerHtml;
+            $dailyScore = $content->find('td', 4)->innerHtml;   //平时成绩
+            $expScore = $content->find('td', 5)->innerHtml;     //实验成绩
+            $paperScore = $content->find('td', 6)->innerHtml;   //期末成绩
+
+            $score = $this->mappingScore($score);
+            $expScore = $this->mappingScore($expScore);
+            $dailyScore = $this->mappingScore($dailyScore);
+            $paperScore = $this->mappingScore($paperScore);
             $credit = intval($content->find('td', 8)->innerHtml);
             $item = compact(
                 'time','name', 'score', 'credit'
+                ,'classCode','dailyScore','expScore','paperScore'
             );
             $scoreList [] = $item;
         }
@@ -93,7 +87,35 @@ trait JwParser
     private function trimNbsp($str){
         return str_replace('&nbsp;', '',trim($str));
     }
-
+    /**
+     * 将优良中差和数字分数统一转为数字分数
+     * @param $score
+     * @return int
+     */
+    private function mappingScore($score)
+    {
+        if(empty($score)){  //空白字符串也转0
+            return 0;
+        }
+        switch ($score) {
+            case '优':
+                $score = 95;
+                break;
+            case '良':
+                $score = 85;
+                break;
+            case '中':
+                $score = 75;
+                break;
+            case '差':
+                $score = 65;
+                break;
+            default:
+                $score = intval($score);
+                break;
+        }
+        return $score;
+    }
     /**
      * 返回合并连堂后的课表item，多个小节连堂的情况合并成一个item，优化连堂
      * @param $html
@@ -260,6 +282,8 @@ trait JwParser
         }
         return $mergedArr;
     }
+
+
 
     /**
      * 同上，但只处理四节连堂，不处理6节，8节。。。

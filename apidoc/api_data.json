@@ -832,7 +832,7 @@
     "type": "post",
     "url": "jw/get-grade",
     "title": "获取成绩",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "name": "get_grade",
     "group": "Jw",
     "description": "<p>获取成绩</p>",
@@ -914,13 +914,41 @@
             "optional": false,
             "field": "data.credit",
             "description": "<p>学分</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "data.classCode",
+            "description": "<p>课程编号</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "data.dailyScore",
+            "description": "<p>平时成绩</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "data.expScore",
+            "description": "<p>实验成绩</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "data.paperScore",
+            "description": "<p>期末卷面成绩</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "正常返回",
-          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2013-2014-2\",\"name\":\"大学英语IIb\",\"score\":83,\"credit\":4},{\"time\":\"2013-2014-2\",\"name\":\"程序设计课程设计\",\"score\":95,\"credit\":2}]}",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2014-2015-1\",\"name\":\"离散数学\",\"score\":91,\"credit\":4,\"classCode\":\"110094\",\"dailyScore\":99,\"expScore\":0,\"paperScore\":87},{\"time\":\"2014-2015-1\",\"name\":\"数据结构\",\"score\":95,\"credit\":4,\"classCode\":\"110104\",\"dailyScore\":94,\"expScore\":0,\"paperScore\":95}]}",
           "type": "json"
         }
       ]
@@ -1962,7 +1990,7 @@
     "type": "post",
     "url": "work/feedback",
     "title": "反馈",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "name": "feedback",
     "group": "Work",
     "description": "<p>反馈，将存入服务器数据库</p>",
@@ -1989,6 +2017,27 @@
             "optional": false,
             "field": "contact",
             "description": "<p>联系方式</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "devBrand",
+            "description": "<p>手机品牌，可选</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "devModel",
+            "description": "<p>手机型号，可选</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "osVersion",
+            "description": "<p>操作系统版本号，可选</p>"
           }
         ]
       }
