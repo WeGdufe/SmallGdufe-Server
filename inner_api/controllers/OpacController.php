@@ -32,6 +32,9 @@ class OpacController extends InfoController
         if (empty($bookName)) {
             return $this->getReturn(Error::opacBookEmpty, []);
         }
+        if($this->isSystemCrashed($this->urlConst['opac']['search'])) {
+            return $this->getReturn(Error::opacSysError,[]);
+        }
         return $this->getReturn(Error::success, $this->getSearchBook($bookName));
     }
 
