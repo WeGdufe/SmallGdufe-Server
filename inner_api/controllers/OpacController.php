@@ -89,8 +89,12 @@ class OpacController extends InfoController
 
     public function actionTest()
     {
+
+        // $key = self::REDIS_OPAC_PRE . '13251102210';
+        // return $key = ctype_alnum($key) && StringHelper::byteLength($key) <= 32 ?  $key: md5($key);
+
         // return $this->parseSearchBookList( file_get_contents('F:\\Desktop\\ces.html') );
-        return $this->parseBookStoreDetail( file_get_contents('F:\\Desktop\\77.html') );
+        // return $this->checkIsAccountWithdraw( file_get_contents('F:\\Desktop\\77.html') );
         // return $this->parseHistoryBorrowedBookList( file_get_contents('F:\\Desktop\\bo.html') );
     }
 
@@ -185,7 +189,7 @@ class OpacController extends InfoController
      * @param $sno
      * @param $pwd string 目前不需要
      * @param $idsCookie string 必须
-     * @return mixed|null
+     * @return string|null
      */
     private function getOpacCookie($sno,$pwd='',$idsCookie){
         $cache = Yii::$app->cache->get(self::REDIS_OPAC_PRE . $sno);
@@ -196,6 +200,9 @@ class OpacController extends InfoController
         $curl->setCookie($this->idsCookieKey,$idsCookie);
         $curl->setReferer($this->urlConst['base']['info']);
         $curl->get($this->urlConst['opac']['login']);
+        if( $this->checkIsAccountWithdraw($curl->response) ){
+            return Error::opacAccountWithdraw;
+        }
         $opacCookie = $curl->getCookie($this->opacCookieKey);
         if(empty($opacCookie)) return null;
         Yii::$app->cache->set(self::REDIS_OPAC_PRE . $sno, $opacCookie, $this->opacExpire);
@@ -206,14 +213,6 @@ class OpacController extends InfoController
     //////////////////////////////////////////////
     //                  ↓工具函数↓                 //
     //////////////////////////////////////////////
-    /**
-     * 返回毫秒级的时间戳（float类型的纯整数，无小数点），位数更多
-     * @return float
-     */
-    private function getMillisecond(){
-        list($t1, $t2) = explode(' ', microtime());
-        return (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
-    }
 
     /**
      * OPAC图书馆Action实际操作的通用预处理，判断和获取cookie
@@ -235,6 +234,9 @@ class OpacController extends InfoController
         $opacCookie = $this->getOpacCookie($sno,$pwd,$idsCookie);
         if (empty($opacCookie)) {
             return $this->getReturn(Error::passwordError,$ret);
+        }
+        if($opacCookie == Error::opacAccountWithdraw){ //即将毕业的人图书账号被注销
+            return $this->getReturn(Error::opacAccountWithdraw,$ret);
         }
         return [$idsCookie,$opacCookie];
     }
@@ -262,6 +264,13 @@ class OpacController extends InfoController
         }
         return $curl->response;
     }
-
+    /**
+     * 返回毫秒级的时间戳（float类型的纯整数，无小数点），位数更多
+     * @return float
+     */
+    private function getMillisecond(){
+        list($t1, $t2) = explode(' ', microtime());
+        return (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
+    }
 
 }

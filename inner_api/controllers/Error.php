@@ -30,6 +30,7 @@ class Error
     const opacBookEmpty = 3300;
     const opacRenewParmEmpty = 3301;
     const opacBookDetailIdEmpty = 3302;
+    const opacAccountWithdraw = 3303;       //应届毕业生在办理离校手续后会被注销
     const cardNumEmpty = 4000;  //查询校园卡记录
 
     //四六级考号或名字错误
@@ -53,6 +54,7 @@ class Error
         3300 => '书名为空',
         3301 => '参数不完整续借无力',
         3302 => '没有macno参数你也想看书本详情？',
+        3303 => '图书馆账号已被注销',
 
         4000 => '校园卡卡号为空',
 

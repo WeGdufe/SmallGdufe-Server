@@ -73,6 +73,7 @@ class OpacController extends BaseController
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
+     * @apiError 3303 图书馆账号已被注销
      *
      * @apiSuccessExample {json} 正常返回
      * {"code":0,"msg":"","data":[{"barId":"S1101752","name":"深入理解Java虚拟机:JVM高级特性与最佳实践","author":"周志明著","borrowedTime":"2016-12-10","returnTime":"2017-04-06","renewTimes":1,"location":"广州校区自然科学图书区(N-Z类)","checkId":"806D39EB"},{"barId":"S1604030","name":"TCP/IP详解","author":"(美)[W.R.史蒂文斯]W.Richard Stevens著","borrowedTime":"2016-12-10","returnTime":"2017-04-06","renewTimes":1,"location":"广州校区自然科学图书区(N-Z类)","checkId":"F43A0181"}]}
@@ -106,6 +107,7 @@ class OpacController extends BaseController
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
+     * @apiError 3303 图书馆账号已被注销
      *
      * @apiSuccessExample {json} 正常返回
      * {"code":0,"msg":"","data":[{"barId":"S1101752","name":"深入理解Java虚拟机:JVM高级特性与最佳实践","author":"周志明著","borrowedTime":"2016-10-11","returnTime":"2016-12-10","renewTimes":999,"location":"广州校区自然科学图书区(N-Z类)"},{"barId":"S1282556","name":"HTML 5用户指南","author":"(美)Bruce Lawson,(美)Remy Sharp著","borrowedTime":"2016-07-12","returnTime":"2016-10-07","renewTimes":999,"location":"广州校区自然科学图书区(N-Z类)"}]}
@@ -137,6 +139,7 @@ class OpacController extends BaseController
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
      * @apiError 3301 参数不完整续借无力
+     * @apiError 3303 图书馆账号已被注销
      *
      * @apiSuccessExample {json} 正常返回
      * {"code":0,"msg":"","data":{"data":"续借成功"}}
@@ -173,6 +176,7 @@ class OpacController extends BaseController
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
+     * @apiError 3303 图书馆账号已被注销
      *
      * @apiSuccessExample {json} 正常返回
      * {"code":0,"msg":"","data":{"data":"R0lGODdhPAAkAIAAAAQCBNTWzCwAAAAAPAAkAAACdIyPqcvtD6OctNqLs968+w+G4kiW5omm6sq27osB8gwodM3IOW3pjR8AIngJoDByfBx9ySJOopspnwZhs0pFMrMHqXPIDV4p4yW1HCanseD2b72wws1sx3hX7z6bRLf40gfmFZd2A3OImKi4yNjo+AgZaVEAADs="}}
@@ -201,6 +205,7 @@ class OpacController extends BaseController
      * @apiSuccess {String}         data.volume         年卷期，有"-"，""的情况
      * @apiSuccess {String}         data.location       馆藏地
      * @apiSuccess {String}         data.state          可借状态
+     *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
      * @apiError 3302 没有macno参数你也想看书本详情

@@ -12,6 +12,18 @@ use Yii;
 trait OpacParser
 {
     /**
+     * 检查图书系统是否账号被注销（毕业生办理离校手续后不可用，大概在6月18）
+     * @param $html
+     * @return bool
+     */
+    public function  checkIsAccountWithdraw($html){
+        if (empty($html)) return false;
+        if( false === strpos($html,'读者已经注销') ){ //无则正常
+            return false;
+        }
+        return true;    //有则被注销了
+    }
+    /**
      * 搜索书籍的解析 库无法处理无标签的情况，所以用正则
      * [{"name":"算法竞赛入门经典","serial":"TP301.6/100","numAll":3,"numCan":0,"author":"刘汝佳编著","publisher":"清华大学出版社 2009","macno":"0000413900"},{"name":"算法竞赛入门经典","serial":"TP301.6/100(2D)","numAll":3,"numCan":1,"author":"刘汝佳编著","publisher":"清华大学出版社 2014","macno":"0000442705"}]
      * @param $html

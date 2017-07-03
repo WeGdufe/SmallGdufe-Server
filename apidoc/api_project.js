@@ -1,6 +1,6 @@
 define({
   "name": "移动广财",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "服务器端API",
   "title": "移动广财API文档",
   "url": "http://api.wintercoder.com:82/index.php?r=",
@@ -23,7 +23,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-06-01T02:49:55.163Z",
+    "time": "2017-07-03T05:26:41.100Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

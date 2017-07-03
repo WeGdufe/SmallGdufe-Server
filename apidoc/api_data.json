@@ -832,7 +832,7 @@
     "type": "post",
     "url": "jw/get-grade",
     "title": "获取成绩",
-    "version": "1.0.3",
+    "version": "1.0.0",
     "name": "get_grade",
     "group": "Jw",
     "description": "<p>获取成绩</p>",
@@ -1259,6 +1259,12 @@
             "optional": false,
             "field": "3001",
             "description": "<p>学号或密码错误</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3303",
+            "description": "<p>图书馆账号已被注销</p>"
           }
         ]
       }
@@ -1398,6 +1404,12 @@
             "optional": false,
             "field": "3001",
             "description": "<p>学号或密码错误</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3303",
+            "description": "<p>图书馆账号已被注销</p>"
           }
         ]
       }
@@ -1605,6 +1617,12 @@
             "optional": false,
             "field": "3001",
             "description": "<p>学号或密码错误</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3303",
+            "description": "<p>图书馆账号已被注销</p>"
           }
         ]
       }
@@ -1722,6 +1740,12 @@
             "optional": false,
             "field": "3301",
             "description": "<p>参数不完整续借无力</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3303",
+            "description": "<p>图书馆账号已被注销</p>"
           }
         ]
       }

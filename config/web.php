@@ -116,8 +116,13 @@ $config = [
     'modules'=> require(__DIR__.'/modules.php'),
 ];
 
-defined('YII_DEBUG') or define('YII_DEBUG', $_SERVER['SERVER_NAME'] != 'app.wintercoder.com' ? true : false);
-defined('YII_ENV') or define('YII_ENV', $_SERVER['SERVER_NAME'] != 'app.wintercoder.com' ? 'dev' : 'prod');
+defined('YII_DEBUG') or define('YII_DEBUG', false );
+defined('YII_ENV') or define('YII_ENV', 'prod');
+
+// defined('YII_DEBUG') or define('YII_DEBUG', strpos($_SERVER['SERVER_NAME'],'wintercoder.com') === false ? true : false);        ////怕效率慢
+// defined('YII_ENV') or define('YII_ENV', strpos($_SERVER['SERVER_NAME'],'wintercoder.com') === false? 'dev' : 'prod');   //怕效率慢
+
+// defined('YII_ENV') or define('YII_ENV', $_SERVER['SERVER_NAME'] != 'app.wintercoder.com' ? 'dev' : 'prod');  //单域名时用
 
 
 if (YII_ENV_DEV) {

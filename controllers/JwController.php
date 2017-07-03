@@ -25,7 +25,7 @@ class JwController  extends BaseController
 
     /**
      * @api {post} jw/get-grade 获取成绩
-     * @apiVersion 1.0.3
+     * @apiVersion 1.0.0
      * @apiName get-grade
      * @apiGroup Jw
      * @apiDescription 获取成绩
