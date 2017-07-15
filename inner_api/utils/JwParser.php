@@ -44,7 +44,8 @@ trait JwParser
             $expScore = $this->mappingScore($expScore);
             $dailyScore = $this->mappingScore($dailyScore);
             $paperScore = $this->mappingScore($paperScore);
-            $credit = intval($content->find('td', 8)->innerHtml);
+            $credit = $content->find('td', 8)->innerHtml;   //学分有0.5分的，如就业指导、大学生职业发展与规划
+            // $credit = intval($content->find('td', 8)->innerHtml);
             $item = compact(
                 'time','name', 'score', 'credit'
                 ,'classCode','dailyScore','expScore','paperScore'

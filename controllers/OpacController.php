@@ -17,9 +17,10 @@ class OpacController extends BaseController
      * @apiName search-book
      * @apiGroup Opac
      *
-     * @apiDescription 返回书籍搜索结果，目前只返回一页(最多20个)的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况
+     * @apiDescription 返回书籍搜索结果，分页查询，每页最多20个，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况
      *
      * @apiParam {String} bookName 书名
+     * @apiParam {int} page 可选，分页查询的当前页数，默认为1
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -43,7 +44,11 @@ class OpacController extends BaseController
         if (!isset($req['bookName'])) {
             $req['bookName'] = '';
         }
+        if (!isset($req['bookName'])) {
+            $req['page'] = 1;
+        }
         $this->data['bookName'] = $req['bookName'];
+        $this->data['page'] = $req['page'];
         return Yii::$app->runAction('api/opac/search-book', $this->data);
     }
 

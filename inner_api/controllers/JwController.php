@@ -29,18 +29,20 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split));
     }
+
     /**
      * 获取成绩
      * @param $sno
      * @param $pwd
      * @param string $stu_time ex. 2014-2015-2 可选，不填则返回整个大学的全部学期
+     * @param int $minor 辅修为1，主修为0
      * @return array|string
      */
-    public function actionGetGrade($sno, $pwd, $stu_time = '')
+    public function actionGetGrade($sno, $pwd, $stu_time = '',$minor = 0)
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        $ret = $this->getGrade($jwCookie[0], $stu_time);
+        $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
         if($ret == Error::jwNotCommentTeacher){
             return $this->getReturn($ret,[]);
         }
@@ -92,26 +94,22 @@ class JwController extends BaseController
         return $this->parseBasicInfo($curl->response);
     }
 
-
-    private function getGrade($jwCookie, $study_time = '')
+    //查成绩，未使用的功能：查询主修辅修一起算的整个大学，无参get这个地址
+    //$curl->get($this->urlConst['jw']['grade']);
+    private function getGrade($jwCookie, $study_time = '',$minor = 0) //都为空则为主修-整个大学
     {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
         $curl->setCookie($this->comCookieKey, $jwCookie);
         $curl->setReferer($this->urlConst['base']['jw']);
-
-        if (empty($study_time)) {
-            $curl->get($this->urlConst['jw']['grade']);
-        } else {
-            $data = [
-                'kksj' => $study_time,
-                'kcxz' => '',
-                'kcmc' => '',
-                'fxkc' => '0',
-                'xsfs' => 'all',
-            ];
-            $curl->post($this->urlConst['jw']['grade'], $data);
-        }
+        $data = [
+            'kksj' => $study_time,  //开课时间
+            'kcxz' => '',           //课程性质
+            'kcmc' => '',           //课程名称
+            'fxkc' => $minor,       //辅修为1，主修为0
+            'xsfs' => 'max',        //显示最好成绩(补考情况)，显示全部成绩为all
+        ];
+        $curl->post($this->urlConst['jw']['grade'], $data);
         //检查是否有评教
         if($this->checkHasCommentTeacher($curl->response)){
             return Error::jwNotCommentTeacher;

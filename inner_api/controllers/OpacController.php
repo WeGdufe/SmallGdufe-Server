@@ -25,9 +25,10 @@ class OpacController extends InfoController
      * @param string $sno
      * @param string $pwd
      * @param string $bookName 必须
+     * @param int $page 分页查询的页码
      * @return array|string
      */
-    public function actionSearchBook($sno = '', $pwd = '', $bookName = '')
+    public function actionSearchBook($sno = '', $pwd = '', $bookName = '',$page = 1)
     {
         if (empty($bookName)) {
             return $this->getReturn(Error::opacBookEmpty, []);
@@ -35,7 +36,7 @@ class OpacController extends InfoController
         if($this->isSystemCrashed($this->urlConst['opac']['search'])) {
             return $this->getReturn(Error::opacSysError,[]);
         }
-        return $this->getReturn(Error::success, $this->getSearchBook($bookName));
+        return $this->getReturn(Error::success, $this->getSearchBook($bookName,$page));
     }
 
     public function actionCurrentBook($sno, $pwd)
@@ -133,19 +134,22 @@ class OpacController extends InfoController
         return $this->parseBookStoreDetail($curl->response);
     }
     // 搜索(不登录状态)
-    private function getSearchBook($bookName,$idsCookie='',$opacCookie='')
+    private function getSearchBook($bookName,$page = 1, $idsCookie='',$opacCookie='')
     {
         $curl = $this->newCurl();
         $data = [
-            's2_type' => 'title',
-            's2_text' => $bookName,
-            'search_bar' => 'new',
+            'dept' => 'ALL',
             'title' => $bookName,
             'doctype' => 'ALL',
-            'with_ebook' => 'on',
+            'lang_code' => 'ALL',
             'match_flag' => 'forward',
+            'displaypg' => '20',
             'showmode' => 'list',
-            'location' => 'ALL',
+            'orderby' => 'DESC',
+            'sort' => 'CATA_DATE',
+            'onlylendable' => 'no',
+            'with_ebook' => 'on',
+            'page' => $page,
         ];
         $curl->setReferer($this->urlConst['base']['opac']);
         $curl->get($this->urlConst['opac']['search'],$data);

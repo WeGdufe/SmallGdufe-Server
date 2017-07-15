@@ -28,11 +28,12 @@ class JwController  extends BaseController
      * @apiVersion 1.0.0
      * @apiName get-grade
      * @apiGroup Jw
-     * @apiDescription 获取成绩
+     * @apiDescription 获取成绩，补考/重修情况只显示最好成绩
      *
      * @apiParam {String} sno       学号
      * @apiParam {String} pwd       教务系统密码
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回整个大学（全部已修学期）
+     * @apiParam {int} minor        可选，查询辅修成绩为1，查主修为0，默认为0查主修
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -40,7 +41,7 @@ class JwController  extends BaseController
      * @apiSuccess {String}     data.name       课程名
      * @apiSuccess {String}     data.time       学年学期，格式：2014-2015-2
      * @apiSuccess {int}        data.score      总分，优良中差对应返回98，85，75，65
-     * @apiSuccess {int}        data.credit     学分
+     * @apiSuccess {String}     data.credit     学分，有0.5学分的情况
      * @apiSuccess {int}        data.classCode     课程编号
      * @apiSuccess {int}        data.dailyScore     平时成绩
      * @apiSuccess {int}        data.expScore       实验成绩
@@ -51,7 +52,7 @@ class JwController  extends BaseController
      * @apiError 3100 没评教，去成绩打印机处查询吧
      *
      * @apiSuccessExample {json} 正常返回
-     * {"code":0,"msg":"","data":[{"time":"2014-2015-1","name":"离散数学","score":91,"credit":4,"classCode":"110094","dailyScore":99,"expScore":0,"paperScore":87},{"time":"2014-2015-1","name":"数据结构","score":95,"credit":4,"classCode":"110104","dailyScore":94,"expScore":0,"paperScore":95}]}
+     * {"code":0,"msg":"","data":[{"time":"2014-2015-1","name":"离散数学","score":91,"credit":"4","classCode":"110094","dailyScore":99,"expScore":0,"paperScore":87},{"time":"2014-2015-1","name":"数据结构","score":95,"credit":"4","classCode":"110104","dailyScore":94,"expScore":0,"paperScore":95}]}
      * @apiErrorExample  {json} 异常返回
      * {"code":3001,"msg":"学号或密码错误","data":[]}
      */
@@ -60,6 +61,10 @@ class JwController  extends BaseController
         if(isset($this->req['stu_time'])){
             $this->data['stu_time'] = $this->req['stu_time'];
         }
+        if(isset($this->req['minor'])){
+            $this->data['minor'] = $this->req['minor'];
+        }
+
         return Yii::$app->runAction('api/jw/get-grade', $this->data);
     }
 
