@@ -967,6 +967,12 @@
             "optional": false,
             "field": "3001",
             "description": "<p>学号或密码错误</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3100",
+            "description": "<p>没评教，去成绩打印机处查询吧</p>"
           }
         ]
       },

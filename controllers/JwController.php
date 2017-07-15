@@ -48,6 +48,7 @@ class JwController  extends BaseController
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
+     * @apiError 3100 没评教，去成绩打印机处查询吧
      *
      * @apiSuccessExample {json} 正常返回
      * {"code":0,"msg":"","data":[{"time":"2014-2015-1","name":"离散数学","score":91,"credit":4,"classCode":"110094","dailyScore":99,"expScore":0,"paperScore":87},{"time":"2014-2015-1","name":"数据结构","score":95,"credit":4,"classCode":"110104","dailyScore":94,"expScore":0,"paperScore":95}]}

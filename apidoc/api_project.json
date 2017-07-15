@@ -1,7 +1,7 @@
 {
   "name": "移动广财",
   "version": "1.0.4",
-  "description": "服务器端API",
+  "description": "服务器端API，接口版本号为新增时的版本",
   "title": "移动广财API文档",
   "url": "http://api.wintercoder.com:82/index.php?r=",
   "_url2": "http://www.wintercoder.com:82/index.php?r=",
@@ -23,7 +23,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-07-03T05:26:41.100Z",
+    "time": "2017-07-15T13:09:53.957Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

@@ -40,7 +40,11 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getGrade($jwCookie[0], $stu_time));
+        $ret = $this->getGrade($jwCookie[0], $stu_time);
+        if($ret == Error::jwNotCommentTeacher){
+            return $this->getReturn($ret,[]);
+        }
+        return $this->getReturn(Error::success,$ret);
     }
 
     /**
@@ -107,6 +111,10 @@ class JwController extends BaseController
                 'xsfs' => 'all',
             ];
             $curl->post($this->urlConst['jw']['grade'], $data);
+        }
+        //检查是否有评教
+        if($this->checkHasCommentTeacher($curl->response)){
+            return Error::jwNotCommentTeacher;
         }
         return $this->parseGrade($curl->response);
     }

@@ -27,11 +27,16 @@ class Error
     //用户错误
     const accountEmpty = 3000;
     const passwordError = 3001;
+
+    const jwNotCommentTeacher = 3100;
+
+
     const opacBookEmpty = 3300;
     const opacRenewParmEmpty = 3301;
     const opacBookDetailIdEmpty = 3302;
     const opacAccountWithdraw = 3303;       //应届毕业生在办理离校手续后会被注销
     const cardNumEmpty = 4000;  //查询校园卡记录
+
 
     //四六级考号或名字错误
     const cetError = 5300;
@@ -51,6 +56,9 @@ class Error
 
         3000 => '账号或者密码为空',
         3001 => '账号或密码错误',
+
+        3100 => '没评教，去成绩打印机处查询吧',
+
         3300 => '书名为空',
         3301 => '参数不完整续借无力',
         3302 => '没有macno参数你也想看书本详情？',
