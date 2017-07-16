@@ -835,7 +835,7 @@ define({ "api": [
     "version": "1.0.0",
     "name": "get_grade",
     "group": "Jw",
-    "description": "<p>获取成绩</p>",
+    "description": "<p>获取成绩，显示全部成绩</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -858,7 +858,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "stu_time",
-            "description": "<p>可选，学年学期，格式：2014-2015-2，默认返回整个大学（全部已修学期）</p>"
+            "description": "<p>可选，学年学期，格式：2014-2015-2 和 2014-2015（返回学年成绩），为空则默认返回整个大学（全部已修学期）</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "minor",
+            "description": "<p>可选，查询辅修成绩为1，查主修为0，默认为0查主修</p>"
           }
         ]
       }
@@ -910,10 +917,10 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "int",
+            "type": "float",
             "optional": false,
             "field": "data.credit",
-            "description": "<p>学分</p>"
+            "description": "<p>学分，有0.5学分的情况，整数学分则为纯整数</p>"
           },
           {
             "group": "Success 200",
@@ -942,13 +949,20 @@ define({ "api": [
             "optional": false,
             "field": "data.paperScore",
             "description": "<p>期末卷面成绩</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.examType",
+            "description": "<p>考试类型，正常考试、补考一、补考二等</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "正常返回",
-          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2014-2015-1\",\"name\":\"离散数学\",\"score\":91,\"credit\":4,\"classCode\":\"110094\",\"dailyScore\":99,\"expScore\":0,\"paperScore\":87},{\"time\":\"2014-2015-1\",\"name\":\"数据结构\",\"score\":95,\"credit\":4,\"classCode\":\"110104\",\"dailyScore\":94,\"expScore\":0,\"paperScore\":95}]}",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2014-2015-2\",\"name\":\"面向对象程序设计\",\"score\":74,\"credit\":4,\"classCode\":110154,\"dailyScore\":0,\"expScore\":0,\"paperScore\":0,\"examType\":\"补考一\"},{\"time\":\"2016-2017-2\",\"name\":\"就业指导\",\"score\":94,\"credit\":0.5,\"classCode\":400025,\"dailyScore\":92,\"expScore\":0,\"paperScore\":96,\"examType\":\"正常考试\"}]}",
           "type": "json"
         }
       ]
@@ -967,6 +981,12 @@ define({ "api": [
             "optional": false,
             "field": "3001",
             "description": "<p>学号或密码错误</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "3100",
+            "description": "<p>没评教，去成绩打印机处查询吧</p>"
           }
         ]
       },
@@ -1760,7 +1780,7 @@ define({ "api": [
     "version": "1.0.0",
     "name": "search_book",
     "group": "Opac",
-    "description": "<p>返回书籍搜索结果，目前只返回一页(最多20个)的结果，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况</p>",
+    "description": "<p>返回书籍搜索结果，分页查询，每页最多20个，搜索方式为题目-前方一致，已过滤了serial为空（没馆藏）的情况</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1770,6 +1790,13 @@ define({ "api": [
             "optional": false,
             "field": "bookName",
             "description": "<p>书名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "page",
+            "description": "<p>可选，分页查询的当前页数，默认为1</p>"
           }
         ]
       }
@@ -2205,6 +2232,30 @@ define({ "api": [
           "type": "json"
         }
       ]
+    },
+    "filename": "controllers/WorkController.php",
+    "groupTitle": "Work"
+  },
+  {
+    "type": "post",
+    "url": "work/get-document",
+    "title": "文档下载",
+    "version": "1.0.4",
+    "name": "get_document",
+    "group": "Work",
+    "description": "<p>获取校历图片等文件，直接返回文件</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fileCode",
+            "description": "<p>文件码，目前可用值： xiaoli</p>"
+          }
+        ]
+      }
     },
     "filename": "controllers/WorkController.php",
     "groupTitle": "Work"

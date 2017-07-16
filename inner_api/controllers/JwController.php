@@ -29,18 +29,28 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split));
     }
+
     /**
      * 获取成绩
      * @param $sno
      * @param $pwd
-     * @param string $stu_time ex. 2014-2015-2 可选，不填则返回整个大学的全部学期
+     * @param string $stu_time 可选，如2014-2015-2，默认为整个大学的全部学期，2014-2015则为一个学年两个学期的成绩
+     * @param int $minor 辅修为1，主修为0
      * @return array|string
      */
-    public function actionGetGrade($sno, $pwd, $stu_time = '')
+    public function actionGetGrade($sno, $pwd, $stu_time = '',$minor = 0)
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getGrade($jwCookie[0], $stu_time));
+        if(strlen($stu_time) == 9){ //2014-2015这样则为查询学年成绩
+            $ret = $this->getXueNianGrade($jwCookie[0], $stu_time,$minor);
+        }else{
+            $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
+        }
+        if($ret == Error::jwNotCommentTeacher){
+            return $this->getReturn($ret,[]);
+        }
+        return $this->getReturn(Error::success,$ret);
     }
 
     /**
@@ -88,25 +98,38 @@ class JwController extends BaseController
         return $this->parseBasicInfo($curl->response);
     }
 
+    //查询一个学年（两学期）的成绩
+    private function getXueNianGrade($jwCookie, $study_time = '',$minor = 0){
+        $xueQi1 = $this->getGrade($jwCookie,$study_time."-1",$minor);
+        if($xueQi1 == Error::jwNotCommentTeacher){
+            return Error::jwNotCommentTeacher;
+        }
+        $xueQi2 = $this->getGrade($jwCookie,$study_time."-2",$minor);
+        if($xueQi2 == Error::jwNotCommentTeacher){
+            return Error::jwNotCommentTeacher;
+        }
+        return array_merge($xueQi1,$xueQi2);
+    }
 
-    private function getGrade($jwCookie, $study_time = '')
+    //查成绩，未使用的功能：查询主修辅修一起算的整个大学，无参get这个地址
+    //$curl->get($this->urlConst['jw']['grade']);
+    private function getGrade($jwCookie, $study_time = '',$minor = 0) //都为空则为主修-整个大学
     {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
         $curl->setCookie($this->comCookieKey, $jwCookie);
         $curl->setReferer($this->urlConst['base']['jw']);
-
-        if (empty($study_time)) {
-            $curl->get($this->urlConst['jw']['grade']);
-        } else {
-            $data = [
-                'kksj' => $study_time,
-                'kcxz' => '',
-                'kcmc' => '',
-                'fxkc' => '0',
-                'xsfs' => 'all',
-            ];
-            $curl->post($this->urlConst['jw']['grade'], $data);
+        $data = [
+            'kksj' => $study_time,  //开课时间
+            'kcxz' => '',           //课程性质
+            'kcmc' => '',           //课程名称
+            'fxkc' => $minor,       //辅修为1，主修为0
+            'xsfs' => 'all',        //显示最好成绩(补考情况)为max【教务没显示平时分】，显示全部成绩为all
+        ];
+        $curl->post($this->urlConst['jw']['grade'], $data);
+        //检查是否有评教
+        if($this->checkHasCommentTeacher($curl->response)){
+            return Error::jwNotCommentTeacher;
         }
         return $this->parseGrade($curl->response);
     }
@@ -187,7 +210,7 @@ class JwController extends BaseController
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // echo file_get_contents('F:\\Desktop\\233.html');
-        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\233.html')));
+        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
        //  if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
        //
        //      // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){

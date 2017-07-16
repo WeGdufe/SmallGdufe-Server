@@ -12,6 +12,14 @@ use PHPHtmlParser\Dom;
 
 trait JwParser
 {
+    public function  checkHasCommentTeacher($html){
+        if (empty($html)) return false;
+        if( false === strpos($html,'评教未完成，不能查询成绩') ){ //无则正常
+            return false;
+        }
+        return true;    //有则未评教
+    }
+
     public function parseGrade($html)
     {
         if (empty($html)) return [];
@@ -27,7 +35,7 @@ trait JwParser
             $name = $content->find('td', 3)->innerHtml;
             $score = $content->find('td a')->innerHtml;
 
-            $classCode = $content->find('td', 2)->innerHtml;
+            $classCode = intval($content->find('td', 2)->innerHtml);
             $dailyScore = $content->find('td', 4)->innerHtml;   //平时成绩
             $expScore = $content->find('td', 5)->innerHtml;     //实验成绩
             $paperScore = $content->find('td', 6)->innerHtml;   //期末成绩
@@ -36,10 +44,12 @@ trait JwParser
             $expScore = $this->mappingScore($expScore);
             $dailyScore = $this->mappingScore($dailyScore);
             $paperScore = $this->mappingScore($paperScore);
-            $credit = intval($content->find('td', 8)->innerHtml);
+            $credit = floatval($content->find('td', 8)->innerHtml);   //学分有0.5分的，如就业指导、大学生职业发展与规划
+            $examType = $content->find('td', 14)->innerHtml;//正常考试、补考一
             $item = compact(
                 'time','name', 'score', 'credit'
                 ,'classCode','dailyScore','expScore','paperScore'
+                ,'examType'
             );
             $scoreList [] = $item;
         }
@@ -182,6 +192,7 @@ trait JwParser
             for($ith = 0; $ith < $resCnt; $ith++){
 
                 $name = $matches[1][$ith];
+                $name = $this->doSubStrScheduleName($name);
                 $teacher = $matches[2][$ith];
                 $period = $matches[3][$ith];        //周
                 $location = $matches[4][$ith];
@@ -190,8 +201,8 @@ trait JwParser
                 $startSec = intval($expArr[0]);
                 if (1 == count($expArr)) {      //[11]这种单节
                     $endSec = intval($startSec);
-                } else {                        //[3-4]双节
-                    $endSec = intval($expArr[1]);
+                } else {                        //[3-4]双节和[3-4-5]这种恶心三节
+                    $endSec = intval($expArr[count($expArr)-1]);
                 }
                 $item = compact(
                     'name','teacher'
@@ -323,7 +334,37 @@ trait JwParser
         }
         return $mergedArr;
     }
-
+    /**
+     * 对长名字课程进行缩减
+     * @param $name string 课程名
+     * @return string 缩进后的课程名（或者原名）
+     */
+    private function doSubStrScheduleName($name){
+        $specialArr = array(    //长名字课程映射数组
+            array(
+                'old'=>"毛泽东思想和中国特色社会主义理论体系概论I",
+                'new'=>'毛概I',
+            ),
+            array(
+                'old'=>"毛泽东思想和中国特色社会主义理论体系概论II",
+                'new'=>'毛概II',
+            ),
+            array(
+                'old'=>"国际会计（ACCA）创新实验区专业导论",
+                'new'=>'ACCA专业导论',
+            ),
+            array(
+                'old'=>"电子商务战略、结构与设计",
+                'new'=>'电商战略、结构与设计',
+            ),
+        );
+        $specialMap = array_column($specialArr,'old','new');   //转成Key-value（毛概I->长名字)
+        $tmpName = array_search($name,$specialMap);            //在value里找，有则返回key
+        if($tmpName != false){
+            $name = $tmpName;
+        }
+        return $name;
+    }
 }
 
 
