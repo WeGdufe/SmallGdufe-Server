@@ -34,7 +34,7 @@ class JwController extends BaseController
      * 获取成绩
      * @param $sno
      * @param $pwd
-     * @param string $stu_time ex. 2014-2015-2 可选，不填则返回整个大学的全部学期
+     * @param string $stu_time 可选，如2014-2015-2，默认为整个大学的全部学期，2014-2015则为一个学年两个学期的成绩
      * @param int $minor 辅修为1，主修为0
      * @return array|string
      */
@@ -42,7 +42,11 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
+        if(strlen($stu_time) == 9){ //2014-2015这样则为查询学年成绩
+            $ret = $this->getXueNianGrade($jwCookie[0], $stu_time,$minor);
+        }else{
+            $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
+        }
         if($ret == Error::jwNotCommentTeacher){
             return $this->getReturn($ret,[]);
         }
@@ -92,6 +96,19 @@ class JwController extends BaseController
         $curl->setReferer($this->urlConst['base']['jw']);
         $curl->get($this->urlConst['jw']['basicInfo']);
         return $this->parseBasicInfo($curl->response);
+    }
+
+    //查询一个学年（两学期）的成绩
+    private function getXueNianGrade($jwCookie, $study_time = '',$minor = 0){
+        $xueQi1 = $this->getGrade($jwCookie,$study_time."-1",$minor);
+        if($xueQi1 == Error::jwNotCommentTeacher){
+            return Error::jwNotCommentTeacher;
+        }
+        $xueQi2 = $this->getGrade($jwCookie,$study_time."-2",$minor);
+        if($xueQi2 == Error::jwNotCommentTeacher){
+            return Error::jwNotCommentTeacher;
+        }
+        return array_merge($xueQi1,$xueQi2);
     }
 
     //查成绩，未使用的功能：查询主修辅修一起算的整个大学，无参get这个地址

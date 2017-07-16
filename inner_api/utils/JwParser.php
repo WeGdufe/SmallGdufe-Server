@@ -45,10 +45,11 @@ trait JwParser
             $dailyScore = $this->mappingScore($dailyScore);
             $paperScore = $this->mappingScore($paperScore);
             $credit = floatval($content->find('td', 8)->innerHtml);   //学分有0.5分的，如就业指导、大学生职业发展与规划
-            // $credit = intval($content->find('td', 8)->innerHtml);
+            $examType = $content->find('td', 14)->innerHtml;//正常考试、补考一
             $item = compact(
                 'time','name', 'score', 'credit'
                 ,'classCode','dailyScore','expScore','paperScore'
+                ,'examType'
             );
             $scoreList [] = $item;
         }

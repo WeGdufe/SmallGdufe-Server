@@ -858,7 +858,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "stu_time",
-            "description": "<p>可选，学年学期，格式：2014-2015-2，默认返回整个大学（全部已修学期）</p>"
+            "description": "<p>可选，学年学期，格式：2014-2015-2 和 2014-2015（返回学年成绩），为空则默认返回整个大学（全部已修学期）</p>"
           },
           {
             "group": "Parameter",
@@ -949,13 +949,20 @@ define({ "api": [
             "optional": false,
             "field": "data.paperScore",
             "description": "<p>期末卷面成绩</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.examType",
+            "description": "<p>考试类型，正常考试、补考一、补考二等</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "正常返回",
-          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2016-2017-2\",\"name\":\"太极\",\"score\":89,\"credit\":2,\"classCode\":16441602,\"dailyScore\":95,\"expScore\":0,\"paperScore\":86},{\"time\":\"2016-2017-2\",\"name\":\"就业指导\",\"score\":94,\"credit\":0.5,\"classCode\":400025,\"dailyScore\":92,\"expScore\":0,\"paperScore\":96}]}",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2014-2015-2\",\"name\":\"面向对象程序设计\",\"score\":74,\"credit\":4,\"classCode\":110154,\"dailyScore\":0,\"expScore\":0,\"paperScore\":0,\"examType\":\"补考一\"},{\"time\":\"2016-2017-2\",\"name\":\"就业指导\",\"score\":94,\"credit\":0.5,\"classCode\":400025,\"dailyScore\":92,\"expScore\":0,\"paperScore\":96,\"examType\":\"正常考试\"}]}",
           "type": "json"
         }
       ]

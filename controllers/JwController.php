@@ -32,7 +32,7 @@ class JwController  extends BaseController
      *
      * @apiParam {String} sno       学号
      * @apiParam {String} pwd       教务系统密码
-     * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回整个大学（全部已修学期）
+     * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2 和 2014-2015（返回学年成绩），为空则默认返回整个大学（全部已修学期）
      * @apiParam {int} minor        可选，查询辅修成绩为1，查主修为0，默认为0查主修
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
@@ -46,13 +46,14 @@ class JwController  extends BaseController
      * @apiSuccess {int}        data.dailyScore     平时成绩
      * @apiSuccess {int}        data.expScore       实验成绩
      * @apiSuccess {int}        data.paperScore     期末卷面成绩
+     * @apiSuccess {String}        data.examType     考试类型，正常考试、补考一、补考二等
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
      * @apiError 3100 没评教，去成绩打印机处查询吧
      *
      * @apiSuccessExample {json} 正常返回
-     * {"code":0,"msg":"","data":[{"time":"2016-2017-2","name":"太极","score":89,"credit":2,"classCode":16441602,"dailyScore":95,"expScore":0,"paperScore":86},{"time":"2016-2017-2","name":"就业指导","score":94,"credit":0.5,"classCode":400025,"dailyScore":92,"expScore":0,"paperScore":96}]}
+     * {"code":0,"msg":"","data":[{"time":"2014-2015-2","name":"面向对象程序设计","score":74,"credit":4,"classCode":110154,"dailyScore":0,"expScore":0,"paperScore":0,"examType":"补考一"},{"time":"2016-2017-2","name":"就业指导","score":94,"credit":0.5,"classCode":400025,"dailyScore":92,"expScore":0,"paperScore":96,"examType":"正常考试"}]}
      * @apiErrorExample  {json} 异常返回
      * {"code":3001,"msg":"学号或密码错误","data":[]}
      */
