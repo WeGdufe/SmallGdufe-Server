@@ -107,7 +107,7 @@ class JwController extends BaseController
             'kcxz' => '',           //课程性质
             'kcmc' => '',           //课程名称
             'fxkc' => $minor,       //辅修为1，主修为0
-            'xsfs' => 'max',        //显示最好成绩(补考情况)，显示全部成绩为all
+            'xsfs' => 'all',        //显示最好成绩(补考情况)为max【教务没显示平时分】，显示全部成绩为all
         ];
         $curl->post($this->urlConst['jw']['grade'], $data);
         //检查是否有评教
@@ -193,7 +193,7 @@ class JwController extends BaseController
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // echo file_get_contents('F:\\Desktop\\233.html');
-        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\233.html')));
+        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
        //  if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
        //
        //      // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){

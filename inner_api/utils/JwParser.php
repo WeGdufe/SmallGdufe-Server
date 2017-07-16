@@ -35,7 +35,7 @@ trait JwParser
             $name = $content->find('td', 3)->innerHtml;
             $score = $content->find('td a')->innerHtml;
 
-            $classCode = $content->find('td', 2)->innerHtml;
+            $classCode = intval($content->find('td', 2)->innerHtml);
             $dailyScore = $content->find('td', 4)->innerHtml;   //平时成绩
             $expScore = $content->find('td', 5)->innerHtml;     //实验成绩
             $paperScore = $content->find('td', 6)->innerHtml;   //期末成绩
@@ -44,7 +44,7 @@ trait JwParser
             $expScore = $this->mappingScore($expScore);
             $dailyScore = $this->mappingScore($dailyScore);
             $paperScore = $this->mappingScore($paperScore);
-            $credit = $content->find('td', 8)->innerHtml;   //学分有0.5分的，如就业指导、大学生职业发展与规划
+            $credit = floatval($content->find('td', 8)->innerHtml);   //学分有0.5分的，如就业指导、大学生职业发展与规划
             // $credit = intval($content->find('td', 8)->innerHtml);
             $item = compact(
                 'time','name', 'score', 'credit'

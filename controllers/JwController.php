@@ -28,7 +28,7 @@ class JwController  extends BaseController
      * @apiVersion 1.0.0
      * @apiName get-grade
      * @apiGroup Jw
-     * @apiDescription 获取成绩，补考/重修情况只显示最好成绩
+     * @apiDescription 获取成绩，显示全部成绩
      *
      * @apiParam {String} sno       学号
      * @apiParam {String} pwd       教务系统密码
@@ -41,7 +41,7 @@ class JwController  extends BaseController
      * @apiSuccess {String}     data.name       课程名
      * @apiSuccess {String}     data.time       学年学期，格式：2014-2015-2
      * @apiSuccess {int}        data.score      总分，优良中差对应返回98，85，75，65
-     * @apiSuccess {String}     data.credit     学分，有0.5学分的情况
+     * @apiSuccess {float}     data.credit     学分，有0.5学分的情况，整数学分则为纯整数
      * @apiSuccess {int}        data.classCode     课程编号
      * @apiSuccess {int}        data.dailyScore     平时成绩
      * @apiSuccess {int}        data.expScore       实验成绩
@@ -52,7 +52,7 @@ class JwController  extends BaseController
      * @apiError 3100 没评教，去成绩打印机处查询吧
      *
      * @apiSuccessExample {json} 正常返回
-     * {"code":0,"msg":"","data":[{"time":"2014-2015-1","name":"离散数学","score":91,"credit":"4","classCode":"110094","dailyScore":99,"expScore":0,"paperScore":87},{"time":"2014-2015-1","name":"数据结构","score":95,"credit":"4","classCode":"110104","dailyScore":94,"expScore":0,"paperScore":95}]}
+     * {"code":0,"msg":"","data":[{"time":"2016-2017-2","name":"太极","score":89,"credit":2,"classCode":16441602,"dailyScore":95,"expScore":0,"paperScore":86},{"time":"2016-2017-2","name":"就业指导","score":94,"credit":0.5,"classCode":400025,"dailyScore":92,"expScore":0,"paperScore":96}]}
      * @apiErrorExample  {json} 异常返回
      * {"code":3001,"msg":"学号或密码错误","data":[]}
      */

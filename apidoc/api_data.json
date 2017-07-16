@@ -835,7 +835,7 @@
     "version": "1.0.0",
     "name": "get_grade",
     "group": "Jw",
-    "description": "<p>获取成绩，补考/重修情况只显示最好成绩</p>",
+    "description": "<p>获取成绩，显示全部成绩</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -917,10 +917,10 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "float",
             "optional": false,
             "field": "data.credit",
-            "description": "<p>学分，有0.5学分的情况</p>"
+            "description": "<p>学分，有0.5学分的情况，整数学分则为纯整数</p>"
           },
           {
             "group": "Success 200",
@@ -955,7 +955,7 @@
       "examples": [
         {
           "title": "正常返回",
-          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2014-2015-1\",\"name\":\"离散数学\",\"score\":91,\"credit\":\"4\",\"classCode\":\"110094\",\"dailyScore\":99,\"expScore\":0,\"paperScore\":87},{\"time\":\"2014-2015-1\",\"name\":\"数据结构\",\"score\":95,\"credit\":\"4\",\"classCode\":\"110104\",\"dailyScore\":94,\"expScore\":0,\"paperScore\":95}]}",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"time\":\"2016-2017-2\",\"name\":\"太极\",\"score\":89,\"credit\":2,\"classCode\":16441602,\"dailyScore\":95,\"expScore\":0,\"paperScore\":86},{\"time\":\"2016-2017-2\",\"name\":\"就业指导\",\"score\":94,\"credit\":0.5,\"classCode\":400025,\"dailyScore\":92,\"expScore\":0,\"paperScore\":96}]}",
           "type": "json"
         }
       ]
