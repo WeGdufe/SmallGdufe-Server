@@ -10,7 +10,7 @@ return $appTips = [
 2.有技术人员打算做iOS版么？管理员要上班了，戳下面"前往"按钮进群聊下
         ',
         'startTime' => '2017-07-03 00:40:00',
-        'endTime' => '2017-08-03 00:40:00',
+        'endTime' => '2017-07-16 00:40:00',
         'openUrl' => 'https://jq.qq.com/?_wv=1027&k=4BERdze'
     ]
 ];

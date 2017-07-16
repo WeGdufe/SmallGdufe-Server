@@ -159,6 +159,29 @@ class WorkController extends Controller
     }
 
     /**
+     * @api {post} work/get-document 文档下载
+     * @apiVersion 1.0.4
+     * @apiName get-document
+     * @apiGroup Work
+     *
+     * @apiDescription 获取校历图片等文件，直接返回文件
+     *
+     * @apiParam {String} fileCode  文件码，目前可用值： xiaoli
+     *
+     */
+    public function actionGetDocument()
+    {
+        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+        if(!isset($req['fileCode'])) {
+            return;
+        }
+        if($req['fileCode'] == 'xiaoli'){
+            $res = \YII::$app->response;
+            $res->sendFile('../release/xiaoli.jpg');
+        }
+    }
+
+    /**
      * @api {post} work/all-logout 彻底退出登录
      * @apiVersion 1.0.2
      * @apiName all-logout
@@ -178,14 +201,14 @@ class WorkController extends Controller
     public function actionAllLogout()
     {
         $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        if(isset($req['sno'])
-            && $req['sno'] != Yii::$app->params['schoolMateSnoFlag'] ){
-            $sno = $req['sno'];
-            Yii::$app->cache->delete('in:' . $sno);
-            Yii::$app->cache->delete('op:' . $sno);
-            Yii::$app->cache->delete('jw:' . $sno);
-            Yii::$app->cache->delete('card:' . $sno);
-        }
+        // if(isset($req['sno'])
+            // && $req['sno'] != Yii::$app->params['schoolMateSnoFlag'] ){
+            // $sno = $req['sno'];
+            // Yii::$app->cache->delete('in:' . $sno);
+            // Yii::$app->cache->delete('op:' . $sno);
+            // Yii::$app->cache->delete('jw:' . $sno);
+            // Yii::$app->cache->delete('card:' . $sno);
+        // }
         return $this->getReturn(0,'',new StdClass);
     }
 

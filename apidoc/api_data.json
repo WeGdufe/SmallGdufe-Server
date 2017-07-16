@@ -2238,6 +2238,30 @@
   },
   {
     "type": "post",
+    "url": "work/get-document",
+    "title": "文档下载",
+    "version": "1.0.4",
+    "name": "get_document",
+    "group": "Work",
+    "description": "<p>获取校历图片等文件，直接返回文件</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "fileCode",
+            "description": "<p>文件码，目前可用值： xiaoli</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/WorkController.php",
+    "groupTitle": "Work"
+  },
+  {
+    "type": "post",
     "url": "work/update",
     "title": "最新版apk下载",
     "version": "1.0.0",
