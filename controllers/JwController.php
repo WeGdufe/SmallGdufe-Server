@@ -81,6 +81,7 @@ class JwController  extends BaseController
      * @apiParam {String} pwd       教务系统密码
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回当前学期
      * @apiParam {int} split        可选，是否拆分连堂的课程，默认为0表示不拆分（连堂则合并成一个课程）
+	 * @apiParam {String} week  可选，学期周数，格式：8（周数字），默认返回全部
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -111,6 +112,10 @@ class JwController  extends BaseController
             $this->data['split'] = intval($this->req['split']);
         }else{
             $this->data['split'] = 0;
+        }
+		//判断周参数是否为空
+		if(isset($this->req['week'])){
+            $this->data['week'] = $this->req['week'];
         }
         return Yii::$app->runAction('api/jw/get-schedule', $this->data);
     }

@@ -21,13 +21,14 @@ class JwController extends BaseController
      * @param $pwd
      * @param string $stu_time ex. 2014-2015-2 可选，不填则返回当前学期
      * @param int $split 是否分拆连堂的课程，默认为0代表不拆，若为1则将连堂item拆成多个，避开true/false的类型问题
+	 * @param string $week 学期周数，格式：8（周数字），默认返回全部
      * @return array|string
      */
-    public function actionGetSchedule($sno, $pwd, $stu_time = '', $split = 0)
+    public function actionGetSchedule($sno, $pwd, $stu_time = '', $split = 0, $week = '')
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split));
+        return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split, $week));
     }
 
     /**
@@ -134,7 +135,7 @@ class JwController extends BaseController
         return $this->parseGrade($curl->response);
     }
 
-    private function getSchedule($jwCookie, $study_time = '', $split = 0)
+    private function getSchedule($jwCookie, $study_time = '', $split = 0, $week = '')
     {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
@@ -145,6 +146,7 @@ class JwController extends BaseController
             $curl->get($this->urlConst['jw']['schedule']);
         } else {
             $data = [
+				'zc' => $week,
                 'xnxq01id' => $study_time,
                 'sfFD' => '1',
             ];
