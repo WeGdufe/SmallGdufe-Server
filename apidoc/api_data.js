@@ -1040,12 +1040,12 @@ define({ "api": [
             "field": "split",
             "description": "<p>可选，是否拆分连堂的课程，默认为0表示不拆分（连堂则合并成一个课程）</p>"
           },
-		  {
+          {
             "group": "Parameter",
-            "type": "String",
+            "type": "int",
             "optional": false,
             "field": "week",
-            "description": "<p>可选，学期周数，格式：8（周数字），默认返回全部</p>"
+            "description": "<p>可选，按周查看，数字1-16，格式：8，默认返回全部</p>"
           }
         ]
       }
