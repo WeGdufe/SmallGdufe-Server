@@ -44,7 +44,7 @@ class OpacController extends BaseController
         if (!isset($req['bookName'])) {
             $req['bookName'] = '';
         }
-        if (!isset($req['bookName'])) {
+        if (!isset($req['page'])) {
             $req['page'] = 1;
         }
         $this->data['bookName'] = $req['bookName'];

@@ -81,7 +81,7 @@ class JwController  extends BaseController
      * @apiParam {String} pwd       教务系统密码
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回当前学期
      * @apiParam {int} split        可选，是否拆分连堂的课程，默认为0表示不拆分（连堂则合并成一个课程）
-	 * @apiParam {String} week  可选，学期周数，格式：8（周数字），默认返回全部
+     * @apiParam {int} week         可选，按周查看，数字1-16，格式：8，默认返回全部
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示

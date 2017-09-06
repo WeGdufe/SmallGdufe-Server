@@ -68,7 +68,7 @@ class InfoController extends BaseController
     }
 
     /**
-     * 获取信息门户tab标签的素拓信息
+     * 获取信息门户tab标签的素拓信息，APP当前检查这个接口来验证登陆
      * @param $sno
      * @param $pwd
      * @return string json
@@ -77,6 +77,9 @@ class InfoController extends BaseController
     {
         if (empty($sno) || empty($pwd)){
             return $this->getReturn(Error::accountEmpty,[]);
+        }
+        if($this->isSystemCrashed($this->urlConst['base']['ids'])) {
+            return $this->getReturn(Error::idsSysError,[]);
         }
         $idsCookie = $this->getIdsCookie($sno, $pwd);
         if(empty($idsCookie)){

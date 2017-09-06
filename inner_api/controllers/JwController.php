@@ -146,17 +146,23 @@ class JwController extends BaseController
             $curl->get($this->urlConst['jw']['schedule']);
         } else {
             $data = [
-				'zc' => $week,
+				// 'zc' => $week,   //教务处官方按周筛选，目前官方有BUG，暂不使用
                 'xnxq01id' => $study_time,
                 'sfFD' => '1',
             ];
             $curl->post($this->urlConst['jw']['schedule'], $data);
         }
         if ($split) {
-            return $this->parseSchedule($curl->response);
+            $scheduleList = $this->parseSchedule($curl->response);
+        }else{
+            $scheduleList = $this->parseScheduleMergeNext($curl->response);
         }
-        return $this->parseScheduleMergeNext($curl->response);
+        if(intval($week) >= 1 && intval($week) <= 30 ){
+            $scheduleList = $this->filterScheduleByWeek($scheduleList,$week);
+        }
+        return $scheduleList;
     }
+
 
     /**
      * 返回该学号对应的cookie，无则重登录以获取
@@ -200,6 +206,79 @@ class JwController extends BaseController
         return [$jwCookie];
     }
 
+    /**
+     * 按周查看过滤，返回一个过滤后的，不符合的不返回
+     * @param $scheduleList
+     * @param $week
+     * @return array 返回修改后的$scheduleList
+     */
+    private function filterScheduleByWeek($scheduleList,$week)
+    {
+        $ret = $scheduleList;
+        foreach ($ret as $key => &$schedule){
+            if(!$this->isCurrentWeek($schedule['period'],$week)){
+                unset($ret[$key]);
+            }
+        }
+        return array_values($ret);
+    }
+    /**
+     * 周参数是否为目标周
+     * @param $period string 周参数，1-8(周) 6,9,12,15(周)等各种格式
+     * @param $week int 目标周
+     * @return bool 周参数包含目标周则返回true
+     */
+    private function isCurrentWeek($period,$week)
+    {
+        //统一括号
+        $period = str_replace('[','(',$period);
+        $period = str_replace(']',')',$period);
+
+        //1-8(周) 1-16(双周) 这类
+        $pattern = '#(\\d+)-(\\d+)\\((.?)周\\)#u'; //取出数字
+        $isMatched = preg_match($pattern, $period, $matchRes);
+        if($isMatched){
+            if($matchRes[3] == '单' && ($week % 2 == 0) ){
+                return false;
+            }
+            if($matchRes[3] == '双' && ($week % 2 != 0) ){
+                return false;
+            }
+            // 1-8这种不限制单双周 或者 限制但符合了，检查周数范围，$week是否在1-8里
+            if( $matchRes[1] <= $week && $week <= $matchRes[2]){
+                return true;
+            }
+            //将刚匹配的内容全删掉，如果不剩则说明$week不在1-8里，如果还有剩余字符说明是 1-9,16(周)这种，交给下面处理
+            preg_replace($pattern,'',$period);
+            if( strlen($period) == 0 ){ //不剩说明周数不符合
+                return false;
+            }
+        }
+        // 处理 1,2,4,6,8,10,12(周) 1-9,16(周)
+        // 先去掉(周)，再分割数字，在判断数字符合周数不
+        preg_replace('#\\(.?周\\)#u','',$period);
+        $arrWeeks = explode(',',$period);
+        if(empty($arrWeeks)){
+            return false;
+        }
+        //1-9,10,16(周) 经过 去掉(周) 和 分割数字后 剩下 1-9和10 16
+        foreach ($arrWeeks as $item) {
+            //先处理1-9
+            $pattern = '#(\\d+)-(\\d+)#';
+            $isMatched = preg_match($pattern, $item, $matchRes);
+            if ($isMatched) {
+                if( $matchRes[1] <= $week && $week <= $matchRes[2]){
+                    return true;
+                }
+                continue;
+            }
+            //处理单个数字
+            if($item == $week){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public function actionIndex()
     {
