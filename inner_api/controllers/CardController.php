@@ -73,10 +73,99 @@ class CardController extends InfoController
     public function actionTest()
     {
         // return $this->parseCurrentCash( file_get_contents('F:\\Desktop\\fanka_basic.html') );
-        return $this->parseConsumeToday( file_get_contents('F:\\Desktop\\fanka_dangtian.html') );
+        //return $this->parseConsumeToday( file_get_contents('F:\\Desktop\\fanka_dangtian.html') );
+        //return $this->parseElectric(file_get_contents('D:\\log.txt'));
+        //return json_encode($this->getElectricSdms(30, 201), JSON_UNESCAPED_UNICODE);
+    }
+    public function actionElectric($building, $room) {
+        $building = intval($building);
+        $room = intval($room);
+        $cgcSims = [26, 27, 29];
+        $sdms = [23, 30, 32];
+        if(in_array($building, $cgcSims)) {
+            $data = $this->getElectricSims($building, $room);
+            if (empty($data) || count($data) < 1) {
+                return  $this->getReturn(Error::roomNotExite,[]);
+            }
+            return $this->getReturn(Error::success,$data);
+        } else if(in_array($building, $sdms)) {
+            $data = $this->getElectricSdms($building, $room);
+            if (empty($data) || count($data) < 1) {
+                return  $this->getReturn(Error::roomNotExite,[]);
+            }
+            return $this->getReturn(Error::success,$data);
+        } else {
+            return $this->getReturn(Error::buildingError, []);
+        }
     }
 
+    public function getElectricSdms($building, $room) {
+        $url = 'http://202.116.48.108:8090/sdms-select/webSelect/welcome2.jsp';
 
+        $html = $this->runElectricCurl(self::METHOD_GET, $url, null, $this->getSdmsCookie($building, $room));
+        return $this->parseElectricSdms($html);
+    }
+    public function getSdmsCookie($building, $room) {
+        $curl = $this->newCurl();
+        $url = 'http://202.116.48.108:8090/sdms-select/webSelect/roomFillLogView.do';
+        $buildingMap = [
+            '23' => '5',
+            '30' => '97',
+            '32' => '911'
+        ];
+        $data = [
+            'buildingId' => $buildingMap[strval($building)],
+            'roomName' => $room
+        ];
+        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        $curl->setOpt(CURLOPT_FOLLOWLOCATION, false);
+        // $curl->post('http://localhost/2.php', $data);
+        $curl->post($url, $data);
+        $cookie = $curl->getCookie($this->comCookieKey);
+        return $cookie;
+    }
+    public function getElectricSims($building, $room) {
+        $url = 'http://202.116.48.108:8090/cgcSims_en/selectList_list.action';
+        $data = array(
+            'hiddenType' => '0',
+            'isHost' => '',
+            'beginTime' => date('Y-m-d', time() - 7*24*3600),
+            'endTime' => date('Y-m-d'),
+            'type' => '2',
+            'client' => '',
+            'roomId' => $this->getRoomId($building, $room),
+            'roomName' => $building.$room,
+            'building' => $building.'栋'
+        );
+        $html = $this->runElectricCurl(self::METHOD_POST, $url,$data);
+        return $this->parseElectricSims($html);
+    }
+
+    function getRoomId($building, $room) {
+        $buildingMap = [
+            '26' => '51',
+            '27' => '52',
+            '29' => '982'
+        ];
+        $url = 'http://202.116.48.108:8090/cgcSims_en/login_list.action';
+        $pdata = [
+            'buildingName' => '',
+            'buildingId' => $buildingMap[strval($building)],
+            'roomName' => $building.$room,
+            'select' => '查询'
+        ];
+        //$url = $url.'?'.http_build_query($pdata);
+        //$data = file_get_contents($url);
+        $data = $this->runElectricCurl(self::METHOD_GET, $url, $pdata);
+        preg_match_all('/<input .*? \/\>/', $data, $inputs);
+        foreach ($inputs[0] as $key => &$value) {
+            if(strstr($value, 'roomId')) {
+                preg_match('/(?<=value\=\")\d+(?=\")/', $value, $ids);
+                return $ids[0];
+            }
+        }
+        return false;
+    }
 
     /**
      * 返回校园卡系统的cookie
@@ -156,4 +245,20 @@ class CardController extends InfoController
         return $curl->response;
     }
 
+    private function runElectricCurl($method, $url, $data, $cookie = null) {
+        $curl = $this->newCurl();
+
+        if($cookie) {
+            $curl->setCookie($this->comCookieKey, $cookie);
+            $curl->setReferrer('http://202.116.48.108:8090/sdms-select/webSelect/roomFillLogView.do');
+        } else {
+            $curl->setReferrer($url);
+        }
+        if(isset($data) && is_array($data)) {
+            $curl->$method($url, $data);
+        }else{
+            $curl->$method($url);
+        }
+        return $curl->response;
+    }
 }

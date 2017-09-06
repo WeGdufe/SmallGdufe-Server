@@ -81,6 +81,21 @@ class CardController extends BaseController
         return Yii::$app->runAction('api/card/consume-today', $this->data);
     }
 
+    public function actionElectric() {
+        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+        if(isset($req['building'])){ //必备参数，若缺则api/去检测返回
+            $this->data['building'] = $req['building'];
+        } else {
+            $this->data['building'] = 0;
+        }
+        if(isset($req['room'])){ //必备参数，若缺则api/去检测返回
+            $this->data['room'] = $req['room'];
+        } else {
+            $this->data['building'] = 0;
+        }
+        return Yii::$app->runAction('api/card/electric', $this->data);
+    }
+
     public function actionTest()
     {
         return Yii::$app->runAction('api/card/test');
