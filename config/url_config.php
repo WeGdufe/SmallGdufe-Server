@@ -9,6 +9,7 @@ $baseUrls = [
     'opac' => 'http://opac.library.gdufe.edu.cn',
     'cet' => 'http://www.chsi.com.cn/cet',
     'card' => 'http://cardinfo.gdufe.edu.cn',
+    'electric' => 'http://202.116.48.108:8090',//电控查询，无域名
 ];
 return $urlConst = [
     'base' => $baseUrls,
@@ -42,5 +43,10 @@ return $urlConst = [
         'home' => $baseUrls['card'] . '/gdcjportalHome.action',//获取cookie用
         'currentCash' => $baseUrls['card'] . '/accountcardUser.action',
         'consumeToday' => $baseUrls['card'] . '/accounttodatTrjnObject.action',
+
+        'SdmsList' => $baseUrls['electric'] . '/sdms-select/webSelect/welcome2.jsp',
+        'SimsList' => $baseUrls['electric'] . '/cgcSims_en/selectList_list.action',
+        'SimsRoom' => $baseUrls['electric'] . '/cgcSims_en/login_list.action',
+        'SdmsCookie' => $baseUrls['electric'] . '/sdms-select/webSelect/roomFillLogView.do',
     ],
 ];

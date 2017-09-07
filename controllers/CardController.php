@@ -80,20 +80,41 @@ class CardController extends BaseController
         }
         return Yii::$app->runAction('api/card/consume-today', $this->data);
     }
-
-    public function actionElectric() {
+    /**
+     * @api {post} card/get-electric 宿舍电控查询
+     * @apiVersion 1.0.5
+     * @apiName get-electric
+     * @apiGroup Card
+     *
+     * @apiDescription 查用电、购电情况，支持本部23，26，27，29，30，32栋
+     *
+     * @apiParam {String} building  宿舍楼号
+     * @apiParam {String} room      宿舍房间号
+     *
+     * @apiSuccess {int}      code      状态码，0为正常返回
+     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {Object[]} data      交易记录
+     * @apiSuccess {String}     data.electric 电量剩余度数
+     * @apiSuccess {String}     data.money 剩余电费
+     * @apiSuccess {String}     data.time 时间
+     *
+     * @apiError 6300 房间号错误或者最近一周系统无记录
+     * @apiError 6301 楼号错误或者暂不支持
+     *
+     * @apiSuccessExample {json} 正常返回
+     * {"code":0,"msg":"","data":[{"electric":"5.0","money":"3.24","time":"2017-09-02 10:00:00"},{"electric":"37.51","money":"24.27","time":"2017-09-03 10:00:00"},{"electric":"29.92","money":"19.36","time":"2017-09-04 10:00:01"},{"electric":"21.2","money":"13.72","time":"2017-09-05 10:00:00"},{"electric":"10.91","money":"7.06","time":"2017-09-06 10:00:01"}]}
+     */
+    public function actionGetElectric() {
         $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        if(isset($req['building'])){ //必备参数，若缺则api/去检测返回
+        $this->data['building'] = 0;
+        $this->data['room'] = 0;
+        if(isset($req['building'])){
             $this->data['building'] = $req['building'];
-        } else {
-            $this->data['building'] = 0;
         }
-        if(isset($req['room'])){ //必备参数，若缺则api/去检测返回
+        if(isset($req['room'])){
             $this->data['room'] = $req['room'];
-        } else {
-            $this->data['building'] = 0;
         }
-        return Yii::$app->runAction('api/card/electric', $this->data);
+        return Yii::$app->runAction('api/card/get-electric', $this->data);
     }
 
     public function actionTest()
