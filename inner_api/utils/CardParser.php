@@ -104,7 +104,7 @@ trait CardParser
             foreach ($tds as $i => $td) {
                 if($i == 2) $electric = $this->trimNbsp($td->text);// 剩余电量
                 else if($i == 3) $money = $this->trimNbsp($td->text);//剩余余额
-                else if($i == 6) $time = $this->trimNbsp(str_replace(".0","",$td->innerHtml));//时间
+                else if($i == 6) $time = $this->trimNbsp(preg_replace("#\\.\\d+#","",$td->innerHtml));//时间
             }
             $item = compact(
                 'electric','money','time'
@@ -129,7 +129,7 @@ trait CardParser
             foreach ($tds as $i => $td) {
                 if($i == 3) $electric = $this->trimNbsp($td->innerHtml);// 剩余电量
                 else if($i == 5) $money = $this->trimNbsp($td->innerHtml);//剩余余额
-                else if($i == 6) $time = $this->trimNbsp(preg_replace("/\.\d+/","",$td->innerHtml));//时间
+                else if($i == 6) $time = $this->trimNbsp(preg_replace("#\\.\\d+#","",$td->innerHtml));//时间
             }
             $item = compact(
                 'electric','money','time'

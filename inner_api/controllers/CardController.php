@@ -56,12 +56,11 @@ class CardController extends InfoController
      * 宿舍电控查询
      * {"code":0,"msg":"","data":[{"electric":"5.0","money":"3.24","time":"2017-09-02 10:00:00"},{"electric":"37.51","money":"24.27","time":"2017-09-03 10:00:00"},{"electric":"29.92","money":"19.36","time":"2017-09-04 10:00:01"},{"electric":"21.2","money":"13.72","time":"2017-09-05 10:00:00"},{"electric":"10.91","money":"7.06","time":"2017-09-06 10:00:01"}]}
      * @param $building int 楼号
-     * @param $room int 宿舍号
+     * @param $room string 宿舍号
      * @return string
      */
     public function actionGetElectric($building, $room) {
         $building = intval($building);
-        $room = $room;
         $cgcSims = [26, 27, 29];
         $sdms = [23, 30, 32];
         if(in_array($building, $cgcSims)) {
