@@ -42,7 +42,7 @@ class Error
     const cetError = 5300;
     const cetAccountEmpty = 5301;
 
-    const roomNotExite = 6300;
+    const roomNotExist = 6300;
     const buildingError = 6301;
     public static $errorMsg = [
         0 => '',

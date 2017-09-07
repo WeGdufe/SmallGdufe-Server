@@ -90,11 +90,9 @@ trait CardParser
     public function parseElectricSims($html) {
         if (empty($html)) return [];
         //$html = iconv("GBK", "UTF-8", $html);   //GBK->UTF-8
-
         preg_match_all('/<table[\s\S]*?\/table>/', $html, $matches);
         $dom = new Dom;
         $dom->loadStr($matches[0][1], []);
-        //echo $matches[0][1];
         $elecList = [];
         $contents = $dom->find('tr');
         $cnt = count($contents);
@@ -102,12 +100,11 @@ trait CardParser
         foreach ($contents as $index => $content) {
             if ($index == 0) continue;                              //标题头
             if($index >= $cnt - 2) break; // 结束，最后两行无效数据
-            //print_r($content);
             $tds = $content->find('td');
             foreach ($tds as $i => $td) {
-                if($i == 2) $electric = $td->text;// 剩余电量
-                else if($i == 3) $money = $td->text;//剩余余额
-                else if($i == 6) $time = $td->text;//时间
+                if($i == 2) $electric = $this->trimNbsp($td->text);// 剩余电量
+                else if($i == 3) $money = $this->trimNbsp($td->text);//剩余余额
+                else if($i == 6) $time = $this->trimNbsp(str_replace(".0","",$td->innerHtml));//时间
             }
             $item = compact(
                 'electric','money','time'
@@ -120,26 +117,19 @@ trait CardParser
     public function parseElectricSdms($html) {
         if (empty($html)) return [];
         //$html = iconv("GBK", "UTF-8", $html);   //GBK->UTF-8
-
-        //preg_match_all('/<table[\s\S]*?\/table>/', $html, $matches);
         $dom = new Dom;
         $dom->loadStr($html,[]);
-        //echo $matches[0][1];
         $elecList = [];
         $contents = $dom->find('table', 1);
         $contents = $contents->find('tr');
-        //var_dump($contents);
         $cnt = count($contents);
-        //if($cnt <= 3) return null;
         foreach ($contents as $index => $content) {
-            if ($index == 0) continue;                              //标题头
-            //if($index >= $cnt - 1) break; // 结束，最后两行无效数据
-            //print_r($content);
+            if ($index == 0) continue; //标题头
             $tds = $content->find('td');
             foreach ($tds as $i => $td) {
-                if($i == 3) $electric = $td->innerHtml;// 剩余电量
-                else if($i == 5) $money = $td->innerHtml;//剩余余额
-                else if($i == 6) $time = $td->innerHtml;//时间
+                if($i == 3) $electric = $this->trimNbsp($td->innerHtml);// 剩余电量
+                else if($i == 5) $money = $this->trimNbsp($td->innerHtml);//剩余余额
+                else if($i == 6) $time = $this->trimNbsp(str_replace(".0","",$td->innerHtml));//时间
             }
             $item = compact(
                 'electric','money','time'

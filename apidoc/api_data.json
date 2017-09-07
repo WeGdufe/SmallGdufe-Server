@@ -250,6 +250,110 @@
   },
   {
     "type": "post",
+    "url": "card/get-electric",
+    "title": "宿舍电控查询",
+    "version": "1.0.5",
+    "name": "get_electric",
+    "group": "Card",
+    "description": "<p>查用电、购电情况，支持本部23，26，27，29，30，32栋</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "building",
+            "description": "<p>宿舍楼号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "room",
+            "description": "<p>宿舍房间号</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int",
+            "optional": false,
+            "field": "code",
+            "description": "<p>状态码，0为正常返回</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "msg",
+            "description": "<p>错误信息，code非0时有错误信息提示</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "data",
+            "description": "<p>交易记录</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.electric",
+            "description": "<p>电量剩余度数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.money",
+            "description": "<p>剩余电费</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.time",
+            "description": "<p>时间</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "正常返回",
+          "content": "{\"code\":0,\"msg\":\"\",\"data\":[{\"electric\":\"5.0\",\"money\":\"3.24\",\"time\":\"2017-09-02 10:00:00\"},{\"electric\":\"37.51\",\"money\":\"24.27\",\"time\":\"2017-09-03 10:00:00\"},{\"electric\":\"29.92\",\"money\":\"19.36\",\"time\":\"2017-09-04 10:00:01\"},{\"electric\":\"21.2\",\"money\":\"13.72\",\"time\":\"2017-09-05 10:00:00\"},{\"electric\":\"10.91\",\"money\":\"7.06\",\"time\":\"2017-09-06 10:00:01\"}]}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "6300",
+            "description": "<p>房间号错误或者最近一周系统无记录</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "6301",
+            "description": "<p>楼号错误或者暂不支持</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/CardController.php",
+    "groupTitle": "Card"
+  },
+  {
+    "type": "post",
     "url": "info/few-sztz",
     "title": "获取素拓信息",
     "version": "1.0.0",
