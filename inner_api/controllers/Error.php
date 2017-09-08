@@ -44,6 +44,7 @@ class Error
 
     const roomNotExist = 6300;
     const buildingError = 6301;
+    const electricNotFound = 6304;
     public static $errorMsg = [
         0 => '',
         1000 => '网络错误',
@@ -72,7 +73,8 @@ class Error
         5301 => '考号或者名字为空',
 
         6300 => '房间号错误或者最近一周系统无记录',
-        6301 => '楼号错误或者暂不支持'
+        6301 => '楼号错误或者暂不支持',
+        6304 => '电控系统崩溃了'
     ];
 
 }
