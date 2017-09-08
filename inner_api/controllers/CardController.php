@@ -63,6 +63,9 @@ class CardController extends InfoController
         $building = intval($building);
         $cgcSims = [26, 27, 29];
         $sdms = [23, 30, 32];
+        if($this->isSystemCrashed($this->urlConst['card']['SdmsList'])) {
+            return $this->getReturn(Error::electricNotFound, []);
+        }
         if(in_array($building, $cgcSims)) {
             $data = $this->getElectricSims($building, $room);
         } else if(in_array($building, $sdms)) {
@@ -95,9 +98,6 @@ class CardController extends InfoController
     }
 
     private function getElectricSdms($building, $room) {
-        if($this->isSystemCrashed($this->urlConst['card']['SdmsList'])) {
-            return $this->getReturn(Error::electricNotFound, []);
-        }
         $html = $this->runElectricCurl(self::METHOD_GET, $this->urlConst['card']['SdmsList'], null, $this->getSdmsCookie($building, $room));
         return $this->parseElectricSdms($html);
     }
@@ -113,9 +113,6 @@ class CardController extends InfoController
             'roomName' => $building.$room,
             'building' => $building.'栋'
         ];
-        if($this->isSystemCrashed($this->urlConst['card']['SimsList'])) {
-            return $this->getReturn(Error::electricNotFound, []);
-        }
         $html = $this->runElectricCurl(self::METHOD_POST, $this->urlConst['card']['SimsList'],$data);
         return $this->parseElectricSims($html);
     }
