@@ -43,7 +43,7 @@ class CardController extends InfoController
      * @param $cardNum string|int 校园卡卡号
      * @return string
      */
-    public function actionConsumeToday($sno, $pwd,$cardNum){
+    public function actionConsumeToday($sno, $pwd,$cardNum = ''){
         if(empty($cardNum)){
             return $this->getReturn(Error::cardNumEmpty,[]);
         }
@@ -59,7 +59,10 @@ class CardController extends InfoController
      * @param $room string 宿舍号
      * @return string
      */
-    public function actionGetElectric($building, $room) {
+    public function actionGetElectric($building = '', $room = '') {
+        if(empty($building) || empty($room)){
+            return $this->getReturn(Error::parmEmpty,[]);
+        }
         $building = intval($building);
         $cgcSims = [26, 27, 29];
         $sdms = [23, 30, 32];

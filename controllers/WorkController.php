@@ -155,7 +155,7 @@ class WorkController extends Controller
     public function actionUpdate()
     {
         $res = \YII::$app->response;
-        $res->sendFile('../release/移动广财v1.3.0.apk');
+        $res->sendFile('../release/weGdufe.apk');
     }
 
     /**
