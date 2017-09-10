@@ -17,7 +17,6 @@ return $urlConst = [
         'login' => $baseUrls['jw'] . '/xk/LoginToXkLdap',
         'grade' => $baseUrls['jw'] . '/kscj/cjcx_list',
         'schedule' => $baseUrls['jw'] . '/xskb/xskb_list.do',
-        'cet' => '',
         'basicInfo' => $baseUrls['jw'] . '/grxx/xsxx',
     ],
     'jwc' => [

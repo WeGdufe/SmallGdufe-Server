@@ -70,4 +70,9 @@ class JwcController extends Controller
         }
         return Yii::$app->runAction('api/jwc/get-cet', $this->data);
     }
+    public function actionTest()
+    {
+        return Yii::$app->runAction('api/jwc/test', $this->data);
+    }
+
 }

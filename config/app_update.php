@@ -4,17 +4,18 @@ return $update = [
     'update' =>[
         'original' => '',//扩展用的
         'forced' => false,
-        'updateContent' => '1.New!  查一学年的平均绩点、辅修成绩查询
-2.New!  搜索书籍多页查询功能
-3.更换地铁、校历图，支持长按保存图片
-4.修复0.5学分、单双周课表BUG
-5.新官网： www.wegdufe.com
+        'updateContent' => '1.New!  更名小广财
+2.New!  本部宿舍电量查询
+3.New!  APP分享微信功能
+4.美化桌面课表组件颜色
+5.修几个小Bug
+6.下次更新预告：失物招领+认领推送 or 社交
         ',
-        'updateUrl' => 'http://acm.gdufe.edu.cn/kits/movingGdufe/movingGdufe.apk',
-        // 'updateUrl' => 'http://www.wegdufe.com/release/movingGdufe.apk',
-        'updateTime' => 1500210139, //版本发布的时间戳
-        'versionCode' => 5,
-        'versionName' =>  '1.3.1',
+        'updateUrl' => 'http://acm.gdufe.edu.cn/kits/weGdufe/weGdufe.apk',
+        // 'updateUrl' => 'http://www.wegdufe.com/release/weGdufe.apk',
+        'updateTime' => 1504975391, //版本发布的时间戳
+        'versionCode' => 6,
+        'versionName' =>  '1.4.0',
         'ignore' => false,
     ]
 ];

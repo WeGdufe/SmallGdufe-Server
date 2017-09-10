@@ -22,7 +22,7 @@ class JwcController extends Controller
     {
         $curl = $this->newCurl();
         $curl->get(Yii::$app->params['jwc']['xiaoLi']);
-        return $this->getReturn(Error::success, $this->parseXiaoLi($curl->response));
+        return $this->getReturn(Error::success,'', $this->parseXiaoLi($curl->response));
     }
 
     public function actionGetCet($zkzh='', $xm='')
@@ -34,13 +34,28 @@ class JwcController extends Controller
         $data = compact(
             'zkzh', 'xm'
         );
+        //待解决，执行时间长，$curl->response是空，原因不明，若在本地localhost则可用，放宽超时参数能返回带错误信息的页面
+        //暂且把时间设置正常，然后直接返回自定义错误，下面两条curl都可用
+        //curl 'http://www.chsi.com.cn/cet/query?zkzh=440101171107019&xm=%E9%83%AD%E5%98%89%E6%A2%81'  -H 'Accept-Encoding: deflate'  -H 'Referer: http://www.chsi.com.cn/cet'    > 1.html
+        //curl 'http://www.chsi.com.cn/cet/query?zkzh=440101171107019&xm=%E9%83%AD%E5%98%89%E6%A2%81'  -H 'Accept-Encoding: gzip,deflate'  -H 'Referer: http://www.chsi.com.cn/cet/' --compressed    > 1.html
+
+        $curl->setOpt(CURLOPT_TIMEOUT,1);
+        // $curl->setOpt(CURLOPT_TIMEOUT,30);
+        $curl->setOpt(CURLOPT_ENCODING,'');
+        $curl->setHeader('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
+        $curl->setHeader('Accept-Encoding','gzip, deflate');
+        $curl->setHeader('User-Agent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36');
+        $curl->setHeader('Accept-Language','zh-CN,zh;q=0.8,en;q=0.6');
+        $curl->setHeader('Connection','Close');
         $curl->setReferer(Yii::$app->params['base']['cet']);
         $curl->get(Yii::$app->params['jwc']['cet'], $data);
+        // var_dump($curl->rawResponse);
+
         $res = $this->parseCet($curl->response);
-        if (!$res) {
-            return $this->getReturn(Error::cetError);
+        if (gettype($res) == 'string') {
+            return $this->getReturn(Error::cetError, $res);
         }
-        return $this->getReturn(Error::success, $res);
+        return $this->getReturn(Error::success, '',$res);
     }
 
     private function newCurl()
@@ -52,10 +67,12 @@ class JwcController extends Controller
         return $curl;
     }
 
-    private function getReturn($code, $data=null)
+    private function getReturn($code,$msg='', $data=null)
     {
         if ($data == null) $data = new stdClass;
-        $msg = Error::$errorMsg[$code];
+        if(empty($msg)){
+            $msg = Error::$errorMsg[$code];
+        }
         return \Yii::createObject([
             'class' => 'yii\web\Response',
             'format' => Response::FORMAT_JSON,
@@ -73,6 +90,9 @@ class JwcController extends Controller
 
     public function actionTest()
     {
+        return $this->parseCet( file_get_contents('F:\\Desktop\\2.html') );
+
+
     }
 
 

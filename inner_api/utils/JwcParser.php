@@ -34,15 +34,16 @@ trait JwcParser
 
     public function parseCet($html)
     {
-        if (empty($html)) return new stdClass;
+        if (empty($html)) return "Sorry，服务器智障了，待修复"; // new stdClass;
+
         $dom = new Dom;
         $dom->loadStr($html, []);
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         //准考证号/名字错误
         $contents = $dom->find('div[class=error]');
-        if(count($contents)){
-            return null;
+        if(count($contents)){   //返回报错信息
+            return trim($contents->innerHtml);
         }
 
         //正常情况
