@@ -177,26 +177,37 @@ trait JwParser
 
             //其他课程信息
             $matchContent = $content;
+
+            //对于缺少老师名的情况，分隔出多个连续课程，添加老师信息户再合并
+            if( substr_count($matchContent,"title='老师") != substr_count($matchContent,"title='周次") ) {
+                $itemArr = explode("---------------------", $matchContent);
+                if (!empty($itemArr)){
+                    foreach ($itemArr as &$item) {
+                        if (strpos($item, "老师") === false) {
+                            $item = substr_replace($item, "<font title='老师'>老师不明</font><br/>", strpos($item, "<font"), 0);
+                        }
+                    }
+                    $matchContent = implode("", $itemArr); //分隔符随意
+                }
+            }
+
             $pattern = '>(.+?)<br\/>';
             for ($i = 0; $i < 3; $i++) {
                 $pattern .= '.+?\'>(.+?)<\/font>';
             }
             $pattern .= '.+?\[(.+?)\].+?<br\/>';
             preg_match_all('/' . $pattern . '/', $matchContent, $matches);
-
             $resCnt = count($matches[0]);
             if($resCnt == 0){   //忽略空数据情况（就是那个单元格没有课程的情况）
                 continue;
             }
             //不管是一个形势政策还是多个不同周的 都循环解决
             for($ith = 0; $ith < $resCnt; $ith++){
-
                 $name = $matches[1][$ith];
                 $name = $this->doSubStrScheduleName($name);
                 $teacher = $matches[2][$ith];
                 $period = $matches[3][$ith];        //周
                 $location = $matches[4][$ith];
-
                 $expArr = explode('-', $matches[5][$ith]);
                 $startSec = intval($expArr[0]);
                 if (1 == count($expArr)) {      //[11]这种单节
