@@ -28,7 +28,7 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split, $week));
+        return $this->getReturn(Error::success,'', $this->getSchedule($jwCookie[0], $stu_time, $split, $week));
     }
 
     /**
@@ -49,9 +49,9 @@ class JwController extends BaseController
             $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
         }
         if($ret == Error::jwNotCommentTeacher){
-            return $this->getReturn($ret,[]);
+            return $this->getReturn($ret,'',[]);
         }
-        return $this->getReturn(Error::success,$ret);
+        return $this->getReturn(Error::success,'',$ret);
     }
 
     /**
@@ -64,7 +64,7 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getBasicInfo($jwCookie[0]));
+        return $this->getReturn(Error::success, '',$this->getBasicInfo($jwCookie[0]));
     }
 
     /**
@@ -194,14 +194,14 @@ class JwController extends BaseController
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
         if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
-            return $this->getReturn(Error::jwSysError,$ret);
+            return $this->getReturn(Error::jwSysError,'',$ret);
         }
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty,$ret);
+            return $this->getReturn(Error::accountEmpty,'',$ret);
         }
         $jwCookie = $this->getJWCookie($sno, $pwd);
         if (empty($jwCookie)) {
-            return $this->getReturn(Error::passwordError,$ret);
+            return $this->getReturn(Error::passwordError,'',$ret);
         }
         return [$jwCookie];
     }
@@ -291,7 +291,7 @@ class JwController extends BaseController
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // echo file_get_contents('F:\\Desktop\\233.html');
-        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
+        return $this->getReturn(Error::success, '',$this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
        //  if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
        //
        //      // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){
