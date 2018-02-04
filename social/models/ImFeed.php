@@ -11,7 +11,7 @@ class ImFeed extends ActiveRecord
 
     public static function tableName()
     {
-        return 'im_feed_reply';
+        return 'im_feed';
     }
 
 

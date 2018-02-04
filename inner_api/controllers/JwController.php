@@ -66,7 +66,17 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, '',$this->getBasicInfo($jwCookie[0]));
     }
-
+     /**
+     * 获取考试安排
+     * @param $stu_time 学期
+     * @return string
+     */
+    private function actionGetExamSchedule($stu_time = '') {
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
+        if (!is_array($jwCookie)) return $jwCookie;
+        $ret = $this->getExamSchedule($jwCookie[0], $stu_time);
+        return $this->getReturn(Error::success,'',$ret);
+    }
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
      * 登教务如果cookie不过期，则多次登陆返回的Set-Cookie是一样的
@@ -163,7 +173,20 @@ class JwController extends BaseController
         return $scheduleList;
     }
 
-
+    //获取考试安排
+    private function getExamSchedule($jwCookie, $stu_time = '') {
+        if (empty($jwCookie)) return null;
+        $curl = $this->newCurl();
+        $curl->setCookie($this->comCookieKey, $jwCookie);
+        $curl->setReferer('http://jwxt.gdufe.edu.cn/jsxsd/xsks/xsksap_query?Ves632DSdyV=NEW_XSD_KSBM');
+        $data = [
+            'xnxqid' => $stu_time,
+            'xqlb' => '',
+            'xqlbmc' => ''
+        ];
+        $curl->post($this->urlConst['jw']['examSchedule'], $data);
+        return $this->parseExamSchedule($curl->response);
+    }
     /**
      * 返回该学号对应的cookie，无则重登录以获取
      * @param $sno
