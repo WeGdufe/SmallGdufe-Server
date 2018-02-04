@@ -159,4 +159,42 @@ class JwController  extends BaseController
     }
 
 
+    /**
+     * @api {post} jw/get-exam-schedule 获取考试安排表
+     * @apiVersion 1.0.6
+     * @apiName get-exam-schedule
+     * @apiGroup Jw
+     *
+     * @apiDescription 获取考试安排表
+     *
+     * @apiParam {String} sno 学号
+     * @apiParam {String} pwd 教务系统密码
+     * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回当前学期
+     *
+     * @apiSuccess {int}      code      状态码，0为正常返回
+     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {Object}   data      基本信息
+     * @apiSuccess {String}     data.name           课程
+     * @apiSuccess {String}     data.time           时间
+     * @apiSuccess {String}     data.xiaoqu         校区
+     * @apiSuccess {String}     data.kaochang       考场
+     *
+     * @apiError 3000 学号或者密码为空
+     * @apiError 3001 学号或密码错误
+     *
+     * @apiSuccessExample {json} 正常返回
+     * 暂无
+     * @apiErrorExample  {json} 异常返回
+     * {"code":3000,"msg":"学号或者密码为空","data":{}}
+     */
+    public function actionGetExamSchedule()
+    {
+        if(isset($this->req['stu_time'])){
+            $this->data['stu_time'] = $this->req['stu_time'];
+        }
+        return Yii::$app->runAction('api/jw/get-exam-schedule', $this->data);
+    }
+    
+
+
 }

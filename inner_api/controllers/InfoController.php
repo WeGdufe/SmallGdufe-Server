@@ -58,13 +58,13 @@ class InfoController extends BaseController
     public function actionInfoTips($sno, $pwd)
     {
         if (empty($sno) || empty($pwd)){
-            return $this->getReturn(Error::accountEmpty,[]);
+            return $this->getReturn(Error::accountEmpty,'',[]);
         }
         $idsCookie = $this->getIdsCookie($sno, $pwd);
         if(empty($idsCookie)){
-            return $this->getReturn(Error::passwordError,[]);
+            return $this->getReturn(Error::passwordError,'',[]);
         }
-        return $this->getReturn(Error::success,$this->getInfoTips($idsCookie,$sno));
+        return $this->getReturn(Error::success,'',$this->getInfoTips($idsCookie,$sno));
     }
 
     /**
@@ -76,21 +76,21 @@ class InfoController extends BaseController
     public function actionFewSztz($sno, $pwd)
     {
         if (empty($sno) || empty($pwd)){
-            return $this->getReturn(Error::accountEmpty,[]);
+            return $this->getReturn(Error::accountEmpty,'',[]);
         }
         if($this->isSystemCrashed($this->urlConst['base']['ids'])) {
-            return $this->getReturn(Error::idsSysError,[]);
+            return $this->getReturn(Error::idsSysError,'',[]);
         }
         $idsCookie = $this->getIdsCookie($sno, $pwd);
         if(empty($idsCookie)){
-            return $this->getReturn(Error::passwordError,[]);
+            return $this->getReturn(Error::passwordError,'',[]);
         }
-        return $this->getReturn(Error::success,$this->getFewSztz($idsCookie));
+        return $this->getReturn(Error::success,'',$this->getFewSztz($idsCookie));
     }
 
     public function actionTest()
     {
-        return $this->getReturn(Error::success,$this->parseFewSztz(file_get_contents('F:\\Desktop\\sutuo16.html')));
+        return $this->getReturn(Error::success,'',$this->parseFewSztz(file_get_contents('F:\\Desktop\\sutuo16.html')));
     }
 
     /**

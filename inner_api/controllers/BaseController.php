@@ -71,15 +71,18 @@ class BaseController extends Controller
      *
      * 组成json格式返回内容
      * @param $code
+     * @param string $msg
      * @param $data object|array|string 出现错误的情况填你业务对应正常返回的类型，如是空json数组[]还是空json对象{}
      * @return string json {"code":0,"data":}
      */
-    public function getReturn($code,$data)
+    public function getReturn($code,$msg='',$data=[])
     {
         // if($data == null) $data = [];
         // if( $data == null) $data = new stdClass;
         if(!isset($data)) $data = new stdClass;
-        $msg = Error::$errorMsg[$code];
+        if(empty($msg)){
+            $msg = Error::$errorMsg[$code];
+        }
         return \Yii::createObject([
             'class' => 'yii\web\Response',
             'format' => Response::FORMAT_JSON,

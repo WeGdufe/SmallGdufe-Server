@@ -28,7 +28,7 @@ class JwcController extends Controller
     public function actionGetCet($zkzh='', $xm='')
     {
         if(empty($zkzh) || empty($xm)){
-            return $this->getReturn(Error::cetAccountEmpty);
+            return $this->getReturn(Error::cetAccountEmpty,'');
         }
         $curl = $this->newCurl();
         $data = compact(
@@ -53,7 +53,7 @@ class JwcController extends Controller
 
         $res = $this->parseCet($curl->response);
         if (gettype($res) == 'string') {
-            return $this->getReturn(Error::cetError, $res);
+            return $this->getReturn(Error::cetError, '',$res);
         }
         return $this->getReturn(Error::success, '',$res);
     }

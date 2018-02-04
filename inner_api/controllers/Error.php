@@ -10,6 +10,8 @@ namespace app\inner_api\controllers;
 class Error
 {
     const success = 0;
+    const commonHit = 1;
+
     //业务错误
     const netError = 1000;
     const parmError = 1001;
@@ -47,6 +49,7 @@ class Error
     const electricNotFound = 6304;
     public static $errorMsg = [
         0 => '',
+        1 => '业务操作成功',    //各种业务需修改该字段
         1000 => '网络错误',
         1001 => '参数错误',
         1002 => '非法操作',

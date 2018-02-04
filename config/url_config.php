@@ -18,6 +18,7 @@ return $urlConst = [
         'grade' => $baseUrls['jw'] . '/kscj/cjcx_list',
         'schedule' => $baseUrls['jw'] . '/xskb/xskb_list.do',
         'basicInfo' => $baseUrls['jw'] . '/grxx/xsxx',
+        'examSchedule' => $baseUrls['jw'] . '/xsks/xsksap_list',
     ],
     'jwc' => [
         'xiaoLi' => $baseUrls['jwc'] . '/html/xl/2015/10/12/c1304008-1dcf-4d89-bb58-f945db0bc677.html',

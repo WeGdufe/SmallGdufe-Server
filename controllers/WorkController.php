@@ -56,28 +56,28 @@ class WorkController extends Controller
     public function actionFeedback()
     {
         $feedback = new Feedback();
-        $feedback['sno'] = Yii::$app->request->get('sno');
-        $feedback['content'] = Yii::$app->request->get('content');
-        $feedback['contact'] = Yii::$app->request->get('contact');
+        $req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
 
+        $feedback['sno'] = isset($req['sno']) ? $req['sno'] : '';
+        $feedback['content'] = isset($req['content']) ? $req['content']  : '';
+        $feedback['contact'] = isset($req['contact']) ? $req['contact']  : '';
         $feedback['fix'] = 0;
         $feedback['comment'] = '';
-
-        $feedback['devBrand'] = Yii::$app->request->get('devBrand');
-        $feedback['devModel'] = Yii::$app->request->get('devModel');
-        $feedback['osVersion'] = Yii::$app->request->get('osVersion');
+        $feedback['dev_brand'] = isset($req['devBrand']) ? $req['devBrand'] : '';
+        $feedback['dev_model'] = isset($req['devModel']) ? $req['devModel'] : '';
+        $feedback['os_version'] = isset($req['osVersion']) ? $req['osVersion'] : '';
+        $feedback['app_ver'] = isset($req['appVer']) ? $req['appVer'] : '';
         // $feedback['imei'] = Yii::$app->request->get('imei');
 
         // $feedback['content'] = mysql_real_escape_string($feedback['content']);//有BUG会空字符串
         // $feedback['content'] = escapeshellarg($feedback['content']);
         $dt = new DateTime();
-        $feedback['createTime'] = $dt->format('Y-m-d H:i:s');
+        $feedback['create_time'] = $dt->format('Y-m-d H:i:s');
         if( $feedback['sno'] == Yii::$app->params['schoolMateSnoFlag'] ){
             $feedback['sno'] = '88888888888';
         }
 
         if (strlen($feedback['content']) < 1000) {
-
             $feedback->save(false);
             return '{"code":0,"msg":"","data":{}}';
         }

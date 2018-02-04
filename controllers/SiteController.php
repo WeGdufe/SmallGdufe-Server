@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-//yii默认的Controller，不使用
+//yii默认的Controller，各种默认处理
 class SiteController extends Controller
 {
     // public function behaviors()
@@ -41,18 +41,27 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
-
     /**
-     * Displays homepage.
+     * 错误处理，返回异常码对应的json，如缺少参数
+     * {"code":400,"msg":"Missing required parameters: sno","data":[]}
+     */
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        // $err['code'] = $exception->statusCode;
+        $err['code'] = 1;   //Error::commonHit
+        $err['msg'] = $exception->getMessage();
+        $err['data'] = [];
+        return json_encode($err);
+    }
+    /**
+     * 默认
      *
      * @return string
      */
