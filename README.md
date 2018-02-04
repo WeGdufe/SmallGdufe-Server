@@ -58,7 +58,7 @@ vi config/db.php #修改账号信息
 
 ## 解决代码库依赖
 代码需要一堆第三方库，在`vendor`目录里，但因`vendor`目录在`.gitignore`里，所以在Github上下载不到，方案有两个。
- - 方案一：找现有服务器下载copy过来，放到项目根目录，这样就不用安装composer了，直接去运行把。
+ - 方案一：在[Github的Release页面下载](https://github.com/wintercoder/MovingGdufe-Server/releases) 或者 找现有服务器下载copy过来，放到项目根目录，这样就不用安装composer了，直接去运行把。
 
  - 方案二：安装`composer`，然后跑命令在线下载，这种方案少了/vender/bower/目录，不过那个是错误页，少了没关系
 
@@ -136,8 +136,9 @@ DocumentRoot "官网代码根目录地址"
 3. 能查成绩且第二次打开会快很多则说明redis没问题 `http://你的ip:82/index.php?r=jw/get-grade&sno=你的学号&pwd=你的密码`
 
 ## 更新Api文档
-Api文档是用Apidoc生成的，需要NodeJs环境，以下是按Win来说明的。
+Api文档是用Apidoc生成的，需要NodeJs环境，以下是按Win来说明的，Linux和Mac操作同理
 1. 安装NodeJs： http://www.runoob.com/nodejs/nodejs-install-setup.html
+   装完后安装apidoc: sudo npm install apidoc -g
 
 2. 解决国内npm命令安装依赖速度慢的问题：
 

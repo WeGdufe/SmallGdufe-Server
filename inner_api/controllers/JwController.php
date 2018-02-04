@@ -71,7 +71,7 @@ class JwController extends BaseController
      * @param $stu_time 学期
      * @return string
      */
-    private function actionGetExamSchedule($stu_time = '') {
+    public function actionGetExamSchedule($sno, $pwd,$stu_time = '') {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
         if (!is_array($jwCookie)) return $jwCookie;
         $ret = $this->getExamSchedule($jwCookie[0], $stu_time);

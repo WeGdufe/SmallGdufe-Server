@@ -21,6 +21,12 @@ class FeedController extends BaseController
         $model = new ImFeed();
     
         $model->setAttributes($this->arrInput);
+        if( empty($this->arrInput['content']) ){
+            return $this->getReturn(Error::commonHit, "内容为空", []);
+        }
+        if( strlen($this->arrInput['content']) > 255){
+            return $this->getReturn(Error::commonHit, "内容过长", []);
+        }
         if (!$model->save()) {
             return $this->getReturn(Error::commonHit, "发布失败", []);
         }
@@ -31,6 +37,12 @@ class FeedController extends BaseController
     {
         $model = new ImFeedReply();
         $model->setAttributes($this->arrInput);
+        if( empty($this->arrInput['content']) ){
+            return $this->getReturn(Error::commonHit, "内容为空", []);
+        }
+        if( strlen($this->arrInput['content']) > 255){
+            return $this->getReturn(Error::commonHit, "内容过长", []);
+        }
         if (!$model->save()) {
             return $this->getReturn(Error::commonHit, "回复失败", []);
         }

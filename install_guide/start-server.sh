@@ -1,1 +1,1 @@
-php yii serve www.wintercoder.com:82
+sudo php yii serve 192.168.0.103:82
