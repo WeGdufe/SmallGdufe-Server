@@ -1,17 +1,40 @@
 # 小广财服务端-安装指南
 
-**非开源** 
+**非开源**
 
 requirements: PHP >= 5.5.9  Redis >= 3.x  Mysql/MariaDB
 
 clone完代码建议直接全部文件777权限 `chmod -R 777 . `
 
-提供了个 [insatall.sh安装脚本](./insatall.sh)  来安装redis和compsoer，使用后无错就配置数据库和Httpd就行，`chmod +x install.sh & bash ./insatall.sh `。
+## 从0开始搭建
+PHP7+MySQL+Nginx安装
 
-不过还是推荐手动复制下面那些命令去操作。
+    按 https://www.hostinger.com/tutorials/how-to-install-lemp-centos7 操作，最后跑
 
-## 更新PHP版本
-如果你PHP是5.3的请升级到至少5.5.9，所以直接5.6或者7.x就方便
+    chmod o+w /var/run/php-fpm/php-fpm.sock
+    yum -y install php-zip [防止composer安装时报找不到zip]
+
+安装redis
+
+    yum -y install epel-release
+    yum -y install redis
+    nohup redis-server  &
+
+如果想远程root连接数据库
+
+    mysql -u root -p 密码
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '你的密码' WITH GRANT OPTION;
+    flush privileges;
+
+建议不要用root连，新建一个，如下新建gdufeuser的数据库用户，更改config/db.php配置
+
+    CREATE USER 'gdufeuser'@'localhost' IDENTIFIED BY '密码';
+    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON *.* TO 'gdufeuser'@'localhost';
+    GRANT SELECT, INSERT, UPDATE, REFERENCES, DELETE, CREATE ON `gdufeapp`.* TO  gdufeuser'@'localhost';
+
+
+## 使用PHP5
+如果你目前是PHP5且不想用PHP7，如果是5.3版本请升级到至少5.5.9，所以直接5.6或者7.x就方便
 
 Centos6: https://www.zerostopbits.com/how-to-install-upgrade-php-5-3-to-php-5-5-on-centos-6-7/
 
@@ -19,35 +42,10 @@ Centos7: https://www.cadch.com/modules/news/article.php?storyid=227
 
 EPEL和remi要装对应版本，Centos7就装7的，如果报了 ` Requires: httpd-mmn = 20051115` 类似错误说明是你Centos7装了remi6，你需要 `remove` 掉6的再装7的。
 
-## 安装redis
-- 安装可用yum安装 或者源码安装。推荐yum安装，跑如下命令就行
 
-```
-yum -y install epel-release 				 # 上面如果升级PHP版本时，就不用安装这个了
-yum -y install redis
-redis-server /usr/local/redis/etc/redis.conf # 运行
-ps aux | grep redis  						 # 这里应该能看到redis在运行了
-```
-
-- 或者源码安装redis https://redis.io/download ，建议3.x
-
-1. 关闭保护模式 protected mode  
-   修改redis源码安装目录下的redis.conf，如下修改参数
-
-   		daemonize yes
-   		protected-mode no
-
-
-2. 运行redis，在redis目录下 ： 
-
-  ```
-  redis-server redis.conf
-  ```
 ## 配置数据库
 
-安装数据库就不说了，不会的[看这里](https://support.rackspace.com/how-to/installing-mysql-server-on-centos/) 。
-
-装完新建数据库，名字叫`gdufeapp`，导入[gdufeapp.sql](./gdufeapp.sql)，修改 `config/db.php` 的数据库密码等配置，在不用客户端的情况下命令如下
+新建数据库，名字叫`gdufeapp`，导入[gdufeapp.sql](./install_guide/gdufeapp.sql)，修改 `config/db.php` 的数据库密码等配置，在不用客户端的情况下命令如下
 
 ```
 mysql -uroot -p
@@ -55,14 +53,14 @@ MySQL [(none)]> create database gdufeapp;
 MySQL [(none)]> use gdufeapp;
 MySQL [gdufeapp]> source 绝对路径/gdufeapp.sql;
 MySQL [gdufeapp]> exit;
-vi config/db.php
+vi config/db.php #修改账号信息
 ```
 
 ## 解决代码库依赖
 代码需要一堆第三方库，在`vendor`目录里，但因`vendor`目录在`.gitignore`里，所以在Github上下载不到，方案有两个。
  - 方案一：找现有服务器下载copy过来，放到项目根目录，这样就不用安装composer了，直接去运行把。
 
- - 方案二：安装`composer`，然后跑命令在线下载就行，想看详情的去[官网。](http://docs.phpcomposer.com/00-intro.html#Installation-*nix)
+ - 方案二：安装`composer`，然后跑命令在线下载，这种方案少了/vender/bower/目录，不过那个是错误页，少了没关系
 
     ```
     curl -sS https://getcomposer.org/installer | php
@@ -73,18 +71,23 @@ vi config/db.php
     ```
 
 
-
 ## 运行
-Yii自带Web服务器，在项目目录下  
+### Nginx配置
+如按上面从0搭建的教程，删掉 `/etc/nginx/nginx.conf` 的 **server** 部分，复制并编辑[nginx样例配置](./install_guide/gdufe.conf)放到 `/etc/nginx/conf.d`，重启Nginx `systemctl restart nginx.service`，不是按教程的话酌情修改`gdufe.conf`的`fastcgi_pass`一行
+日志：
+
+    /var/log/nginx/error.log
+    /usr/share/nginx/MovingGdufe-Server/runtime/logs
+
+### Yii自带Web服务器，在项目目录下
 
     php yii serve app.wintercoder.com:82
 就行。但这个是单线程的，只能测试用，不要线上用，否则更新APP的时候可能卡全部用户。
 
-`Nginx` 配置较麻烦，推荐用 `Httpd`
 
 ### Httpd 配置
 
-配置非常简单，直接监听82端口，目录指到项目根目录的`/web目录`就行，如果代码放在默认的`/var/www/html/`目录下，直接如下操作就行。
+直接监听82端口，目录指到项目根目录的`/web目录`就行，如果代码放在默认的`/var/www/html/`目录下，直接如下操作就行。
 
 ` vi /etc/httpd/conf/httpd.conf `
 
@@ -119,7 +122,7 @@ NameVirtualHost *:8080
 ServerName www.wintercoder.com
 DocumentRoot "官网代码根目录地址"
 </VirtualHost>
-然后DocumentRoot "这目录下包含服务端代码目录和官网目录" 
+然后DocumentRoot "这目录下包含服务端代码目录和官网目录"
 ```
 
 启动 `service httpd start`
@@ -129,8 +132,8 @@ DocumentRoot "官网代码根目录地址"
 记得关闭`iptables`或者开放`82,8080`端口
 
 1. 能浏览器打开（GET） `http://你的ip:82/index.php?r=work/check-app-update` 且返回json则说明环境通了
-2. 能查成绩且第二次打开会快很多则说明redis没问题 `http://你的ip:82/index.php?r=jw/get-grade&sno=你的学号&pwd=你的密码`
-3. 修改完APP的域名指向到你服务器，测试下反馈功能就行了
+2. 访问 `http://你的ip:82/index.php?r=work/feedback&sno=13251102210&content=test` 能通说明数据库OK
+3. 能查成绩且第二次打开会快很多则说明redis没问题 `http://你的ip:82/index.php?r=jw/get-grade&sno=你的学号&pwd=你的密码`
 
 ## 更新Api文档
 Api文档是用Apidoc生成的，需要NodeJs环境，以下是按Win来说明的。

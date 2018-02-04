@@ -31,26 +31,26 @@ class OpacController extends InfoController
     public function actionSearchBook($sno = '', $pwd = '', $bookName = '',$page = 1)
     {
         if (empty($bookName)) {
-            return $this->getReturn(Error::opacBookEmpty, []);
+            return $this->getReturn(Error::opacBookEmpty, '',[]);
         }
         if($this->isSystemCrashed($this->urlConst['opac']['search'])) {
-            return $this->getReturn(Error::opacSysError,[]);
+            return $this->getReturn(Error::opacSysError,'',[]);
         }
-        return $this->getReturn(Error::success, $this->getSearchBook($bookName,$page));
+        return $this->getReturn(Error::success, '',$this->getSearchBook($bookName,$page));
     }
 
     public function actionCurrentBook($sno, $pwd)
     {
         $cookies = $this->beforeBusinessAction($sno, $pwd, true);
         if (!is_array($cookies)) return $cookies;
-        return $this->getReturn(Error::success, $this->getCurrentBook($cookies[0], $cookies[1]));
+        return $this->getReturn(Error::success, '',$this->getCurrentBook($cookies[0], $cookies[1]));
     }
 
     public function actionBorrowedBook($sno, $pwd)
     {
         $cookies = $this->beforeBusinessAction($sno, $pwd, true);
         if (!is_array($cookies)) return $cookies;
-        return $this->getReturn(Error::success, $this->getBorrowedBook($cookies[0], $cookies[1]));
+        return $this->getReturn(Error::success,'', $this->getBorrowedBook($cookies[0], $cookies[1]));
     }
 
     public function actionRenewBook($sno, $pwd, $barId, $checkId, $verify)
@@ -59,11 +59,11 @@ class OpacController extends InfoController
         if (!isset($barId) || !isset($checkId) || !isset($verify)
             || empty($barId) || empty($checkId) || empty($verify)
         ) {
-            return $this->getReturn(Error::opacRenewParmEmpty, new StdClass);
+            return $this->getReturn(Error::opacRenewParmEmpty, '',new StdClass);
         }
         $cookies = $this->beforeBusinessAction($sno, $pwd, true);
         if (!is_array($cookies)) return $cookies;
-        return $this->getReturn(Error::success, $this->doRenewBook($cookies[0], $cookies[1], $barId, $checkId, $verify));
+        return $this->getReturn(Error::success,'', $this->doRenewBook($cookies[0], $cookies[1], $barId, $checkId, $verify));
     }
 
     //获取续借的验证码图片，需登陆状态才有效
@@ -71,7 +71,7 @@ class OpacController extends InfoController
     {
         $cookies = $this->beforeBusinessAction($sno, $pwd, true);
         if (!is_array($cookies)) return $cookies;
-        return $this->getReturn(Error::success, $this->getRenewBookVerifyCode($cookies[0], $cookies[1]));
+        return $this->getReturn(Error::success, '',$this->getRenewBookVerifyCode($cookies[0], $cookies[1]));
     }
 
     /**
@@ -81,9 +81,9 @@ class OpacController extends InfoController
      */
     public function actionGetBookStoreDetail($macno){
         if (empty($macno)) {
-            return $this->getReturn(Error::opacBookDetailIdEmpty, []);
+            return $this->getReturn(Error::opacBookDetailIdEmpty, '', []);
         }
-        return $this->getReturn(Error::success, $this->getBookStoreDetail($macno));
+        return $this->getReturn(Error::success, '', $this->getBookStoreDetail($macno));
     }
 
 
@@ -102,7 +102,7 @@ class OpacController extends InfoController
     private function getCurrentBook($idsCookie,$opacCookie)
     {
         $response = $this->runOpacCurl(OpacController::METHOD_GET,
-            $this->urlConst['opac']['currentBook'], '',$idsCookie,$opacCookie);
+            $this->urlConst['opac']['currentBook'], [],$idsCookie,$opacCookie);
         return $this->parseCurrentBookList($response);
     }
     private function getBorrowedBook($idsCookie,$opacCookie)
@@ -118,7 +118,7 @@ class OpacController extends InfoController
     private function getRenewBookVerifyCode($idsCookie,$opacCookie)
     {
         $response = $this->runOpacCurl(OpacController::METHOD_GET,
-            $this->urlConst['opac']['renewBookVerify'], '',$idsCookie,$opacCookie);
+            $this->urlConst['opac']['renewBookVerify'], [],$idsCookie,$opacCookie);
         $ret['data'] = base64_encode($response);
         return $ret;
     }
@@ -229,18 +229,18 @@ class OpacController extends InfoController
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
         if($this->isSystemCrashed($this->urlConst['base']['opac'])) {
-            return $this->getReturn(Error::opacSysError,$ret);
+            return $this->getReturn(Error::opacSysError,'',$ret);
         }
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty,$ret);
+            return $this->getReturn(Error::accountEmpty,'',$ret);
         }
         $idsCookie = $this->getIdsCookie($sno,$pwd);
         $opacCookie = $this->getOpacCookie($sno,$pwd,$idsCookie);
         if (empty($opacCookie)) {
-            return $this->getReturn(Error::passwordError,$ret);
+            return $this->getReturn(Error::passwordError,'',$ret);
         }
         if($opacCookie == Error::opacAccountWithdraw){ //即将毕业的人图书账号被注销
-            return $this->getReturn(Error::opacAccountWithdraw,$ret);
+            return $this->getReturn(Error::opacAccountWithdraw,'',$ret);
         }
         return [$idsCookie,$opacCookie];
     }

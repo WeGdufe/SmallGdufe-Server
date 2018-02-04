@@ -376,6 +376,30 @@ trait JwParser
         }
         return $name;
     }
+    
+    public function parseExamSchedule($html) {
+        if (empty($html)) return [];
+        $dom = new Dom;
+        $dom->loadStr($html, []);
+        $contents = $dom->find('table[id=dataList] tr');
+        $examList = array();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        foreach ($contents as $index => $content) {
+            if ($index == 0) continue;                      // 标题头
+            $time = $content->find('td', 3)->innerHtml;     // 时间
+            $name = $content->find('td', 2)->innerHtml;     // 课程
+            $xiaoqu = $content->find('td', 4)->innerHtml;       // 校区
+            $kaochang = $content->find('td', 5)->innerHtml; // 考场
+
+            $item = compact(
+                'name','time','xiaoqu','kaochang'
+            );
+            $examList [] = $item;
+        }
+        unset($dom);
+        return $examList;
+    }
+
 }
 
 

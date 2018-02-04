@@ -28,7 +28,7 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getSchedule($jwCookie[0], $stu_time, $split, $week));
+        return $this->getReturn(Error::success,'', $this->getSchedule($jwCookie[0], $stu_time, $split, $week));
     }
 
     /**
@@ -49,9 +49,9 @@ class JwController extends BaseController
             $ret = $this->getGrade($jwCookie[0], $stu_time,$minor);
         }
         if($ret == Error::jwNotCommentTeacher){
-            return $this->getReturn($ret,[]);
+            return $this->getReturn($ret,'',[]);
         }
-        return $this->getReturn(Error::success,$ret);
+        return $this->getReturn(Error::success,'',$ret);
     }
 
     /**
@@ -64,9 +64,19 @@ class JwController extends BaseController
     {
         $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
         if (!is_array($jwCookie)) return $jwCookie;
-        return $this->getReturn(Error::success, $this->getBasicInfo($jwCookie[0]));
+        return $this->getReturn(Error::success, '',$this->getBasicInfo($jwCookie[0]));
     }
-
+     /**
+     * 获取考试安排
+     * @param $stu_time 学期
+     * @return string
+     */
+    private function actionGetExamSchedule($stu_time = '') {
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
+        if (!is_array($jwCookie)) return $jwCookie;
+        $ret = $this->getExamSchedule($jwCookie[0], $stu_time);
+        return $this->getReturn(Error::success,'',$ret);
+    }
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
      * 登教务如果cookie不过期，则多次登陆返回的Set-Cookie是一样的
@@ -163,7 +173,20 @@ class JwController extends BaseController
         return $scheduleList;
     }
 
-
+    //获取考试安排
+    private function getExamSchedule($jwCookie, $stu_time = '') {
+        if (empty($jwCookie)) return null;
+        $curl = $this->newCurl();
+        $curl->setCookie($this->comCookieKey, $jwCookie);
+        $curl->setReferer('http://jwxt.gdufe.edu.cn/jsxsd/xsks/xsksap_query?Ves632DSdyV=NEW_XSD_KSBM');
+        $data = [
+            'xnxqid' => $stu_time,
+            'xqlb' => '',
+            'xqlbmc' => ''
+        ];
+        $curl->post($this->urlConst['jw']['examSchedule'], $data);
+        return $this->parseExamSchedule($curl->response);
+    }
     /**
      * 返回该学号对应的cookie，无则重登录以获取
      * @param $sno
@@ -194,14 +217,14 @@ class JwController extends BaseController
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
         if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
-            return $this->getReturn(Error::jwSysError,$ret);
+            return $this->getReturn(Error::jwSysError,'',$ret);
         }
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty,$ret);
+            return $this->getReturn(Error::accountEmpty,'',$ret);
         }
         $jwCookie = $this->getJWCookie($sno, $pwd);
         if (empty($jwCookie)) {
-            return $this->getReturn(Error::passwordError,$ret);
+            return $this->getReturn(Error::passwordError,'',$ret);
         }
         return [$jwCookie];
     }
@@ -291,7 +314,7 @@ class JwController extends BaseController
         // Yii::$app->cache->set(self::REDIS_IDS_PRE . '13251102210', 'AQIC5wM2LY4SfcxV1CJsccnUc7vVKmuFFq904d43otL0ATU%3D%40AAJTSQACMDE%3D%23', $this->expire);
         // Yii::$app->cache->set(self::REDIS_INFO_PRE . '13251102210', '0000YHmPMyu9ZncwVmS1hq371il:18sfof8na', $this->expire);
         // echo file_get_contents('F:\\Desktop\\233.html');
-        return $this->getReturn(Error::success, $this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
+        return $this->getReturn(Error::success, '',$this->parseGrade(file_get_contents('F:\\Desktop\\2.html')));
        //  if($this->isSystemCrashed($this->urlConst['base']['jw'].'/')) {
        //
        //      // if($this->isSystemCrashed("http://jwxt.gdufe.edu.cn/jsxsd/")){

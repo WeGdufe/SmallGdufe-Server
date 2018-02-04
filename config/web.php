@@ -113,11 +113,20 @@ $config = [
         ],
     ],
     'params' => $params,
-    'modules'=> require(__DIR__.'/modules.php'),
+    // 'modules'=> require(__DIR__.'/modules.php'),
+    'modules'=> [
+        'api' => [
+            'class' => 'app\inner_api\Api',
+        ],
+        'social' => [
+            'class' => 'app\social\socialModule',
+        ]
+    ]
 ];
-
-defined('YII_DEBUG') or define('YII_DEBUG', false );
-defined('YII_ENV') or define('YII_ENV', 'prod');
+defined('YII_DEBUG') or define('YII_DEBUG', true );
+defined('YII_ENV') or define('YII_ENV', 'dev');
+// defined('YII_DEBUG') or define('YII_DEBUG', false );
+// defined('YII_ENV') or define('YII_ENV', 'prod');
 
 // defined('YII_DEBUG') or define('YII_DEBUG', strpos($_SERVER['SERVER_NAME'],'wintercoder.com') === false ? true : false);        ////怕效率慢
 // defined('YII_ENV') or define('YII_ENV', strpos($_SERVER['SERVER_NAME'],'wintercoder.com') === false? 'dev' : 'prod');   //怕效率慢

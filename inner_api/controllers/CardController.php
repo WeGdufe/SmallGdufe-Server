@@ -31,7 +31,7 @@ class CardController extends InfoController
         $cookies = $this->beforeBusinessAction($sno, $pwd,false);
         if(!is_array($cookies))  return $cookies;
         $res = $this->getCurrentCash($cookies[0],$cookies[1]);
-        return $this->getReturn(Error::success,$res);
+        return $this->getReturn(Error::success,'',$res);
     }
 
     /**
@@ -45,11 +45,11 @@ class CardController extends InfoController
      */
     public function actionConsumeToday($sno, $pwd,$cardNum = ''){
         if(empty($cardNum)){
-            return $this->getReturn(Error::cardNumEmpty,[]);
+            return $this->getReturn(Error::cardNumEmpty,'',[]);
         }
         $cookies = $this->beforeBusinessAction($sno, $pwd,true);
         if(!is_array($cookies))  return $cookies;
-        return $this->getReturn(Error::success,$this->getConsumeToday($cookies[0],$cookies[1],$cardNum));
+        return $this->getReturn(Error::success,'',$this->getConsumeToday($cookies[0],$cookies[1],$cardNum));
     }
 
     /**
@@ -61,25 +61,25 @@ class CardController extends InfoController
      */
     public function actionGetElectric($building = '', $room = '') {
         if(empty($building) || empty($room)){
-            return $this->getReturn(Error::parmEmpty,[]);
+            return $this->getReturn(Error::parmEmpty,'',[]);
         }
         $building = intval($building);
         $cgcSims = [26, 27, 29];
         $sdms = [23, 30, 32];
         if($this->isSystemCrashed($this->urlConst['card']['SdmsList'])) {
-            return $this->getReturn(Error::electricNotFound, []);
+            return $this->getReturn(Error::electricNotFound,'', []);
         }
         if(in_array($building, $cgcSims)) {
             $data = $this->getElectricSims($building, $room);
         } else if(in_array($building, $sdms)) {
             $data = $this->getElectricSdms($building, $room);
         } else {
-            return $this->getReturn(Error::buildingError, []);
+            return $this->getReturn(Error::buildingError, '',[]);
         }
         if (empty($data) || count($data) < 1) {
-            return  $this->getReturn(Error::roomNotExist,[]);
+            return  $this->getReturn(Error::roomNotExist,'',[]);
         }
-        return $this->getReturn(Error::success,$data);
+        return $this->getReturn(Error::success,'',$data);
     }
 
     private function getCurrentCash($idsCookie,$cardCookie)
@@ -215,15 +215,15 @@ class CardController extends InfoController
         if($isRetArray) $ret = []; //空数组
         else  $ret = new stdClass; //空对象
         if($this->isSystemCrashed($this->urlConst['base']['card'])) {
-            return $this->getReturn(Error::cardSysError,$ret);
+            return $this->getReturn(Error::cardSysError,'',$ret);
         }
         if (empty($sno) || empty($pwd)) {
-            return $this->getReturn(Error::accountEmpty,$ret);
+            return $this->getReturn(Error::accountEmpty,'',$ret);
         }
         $idsCookie = $this->getIdsCookie($sno,$pwd);
         $cardCookie = $this->getCardCookie($sno,$pwd,$idsCookie);
         if (empty($cardCookie)) {
-            return $this->getReturn(Error::passwordError,$ret);
+            return $this->getReturn(Error::passwordError,'',$ret);
         }
         return [$idsCookie,$cardCookie];
     }
