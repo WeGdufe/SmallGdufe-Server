@@ -21,6 +21,7 @@ class BaseController extends Controller
             $this->urlConst = Yii::$app->params;
             // Yii::warning("访问");
             $this->arrInput = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
+            $this->arrInput['user_id'] = $this->arrInput['sno'];
             return true;
         } else {
             return false;

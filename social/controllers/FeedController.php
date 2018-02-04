@@ -16,9 +16,10 @@ use yii\web\Response;
 class FeedController extends BaseController
 {
 
-    public function actionCreateImFeed($user_id,$content,$imgUrls = '')
+    public function actionCreateImFeed($content,$imgUrls = '')
     {
         $model = new ImFeed();
+    
         $model->setAttributes($this->arrInput);
         if (!$model->save()) {
             return $this->getReturn(Error::commonHit, "发布失败", []);
@@ -26,7 +27,7 @@ class FeedController extends BaseController
         return $this->getReturn(Error::success,"发布成功",[]);
     }
 
-    public function actionCreateImFeedReply($user_id,$content,$imgUrls = '',$parent_id,$target_user_id = 0)
+    public function actionCreateImFeedReply($content,$photos = '',$parent_id,$target_user_id = 0)
     {
         $model = new ImFeedReply();
         $model->setAttributes($this->arrInput);
@@ -39,15 +40,30 @@ class FeedController extends BaseController
     public function actionListImFeed($pageNo = 1,$pageNum = 20)
     {
         $model = new ImFeed();
-        $ret = $model->listRecentFeed($pageNo,$pageNum);
-        return $this->getReturn(Error::success,"",$ret);
+        $feedList = $model->listRecentFeed($pageNo,$pageNum);
+        // var_dump($feedList);exit();
+        foreach ((array)$feedList as &$feed) {
+            if(empty($feed['photos'])){
+                $feed['photos'] = [];    
+            }else{
+                $feed['photos'] = explode("#", $feed['photos']);
+            }
+        }
+        return $this->getReturn(Error::success,"",$feedList);
     }
 
     public function actionListImFeedReply($parent_id ,$pageNo = 1,$pageNum = 20)
     {
         $model = new ImFeedReply();
-        $ret = $model->listRecentFeedReply($parent_id,$pageNo,$pageNum);
-        return $this->getReturn(Error::success,"",$ret);
+        $feddList = $model->listRecentFeedReply($parent_id,$pageNo,$pageNum);
+        foreach ((array)$feddList as &$feed) {
+            if(empty($feed['photos'])){
+                $feed['photos'] = [];    
+            }else{
+                $feed['photos'] = explode("#", $feed['photos']);
+            }
+        }
+        return $this->getReturn(Error::success,"",$feedList);
     }
 
     public function actionTest()
