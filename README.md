@@ -2,23 +2,56 @@
 
 **非开源**
 
-requirements: PHP >= 5.5.9  Redis >= 3.x  Mysql/MariaDB
+requirements: PHP >= 5.5.9 建议直接上php7  Redis >= 3.x  Mysql/MariaDB
 
 clone完代码建议直接全部文件777权限 `chmod -R 777 . `
 
 ## 从0开始搭建
-PHP7+MySQL+Nginx安装
 
-    按 https://www.hostinger.com/tutorials/how-to-install-lemp-centos7 操作，最后跑
+Redis:
 
-    chmod o+w /var/run/php-fpm/php-fpm.sock
-    yum -y install php-zip [防止composer安装时报找不到zip]
+    yum install -y redis 
+    nohup redis-server  &
 
-安装redis
+Nginx: 
+
+    yum install  -y nginx 
+    systemctl start nginx
+    systemctl enable nginx
+
+Mysql(mariadb):
+
+    yum install mariadb-server mariadb -y
+    初始化密码 mysql_secure_installation
+    systemctl start mariadb
+    systemctl enable mariadb
+
+PHP7:
 
     yum -y install epel-release
-    yum -y install redis
-    nohup redis-server  &
+    wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    rpm -Uvh remi-release-7.rpm
+
+    yum install yum-utils -y
+    yum-config-manager --enable remi-php71
+    yum --enablerepo=remi,remi-php71 install -y php-fpm php-common
+    yum --enablerepo=remi,remi-php71 install -y  php-opcache php-pecl-apcu php-cli php-pear php-pdo php-mysqlnd php-pgsql php-pecl-mongodb php-pecl-redis php-pecl-memcache php-pecl-memcached php-gd php-mbstring php-mcrypt php-xml php-zip 
+
+    systemctl start  php-fpm
+    systemctl enable  php-fpm
+    
+    如遇问题可参考： https://www.hostinger.com/tutorials/how-to-install-lemp-centos7
+    
+
+新建数据库用户，避免ROOT账号连接
+
+    mysql -u root -p
+    CREATE USER 'gdufeuser'@'localhost' IDENTIFIED BY '密码';
+    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON *.* TO 'gdufeuser'@'localhost';
+    GRANT SELECT, INSERT, UPDATE, REFERENCES, DELETE, CREATE ON `gdufeapp`.* TO  'gdufeuser'@'localhost';
+    flush privileges;
+然后更改config/db.php配置
+
 
 如果想远程root连接数据库
 
@@ -26,24 +59,18 @@ PHP7+MySQL+Nginx安装
     GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '你的密码' WITH GRANT OPTION;
     flush privileges;
 
-建议不要用root连，新建一个，如下新建gdufeuser的数据库用户，更改config/db.php配置
 
-    CREATE USER 'gdufeuser'@'localhost' IDENTIFIED BY '密码';
-    GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON *.* TO 'gdufeuser'@'localhost';
-    GRANT SELECT, INSERT, UPDATE, REFERENCES, DELETE, CREATE ON `gdufeapp`.* TO  gdufeuser'@'localhost';
-
-
-## 使用PHP5
+## 可选(使用PHP5)
 如果你目前是PHP5且不想用PHP7，如果是5.3版本请升级到至少5.5.9，所以直接5.6或者7.x就方便
 
 Centos6: https://www.zerostopbits.com/how-to-install-upgrade-php-5-3-to-php-5-5-on-centos-6-7/
 
 Centos7: https://www.cadch.com/modules/news/article.php?storyid=227
 
-EPEL和remi要装对应版本，Centos7就装7的，如果报了 ` Requires: httpd-mmn = 20051115` 类似错误说明是你Centos7装了remi6，你需要 `remove` 掉6的再装7的。
+EPEL和remi要装对应版本，Centos7就装7的，如果报了 `Requires: httpd-mmn = 20051115` 类似错误说明是你Centos7装了remi6，你需要 `remove` 掉6的再装7的。
 
 
-## 配置数据库
+## 导入初始数据库
 
 新建数据库，名字叫`gdufeapp`，导入[gdufeapp.sql](./install_guide/gdufeapp.sql)，修改 `config/db.php` 的数据库密码等配置，在不用客户端的情况下命令如下
 
@@ -53,12 +80,11 @@ MySQL [(none)]> create database gdufeapp;
 MySQL [(none)]> use gdufeapp;
 MySQL [gdufeapp]> source 绝对路径/gdufeapp.sql;
 MySQL [gdufeapp]> exit;
-vi config/db.php #修改账号信息
 ```
 
 ## 解决代码库依赖
 代码需要一堆第三方库，在`vendor`目录里，但因`vendor`目录在`.gitignore`里，所以在Github上下载不到，方案有两个。
- - 方案一：在[Github的Release页面下载](https://github.com/wintercoder/MovingGdufe-Server/releases) 或者 找现有服务器下载copy过来，放到项目根目录，这样就不用安装composer了，直接去运行把。
+ - 方案一：在[Github的Release页面下载](https://github.com/wintercoder/MovingGdufe-Server/releases) 或者 找现有服务器下载copy过来，`unzip vendor.zip` 解压放到项目根目录，这样就不用安装composer了
 
  - 方案二：安装`composer`，然后跑命令在线下载，这种方案少了/vender/bower/目录，不过那个是错误页，少了没关系
 
@@ -73,11 +99,19 @@ vi config/db.php #修改账号信息
 
 ## 运行
 ### Nginx配置
-如按上面从0搭建的教程，删掉 `/etc/nginx/nginx.conf` 的 **server** 部分，复制并编辑[nginx样例配置](./install_guide/gdufe.conf)放到 `/etc/nginx/conf.d`，重启Nginx `systemctl restart nginx.service`，不是按教程的话酌情修改`gdufe.conf`的`fastcgi_pass`一行
-日志：
+1. 复制并编辑[nginx样例配置](./install_guide/gdufe.conf)替换 `/etc/nginx/nginx.conf` 里的Server部分
 
-    /var/log/nginx/error.log
-    /usr/share/nginx/MovingGdufe-Server/runtime/logs
+2. 由于样例是Nginx通过sock文件跟PHP交互，所以
+`vi /etc/php-fpm.d/www.conf`
+把 `listen = 127.0.0.1:9000` 改为 `listen = /var/run/php-fpm/php-fpm.sock`
+  
+3.  然后重启Nginx和php-fpm
+     `systemctl restart  php-fpm`  `systemctl restart nginx`，尝试访问你的iP:82端口，如果出现Json字符串说明成功
+   如果你全程是root账号操作你可能需要 尝试 
+     `chmod o+w /var/run/php-fpm/php-fpm.sock`
+   启动失败请看日志：
+      `/var/log/nginx/error.log`
+      `/usr/share/nginx/MovingGdufe-Server/runtime/logs`
 
 ### Yii自带Web服务器，在项目目录下
 
@@ -173,3 +207,9 @@ Api文档是用Apidoc生成的，需要NodeJs环境，以下是按Win来说明�
 ​    如果加载不到这几个.so的报错就可能PHP你不是通过yum安装的
 
 - 该系统在Win上也可安装，最开始是在Win上测试的，不过安装软件就需要自己百度去官网下载了。
+
+- 修改Mysql的Root密码，连上mysql再
+  ```
+  SET PASSWORD FOR 'root'@'localhost' = PASSWORD('新密码');
+  FLUSH PRIVILEGES;
+  ```

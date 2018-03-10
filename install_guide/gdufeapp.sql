@@ -58,11 +58,12 @@ CREATE TABLE `im_feed` (
 -- Records of im_feed
 -- ----------------------------
 BEGIN;
-INSERT INTO `im_feed` VALUES (1, 0, 13251102210, '关于APP和小程序：APP是[13级光]在17年4月当个人毕设发版的，最初计划的就是一个长久维护的产品，就做成了开源的，由一届一届的师弟妹一直维护下去。\n', 0, 'http://ww2.sinaimg.cn/small/0060lm7Tly1fo4uqsgv7tj30lk0jqwr3.jpg', 1517758608);
-INSERT INTO `im_feed` VALUES (2, 0, 13251102210, '17年6月，[14级发]接手做出了小程序版，小程序包含了Dr.com和桌面控件之外的大部分功能，更新频率较高。', 0, '', 1517758607);
-INSERT INTO `im_feed` VALUES (3, 0, 13251102210, '而iOS目前[14级权]已做好，因为苹果账号有点贵，暂时还没发到appStore。', 0, '', 1517758606);
-INSERT INTO `im_feed` VALUES (4, 0, 13251102210, '现[13级光]已毕业，两个14级的今年也该毕业了，故需要一些给力的15，16级继续维护。开发群可加 631036490，通用编程咨询群 649033516', 0, 'http://ww4.sinaimg.cn/large/0060lm7Tly1fo4uuwdmwtj30u01bcq8h.jpg', 1517758605);
-INSERT INTO `im_feed` VALUES (5, 0, 13251102210, '推荐个隐藏比较深的功能：桌面课表，是系统小控件，另外Dr.com现在提速账号稳定性很好', 0, 'http://ww1.sinaimg.cn/large/0060lm7Tly1fo4uhzkwr4j30tz0v3npd.jpg', 1517759220);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (1, 0, 13251102210, '关于APP和小程序：APP是[13级光]在17年4月当个人毕设发版的，最初计划的就是一个长久维护的产品，就做成了开源的，由一届一届的师弟妹一直维护下去。\n', 0, '', 1517758608);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (2, 0, 13251102210, '17年6月，[14级发]接手做出了小程序版，小程序包含了Dr.com和桌面控件之外的大部分功能，更新频率较高。', 0, '', 1517758607);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (3, 0, 13251102210, 'iOS版：18年2月发布，AppStore搜 \'茶珂\' ，下个版本会更名小广财。\nThanks: [14级文]和[14级权]', 0, '', 1517758606);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (4, 0, 13251102210, '现[13级光]已毕业，两个14级的今年也该毕业了，故需要一些给力的15，16级继续维护。开发群可加 631036490，通用编程咨询群 649033516', 0, 'http://ww2.sinaimg.cn/large/0060lm7Tly1fogf5p4hyzj30u01bcwk2.jpg', 1517758605);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (5, 0, 13251102210, '推荐个隐藏比较深的功能：桌面课表，是系统小控件，另外Dr.com现在提速账号稳定性很好', 0, 'http://ww1.sinaimg.cn/large/0060lm7Tly1fo4uhzkwr4j30tz0v3npd.jpg', 1517759220);
+INSERT INTO `im_feed`(`id`, `parent_id`, `user_id`, `content`, `is_deleted`, `photos`, `create_time`) VALUES (6, 0, 0, 'iOS版于2018.02.15 发布啦，AppStore搜  小广财', 0, 'http://ww2.sinaimg.cn/large/00711cMmly1fogfea2oofj30ra0smjzf.jpg', 1518624562);
 COMMIT;
 
 -- ----------------------------
