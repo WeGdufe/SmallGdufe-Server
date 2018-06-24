@@ -12,14 +12,13 @@ use PHPHtmlParser\Dom;
 
 trait JwParser
 {
-    public function  checkHasCommentTeacher($html){
+    private function  hasNotCommentTeacher($html){
         if (empty($html)) return false;
-        if( false === strpos($html,'评教未完成，不能查询成绩') ){ //无则正常
+        if( false === strpos($html,'请评教') ){ //无则正常
             return false;
         }
         return true;    //有则未评教
     }
-
     public function parseGrade($html)
     {
         if (empty($html)) return [];
@@ -33,9 +32,14 @@ trait JwParser
             if ($index == 0) continue;      //标题头
             $time = $content->find('td', 1)->innerHtml;
             $name = $content->find('td', 3)->innerHtml;
-            $score = $content->find('td a')->innerHtml;
-
-            $classCode = intval($content->find('td', 2)->innerHtml);
+            
+            //未评教的 总分一栏没有 a标签 <td>请评教</td>  因为APP是double类型，所以只能返回0,-1之类的数字
+            if( $this->hasNotCommentTeacher($content->find('td',7)->innerHtml) ){
+                $score = -1;
+            }else{
+                $score = $content->find('td a')->innerHtml;
+            }
+            $classCode = $content->find('td', 2)->innerHtml;
             $dailyScore = $content->find('td', 4)->innerHtml;   //平时成绩
             $expScore = $content->find('td', 5)->innerHtml;     //实验成绩
             $paperScore = $content->find('td', 6)->innerHtml;   //期末成绩

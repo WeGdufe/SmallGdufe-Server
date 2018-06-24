@@ -22,14 +22,19 @@ trait JwcParser
      */
     public function parseXiaoLi($html)
     {
+        $item = [];
+        $item['timeTable'] = 'http://jwc.gdufe.edu.cn/_upload/article/images/d1/1f/b2ddfd984948a84b467cb1484887/71b55fd0-faa9-42d5-979f-272fb39f8424.jpg';
+        $item['xiaoLi'] = 'http://jwc.gdufe.edu.cn/_upload/article/images/d1/1f/b2ddfd984948a84b467cb1484887/b47e8477-a67f-4826-9706-c3c5da86d61c.jpg';
+        return $item;
+        
+        //因为校历地址每次变化都是整个都变了，所以改成写死图片地址 2018-06-24 xiaoguang
         if (empty($html)) return new stdClass;
         $dom = new Dom;
         $dom->loadStr($html, []);
         $contents = $dom->find('div[class=detail_content_display]  img');
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $item['timeTable'] = Yii::$app->params['base']['jwc'] . $contents[0]->getAttribute('src');;
-        $item['xiaoLi'] = Yii::$app->params['base']['jwc'] . $contents[1]->getAttribute('src');;
-        return $item;
+        $item['timeTable'] = Yii::$app->params['base']['jwc'] . $contents[0]->getAttribute('src');
+        $item['xiaoLi'] = Yii::$app->params['base']['jwc'] . $contents[1]->getAttribute('src');
     }
 
     public function parseCet($html)

@@ -20,6 +20,8 @@ class JwcController extends Controller
 
     public function actionGetXiaoli()
     {
+        return $this->getReturn(Error::success,'', $this->parseXiaoLi(''));
+        //因为校历地址每次变化都是整个都变了，所以改成写死图片地址 2018-06-24 xiaoguang
         $curl = $this->newCurl();
         $curl->get(Yii::$app->params['jwc']['xiaoLi']);
         return $this->getReturn(Error::success,'', $this->parseXiaoLi($curl->response));

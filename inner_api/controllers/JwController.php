@@ -138,10 +138,6 @@ class JwController extends BaseController
             'xsfs' => 'all',        //显示最好成绩(补考情况)为max【教务没显示平时分】，显示全部成绩为all
         ];
         $curl->post($this->urlConst['jw']['grade'], $data);
-        //检查是否有评教
-        if($this->checkHasCommentTeacher($curl->response)){
-            return Error::jwNotCommentTeacher;
-        }
         return $this->parseGrade($curl->response);
     }
 
