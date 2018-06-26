@@ -39,7 +39,7 @@ trait OpacParser
         $scoreList = array();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $serialPattern = '{marc_no=(\d+)">(.+)?<\/a>(.+)?<\/.+?：(\d+).+?<br.+?：(\d+)<\/span>(.+)?<br />(.+)<br />}ms';
+        $serialPattern = '{marc_no=([0-9a-z]+)".?>\d{1,3}\.(.+)?<\/a>\s+(.+)?<\/[^@]+?：(\d+)[^@]+?：(\d+)<\/span>(.+)?<br \/>\s+([^@]+)?<br \/>}ms';
         foreach ($contents as $index => $content) {
             preg_match($serialPattern, $content, $matches);
 
@@ -52,7 +52,7 @@ trait OpacParser
 
             //分割书名，注意 算法竞赛入门经典、算法竞赛入门经典.2版 区分
             $item = [
-                'name' => preg_split("#\d\.#", $matches[2])[1], 'serial' => $matches[3], 'numAll' => intval($matches[4]),
+                'name' => $matches[2], 'serial' => $matches[3], 'numAll' => intval($matches[4]),
                 'numCan' => intval($matches[5]), 'author' => $matches[6], 'publisher' => $matches[7],
                 'macno' => $matches[1],
             ];
