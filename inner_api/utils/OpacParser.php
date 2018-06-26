@@ -63,6 +63,40 @@ trait OpacParser
     }
 
     /**
+     * 热门书籍的解析 库无法处理无标签的情况，所以用正则
+     * [{"name":"算法竞赛入门经典","serial":"TP301.6/100","numAll":3,"numCan":0,"author":"刘汝佳编著","publisher":"清华大学出版社 2009","macno":"0000413900"},{"name":"算法竞赛入门经典","serial":"TP301.6/100(2D)","numAll":3,"numCan":1,"author":"刘汝佳编著","publisher":"清华大学出版社 2014","macno":"0000442705"}]
+     * @param $html
+     * @return array
+     */
+    public function parseTopBookList($html)
+    {
+        if (empty($html)) return [];
+        $html = $this->ncrDecode($html);
+        $dom = new Dom;
+        $dom->loadStr($html, []);
+        $contents = $dom->find('table[class=table_line] tr');
+        unset($dom);
+        $topList = array();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $serialPattern = '{marc_no=([\d\w]+)">(.+)?<\/a>}ms';
+        foreach ($contents as $index => $content) {
+            if($index == 0) continue;
+            preg_match($serialPattern, $content->find('td', 1)->innerHtml, $matches);
+            $author = $content->find('td', 2)->innerHtml;
+            $serial = $content->find('td', 4)->innerHtml;
+            $publisher = $content->find('td', 3)->innerHtml;
+            $item = [
+                'name' => $matches[2], 'serial' => $serial, 'author' => $author,
+                'publisher' => $publisher, 'macno' => $matches[1],
+            ];
+            //macno:查看书本详细信息的id
+            $topList [] = $item;
+        }
+        return $topList;
+    }
+
+    /**
      * 解析当前借阅书列表
      * @param $html
      * @return array

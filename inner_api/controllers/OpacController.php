@@ -14,6 +14,7 @@ class OpacController extends InfoController
     const REDIS_OPAC_PRE = 'op:';
     private $opacCookieKey = 'PHPSESSID';
     private $opacExpire = 3600; //web上是一年
+    private $bookExpire = 3600 * 7 * 24; // top热门书籍
 
     const METHOD_GET = 'get';
     const METHOD_POST = 'post';
@@ -37,6 +38,21 @@ class OpacController extends InfoController
             return $this->getReturn(Error::opacSysError,'',[]);
         }
         return $this->getReturn(Error::success, '',$this->getSearchBook($bookName,$page));
+    }
+
+    /**
+     * 根据类别获取热门推荐
+     * @param string $sno
+     * @param string $pwd
+     * @param string $type 类别 A-Z
+     * @return array|string
+     */
+    public function actionTopBook($sno = '', $pwd = '', $type = 'ALL')
+    {
+        if($this->isSystemCrashed($this->urlConst['opac']['topLend'])) {
+            return $this->getReturn(Error::opacSysError,[]);
+        }
+        return $this->getReturn(Error::success, $this->getTopBook($type));
     }
 
     public function actionCurrentBook($sno, $pwd)
@@ -155,6 +171,23 @@ class OpacController extends InfoController
         $curl->get($this->urlConst['opac']['search'],$data);
         return $this->parseSearchBookList($curl->response);
     }
+
+    // 热门图书(不登录状态)
+    private function getTopBook($type,$idsCookie='',$opacCookie='')
+    {
+        $cache = Yii::$app->cache->get(self::REDIS_OPAC_PRE . $type);
+        if($cache) return $cache;
+        $curl = $this->newCurl();
+        $data = [
+            'cls_no' => $type,
+        ];
+        $curl->setReferer($this->urlConst['opac']['topLend']);
+        $curl->get($this->urlConst['opac']['topLend'],$data);
+        $data =  $this->parseTopBookList($curl->response);
+        Yii::$app->cache->set(self::REDIS_OPAC_PRE . $type, $data, $this->bookExpire);
+        return $data;
+    }
+
     /**
      * 实际发起http请求去 续借图书
      * @param $idsCookie

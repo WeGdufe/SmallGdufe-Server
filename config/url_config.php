@@ -39,6 +39,7 @@ return $urlConst = [
         'renewBookVerify' => $baseUrls['opac'] . '/reader/captcha.php',
         'renewBook' => $baseUrls['opac'] . '/reader/ajax_renew.php',
         'bookDetail' => $baseUrls['opac'] . '/opac/item.php',
+        'topLend' => $baseUrls['opac'] . '/top/top_lend.php',
     ],
     'card' => [
         'home' => $baseUrls['card'] . '/gdcjportalHome.action',//获取cookie用

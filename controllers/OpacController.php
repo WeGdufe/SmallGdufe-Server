@@ -52,6 +52,34 @@ class OpacController extends BaseController
         return Yii::$app->runAction('api/opac/search-book', $this->data);
     }
 
+    /**
+     * @api {post} opac/top-book 获取热门书籍结果
+     * @apiVersion 1.0.7
+     * @apiName top-book
+     * @apiGroup Opac
+     *
+     * @apiDescription 返回热门书籍结果
+     *
+     * @apiParam {String} type 类别:A-Z 默认为ALL
+     *
+     * @apiSuccess {int}      code      状态码，0为正常返回
+     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {Object[]} data      书籍搜索结果
+     * @apiSuccess {String}     data.name       书名
+     * @apiSuccess {String}     data.serial     序列号
+     * @apiSuccess {String}     data.author     作者
+     * @apiSuccess {String}     data.publisher  出版社
+     * @apiSuccess {String}     data.macno      查看书本详细信息时用到的id
+     *
+     *
+     * @apiSuccessExample {json} 正常返回
+     * {"code":0,"msg":"","data":[{"name":"Kindle paperwhite电子书阅读器","serial":"G250.76/DZ1","author":"制造商：Amazon Fulfillment Service.Inc.","publisher":" [2013]","macno":"76316e2b58723264747533683166503376674b5978513d3d"}{"name":"平凡的世界.2版","serial":"I247.57/768(2D)/1, I247.57/768(2D)/2,...","author":"路遥著","publisher":"北京十月文艺出版社 2012","macno":"3469564134426e79743978436253482f7352443572773d3d"},{"name":"廉洁修身:大学版","serial":"G641/JC1-2","author":"广东高校《廉洁修身》教材编写组编","publisher":"广东高等教育出版社 2016","macno":"7a6261422b6e4c546332614d736551356b5054794c513d3d"},{"name":"西方经济学,宏观部分.6版","serial":"F091.3/JC4(6D)","author":"高鸿业主编","publisher":"中国人民大学出版社 2014","macno":"6f6233626b37686653716870387934485674553458513d3d"}}
+     */
+    public function actionTopBook()
+    {
+        return Yii::$app->runAction('api/opac/top-book', $this->data);
+    }
+
 
     /**
      * @api {post} opac/current-book 获取当前借阅书籍

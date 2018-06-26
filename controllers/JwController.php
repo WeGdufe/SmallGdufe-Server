@@ -212,14 +212,14 @@ class JwController  extends BaseController
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
      * @apiSuccess {Array[]}   data      空课室列表
-     * @apiSuccess {String}     data[0]           课室编号
-     * @apiSuccess {bool}       data[1-42]        周一到周日每日六大节该课室是否为空
+     * @apiSuccess {String}     data.item[0]           课室编号
+     * @apiSuccess {Boolean}    data.item[1-42]        周一到周日每日六大节该课室是否为空
      *
      * @apiError 3000 学号或者密码为空
      * @apiError 3001 学号或密码错误
      *
      * @apiSuccessExample {json} 正常返回
-     * 暂无
+     * {"code":0,"msg":"","data":[["106",true,false,false,false,false,false,false,false,false,false,true,true,false,false,false,false,false,true,false,false,false,false,false,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["107",false,false,false,false,false,false,false,true,false,false,true,true,false,false,false,false,false,false,true,false,false,false,true,true,false,false,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["108",false,false,false,true,true,true,false,false,false,false,true,true,false,false,false,true,false,false,true,true,false,true,true,true,false,false,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true]]}
      * @apiErrorExample  {json} 异常返回
      * {"code":3000,"msg":"学号或者密码为空","data":{}}
      */
