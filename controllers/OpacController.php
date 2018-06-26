@@ -73,7 +73,7 @@ class OpacController extends BaseController
      *
      *
      * @apiSuccessExample {json} 正常返回
-     * {"code":0,"msg":"","data":[{"name":"Kindle paperwhite电子书阅读器","serial":"G250.76/DZ1","author":"制造商：Amazon Fulfillment Service.Inc.","publisher":" [2013]","macno":"76316e2b58723264747533683166503376674b5978513d3d"}{"name":"平凡的世界.2版","serial":"I247.57/768(2D)/1, I247.57/768(2D)/2,...","author":"路遥著","publisher":"北京十月文艺出版社 2012","macno":"3469564134426e79743978436253482f7352443572773d3d"},{"name":"廉洁修身:大学版","serial":"G641/JC1-2","author":"广东高校《廉洁修身》教材编写组编","publisher":"广东高等教育出版社 2016","macno":"7a6261422b6e4c546332614d736551356b5054794c513d3d"},{"name":"西方经济学,宏观部分.6版","serial":"F091.3/JC4(6D)","author":"高鸿业主编","publisher":"中国人民大学出版社 2014","macno":"6f6233626b37686653716870387934485674553458513d3d"}}
+     * {"code":0,"msg":"","data":[{"name":"Kindle paperwhite电子书阅读器","serial":"G250.76/DZ1","author":"制造商：Amazon Fulfillment Service.Inc.","publisher":" 2013","macno":"76316e2b58723264747533683166503376674b5978513d3d"},{"name":"平凡的世界.2版","serial":"I247.57/768(2D)/1, I247.57/768(2D)/2,...","author":"路遥著","publisher":"北京十月文艺出版社 2012","macno":"3469564134426e79743978436253482f7352443572773d3d"},{"name":"廉洁修身:大学版","serial":"G641/JC1-2","author":"广东高校《廉洁修身》教材编写组编","publisher":"广东高等教育出版社 2016","macno":"7a6261422b6e4c546332614d736551356b5054794c513d3d"},{"name":"西方经济学,宏观部分.6版","serial":"F091.3/JC4(6D)","author":"高鸿业主编","publisher":"中国人民大学出版社 2014","macno":"6f6233626b37686653716870387934485674553458513d3d"}]}
      */
     public function actionTopBook()
     {
