@@ -380,6 +380,33 @@ trait JwParser
         }
         return $name;
     }
+
+    public function parseClassRoom($html) {
+        if (empty($html)) return [];
+        $dom = new Dom;
+        //$html = str_replace('<br>', '@', $html);  // 具体课程、班级等信息  目前不需要
+        $dom->loadStr($html, []);
+        $contents = $dom->find('table[id=kbtable] tr');
+        $resList = array();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        foreach ($contents as $index => $content) {
+            if ($index < 2) continue;      //标题头
+            $tmpList = [];
+            $tds = $content->find('td');
+            foreach ($tds as $index2 => $td) {
+                $tmp = $td->find('nobr', 0);
+                if($index2 == 0) $tmpList[] = $this->doSubStrClassRoomName($tmp->innerHtml);
+                else {
+                    if($tmp->innerHtml == ' &nbsp; ') $tmpList[] = true; // 只判断是否为空
+                    else $tmpList[] = false;
+                }
+
+            }
+            $resList [] = $tmpList;
+        }
+        unset($dom);
+        return $resList;
+    }
     
     public function parseExamSchedule($html) {
         if (empty($html)) return [];

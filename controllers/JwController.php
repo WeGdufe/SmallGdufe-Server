@@ -194,7 +194,48 @@ class JwController  extends BaseController
         }
         return Yii::$app->runAction('api/jw/get-exam-schedule', $this->data);
     }
-    
+
+    /**
+     * @api {post} jw/get-empty-classroom 获取空课室
+     * @apiVersion 1.0.6
+     * @apiName get-empty-classroom
+     * @apiGroup Jw
+     *
+     * @apiDescription 获取空课室
+     *
+     * @apiParam {String} sno 学号
+     * @apiParam {String} pwd 教务系统密码
+     * @apiParam {String} stu_time  学年学期，格式：2014-2015-2
+     * @apiParam {String} building  教学楼编号，["J1"=>"第一教学楼","B4"=>"经管实验楼","S1"=>"实验楼","Z1"=>"综合楼","B5"=>"第三教学楼","SJ3"=>"厚德楼","SJ1"=>"励学楼","SS1"=>"拓新楼","SJ2"=>"笃行楼"];
+     * @apiParam {int} week  周数
+     *
+     * @apiSuccess {int}      code      状态码，0为正常返回
+     * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
+     * @apiSuccess {Array[]}   data      空课室列表
+     * @apiSuccess {String}     data[0]           课室编号
+     * @apiSuccess {bool}       data[1-42]        周一到周日每日六大节该课室是否为空
+     *
+     * @apiError 3000 学号或者密码为空
+     * @apiError 3001 学号或密码错误
+     *
+     * @apiSuccessExample {json} 正常返回
+     * 暂无
+     * @apiErrorExample  {json} 异常返回
+     * {"code":3000,"msg":"学号或者密码为空","data":{}}
+     */
+    public function actionGetEmptyClassroom()
+    {
+        if(isset($this->req['stu_time'])){
+            $this->data['stu_time'] = $this->req['stu_time'];
+        }
+        if(isset($this->req['building'])){
+            $this->data['building'] = $this->req['building'];
+        }
+        if(isset($this->req['week'])){
+            $this->data['week'] = $this->req['week'];
+        }
+        return Yii::$app->runAction('api/jw/get-empty-classroom', $this->req);
+    }
 
 
 }

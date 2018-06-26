@@ -12,6 +12,8 @@ use app\inner_api\utils\JwParser;
 class JwController extends BaseController
 {
     const REDIS_JW_PRE = 'jw:';
+    const REDIS_KB_PRE = 'kb:'; // 空课室缓存
+    private $kbExpire = 7*3600*24; // 一周
     private $jwExpire = 1800;   //半小时
     use JwParser;
 
@@ -76,6 +78,21 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         $ret = $this->getExamSchedule($jwCookie[0], $stu_time);
         return $this->getReturn(Error::success,'',$ret);
+    }
+    /**
+     * 返回空课室
+     * 一次返回一栋教学楼一周的空课室情况，每一行为长度43的数组，第0列是课室编号，一天6大节，从周一开始算
+     * @param $sno
+     * @param $pwd
+     * @param string $stu_time ex. 2014-2015-2
+     * @param string $building ex. SJ3
+     * @param integer $week ex. 15
+     * @return array|string
+     */
+    public function  actionGetEmptyClassroom($sno, $pwd, $stu_time, $building, $week) {
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
+        if (!is_array($jwCookie)) return $jwCookie;
+        return $this->getReturn(Error::success, $this->getEmptyClassroom($jwCookie[0], $stu_time, $building, $week));
     }
     /**
      * 登陆教务系统且返回本次登陆的cookie字符串，失败返回false/~todo抛异常~
@@ -182,6 +199,34 @@ class JwController extends BaseController
         ];
         $curl->post($this->urlConst['jw']['examSchedule'], $data);
         return $this->parseExamSchedule($curl->response);
+    }
+    // 获取空课室
+    private function getEmptyClassroom($jwCookie, $study_time, $building, $week) {
+        if (empty($jwCookie)) return null;
+        $key = $study_time.$building.$week;
+        $result = Yii::$app->cache->get(self::REDIS_KB_PRE . $key);
+        if(!$result) {
+            $mapping = ["J1"=>"第一教学楼","B4"=>"经管实验楼","S1"=>"实验楼","Z1"=>"综合楼","B5"=>"第三教学楼","SJ3"=>"厚德楼","SJ1"=>"励学楼","SS1"=>"拓新楼","SJ2"=>"笃行楼"];
+            $curl = $this->newCurl();
+            $curl->setCookie($this->comCookieKey, $jwCookie);
+            $curl->setReferer('http://jwxt.gdufe.edu.cn/jsxsd/kbcx/kbxx_classroom');
+
+            $data = [
+                'xnxqh' => $study_time,
+                'skyx' => '',
+                'xqid' => '',
+                'jzwid' => $building,
+                'zc1' => $week,
+                'zc2' => $week,
+                'jc1' => '',
+                'jc2' => ''
+            ];
+            $curl->post($this->urlConst['jw']['emptyClassroom'], $data);
+            $result = $this->parseClassRoom(str_replace($mapping[$building], '', $curl->response)); // 缩减课室名字，只留编号
+            Yii::$app->cache->set(self::REDIS_KB_PRE . $key, $result, $this->kbExpire);
+        }
+
+        return $result;
     }
     /**
      * 返回该学号对应的cookie，无则重登录以获取
