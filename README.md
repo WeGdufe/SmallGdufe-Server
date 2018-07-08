@@ -1,9 +1,11 @@
 # 小广财服务端-安装指南
 
+![](./install_guide/what_server_do.png)
+
 
 requirements: PHP >= 5.5.9 建议直接上php7  Redis >= 3.x  Mysql/MariaDB
 
-clone完代码建议直接全部文件777权限 `chmod -R 777 . `
+clone完代码建议直接全部文件777权限 `chmod -R 777 . `， 同时跑 `git config core.filemode false` 忽略Git的权限变更
 
 ## 从0开始搭建
 
