@@ -381,6 +381,17 @@ trait JwParser
         return $name;
     }
 
+    /**
+     * 对课室名进行缩减
+     * @param $name string 课室名
+     * @return string 缩进后的课室名（或者原名）
+     */
+    private function doSubStrClassRoomName($name){
+        $name = preg_replace('/（.+?）/', '', $name);
+        $name = preg_replace('/\(.+?\)/', '', $name);
+        return $name;
+    }
+
     public function parseClassRoom($html) {
         if (empty($html)) return [];
         $dom = new Dom;
@@ -407,7 +418,7 @@ trait JwParser
         unset($dom);
         return $resList;
     }
-    
+
     public function parseExamSchedule($html) {
         if (empty($html)) return [];
         $dom = new Dom;
@@ -416,14 +427,16 @@ trait JwParser
         $examList = array();
         Yii::$app->response->format = Response::FORMAT_JSON;
         foreach ($contents as $index => $content) {
-            if ($index == 0) continue;                      // 标题头
-            $time = $content->find('td', 3)->innerHtml;     // 时间
-            $name = $content->find('td', 2)->innerHtml;     // 课程
-            $xiaoqu = $content->find('td', 4)->innerHtml;       // 校区
-            $kaochang = $content->find('td', 5)->innerHtml; // 考场
+            if ($index == 0) continue;      //标题头
+            $time = $content->find('td', 3)->innerHtml; // 时间
+            $name = $content->find('td', 2)->innerHtml; // 课程
+            $name = $this->doSubStrScheduleName($name);
+            $xq = $content->find('td', 4)->innerHtml;    // 校区
+            $kaochang = $content->find('td', 5)->innerHtml;  // 考场
+            $kaochang = $this->doSubStrClassRoomName($kaochang);
 
             $item = compact(
-                'name','time','xiaoqu','kaochang'
+                'name','time','xq','kaochang'
             );
             $examList [] = $item;
         }

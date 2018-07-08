@@ -68,16 +68,17 @@ class JwController extends BaseController
         if (!is_array($jwCookie)) return $jwCookie;
         return $this->getReturn(Error::success, '',$this->getBasicInfo($jwCookie[0]));
     }
-     /**
-     * 获取考试安排
-     * @param $stu_time 学期
-     * @return string
+    /**
+     * 返回考试时间
+     * @param $sno
+     * @param $pwd
+     * @param string $stu_time ex. 2014-2015-2
+     * @return array|string
      */
-    public function actionGetExamSchedule($sno, $pwd,$stu_time = '') {
-        $jwCookie = $this->beforeBusinessAction($sno, $pwd,false);
+    public function  actionGetExamSchedule($sno, $pwd, $stu_time) {
+        $jwCookie = $this->beforeBusinessAction($sno, $pwd,true);
         if (!is_array($jwCookie)) return $jwCookie;
-        $ret = $this->getExamSchedule($jwCookie[0], $stu_time);
-        return $this->getReturn(Error::success,'',$ret);
+        return $this->getReturn(Error::success, $this->getExamSchedule($jwCookie[0], $stu_time));
     }
     /**
      * 返回空课室
@@ -186,18 +187,48 @@ class JwController extends BaseController
         return $scheduleList;
     }
 
-    //获取考试安排
-    private function getExamSchedule($jwCookie, $stu_time = '') {
+    // 获取考试时间
+    private function getExamSchedule($jwCookie, $study_time = '') {
         if (empty($jwCookie)) return null;
         $curl = $this->newCurl();
         $curl->setCookie($this->comCookieKey, $jwCookie);
         $curl->setReferer('http://jwxt.gdufe.edu.cn/jsxsd/xsks/xsksap_query?Ves632DSdyV=NEW_XSD_KSBM');
+
         $data = [
-            'xnxqid' => $stu_time,
+            'xnxqid' => $study_time,
             'xqlb' => '',
             'xqlbmc' => ''
         ];
         $curl->post($this->urlConst['jw']['examSchedule'], $data);
+        $specialArr = array(    //长名字课程映射数组
+            array(
+                'old'=>"笃行楼",
+                'new'=>'二教',
+            ),
+            array(
+                'old'=>"拓新楼",
+                'new'=>'实验楼',
+            ),
+            array(
+                'old'=>"厚德楼",
+                'new'=>'行政楼',
+            ),
+            array(
+                'old'=>"第三教学楼",
+                'new'=>'北五',
+            ),
+            array(
+                'old'=>"经管实验楼",
+                'new'=>'北四',
+            ),
+            array(
+                'old'=>"励学楼",
+                'new'=>'一教',
+            ),
+        );
+        foreach ($specialArr as $index => &$value) {
+            $curl->response = str_replace($value['old'], $value['new'], $curl->response);
+        }
         return $this->parseExamSchedule($curl->response);
     }
     // 获取空课室
