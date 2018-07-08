@@ -1,6 +1,5 @@
 # 小广财服务端-安装指南
 
-**非开源**
 
 requirements: PHP >= 5.5.9 建议直接上php7  Redis >= 3.x  Mysql/MariaDB
 
@@ -84,7 +83,7 @@ MySQL [gdufeapp]> exit;
 
 ## 解决代码库依赖
 代码需要一堆第三方库，在`vendor`目录里，但因`vendor`目录在`.gitignore`里，所以在Github上下载不到，方案有两个。
- - 方案一：在[Github的Release页面下载](https://github.com/wintercoder/MovingGdufe-Server/releases) 或者 找现有服务器下载copy过来，`unzip vendor.zip` 解压放到项目根目录，这样就不用安装composer了
+ - 方案一：在[Github的Release页面下载](https://github.com/WeGdufe/SmallGdufe-Server/releases) 或者 找现有服务器下载copy过来，`unzip vendor.zip` 解压放到项目根目录，这样就不用安装composer了
 
  - 方案二：安装`composer`，然后跑命令在线下载，这种方案少了/vender/bower/目录，不过那个是错误页，少了没关系
 

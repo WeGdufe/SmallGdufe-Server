@@ -2,16 +2,15 @@
 
 return $appTips = [
     'appTips' =>[
-        'version' => 5,
+        'version' => 6,
         'enable' => true,
-        'title' => '小程序版上线了',
-        'message' => '1.小程序版上线了，叫《小广财》，搜索就能看到，适合iOS用户
-
-2.有技术人员打算做iOS版么？管理员要上班了，戳下面"前往"按钮进群聊下
-        ',
-        'startTime' => '2017-07-03 00:40:00',
-        'endTime' => '2017-07-16 00:40:00',
-        'openUrl' => 'https://jq.qq.com/?_wv=1027&k=4BERdze'
+        'title' => 'iOS版上线了',
+        'message' => 'AppStore搜 小广财 即可
+安卓党可以点下面的前往按钮看看界面
+       ',
+        'startTime' => '2018-02-15 00:20:00',
+        'endTime' => '2018-02-30 00:20:00',
+        'openUrl' => 'https://itunes.apple.com/cn/app/小广财/id1346521270'
     ]
 ];
 
