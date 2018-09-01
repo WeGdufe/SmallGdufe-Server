@@ -1,2 +1,5 @@
 vendor.zip
 config/db.php
+.gitconfig
+config/api_center.php
+yiisoft/

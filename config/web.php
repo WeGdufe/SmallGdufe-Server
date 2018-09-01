@@ -10,7 +10,9 @@ $params = array_merge(
 $update_info =
     require(__DIR__ . '/app_update.php')
 ;
-
+$apiCenter =
+    require(__DIR__ . '/api_center.php')
+;
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
