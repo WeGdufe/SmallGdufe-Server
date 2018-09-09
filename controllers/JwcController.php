@@ -5,11 +5,9 @@ namespace app\controllers;
 use yii\web\Controller;
 use Yii;
 
-//不需要登陆，故不继承BaseController
-class JwcController extends Controller
+//不需要登陆
+class JwcController extends NoAuthBaseController
 {
-    private $req;
-    private $data;
     /**
      * @api {post} jwc/get-xiaoli 获取校历、上课时间表
      * @apiVersion 1.0.0

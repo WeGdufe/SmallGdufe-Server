@@ -8,13 +8,13 @@ namespace app\social\controllers;
 
 use app\models\Dao_ImFeed;
 use app\social\base\Error;
-use app\social\base\NoAuthController;
+use app\social\base\NoAuthBaseController;
 use app\social\models\ImFeed;
 use app\social\models\Student;
 use yii;
 use yii\web\Response;
 
-class UserController extends NoAuthController
+class UserBaseController extends NoAuthBaseController
 {
     protected $expire = 1800;//半小时
 

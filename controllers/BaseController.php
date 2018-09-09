@@ -19,31 +19,25 @@ class BaseController extends Controller
     protected $pwd;
     protected $req;
     protected $data=[];
+
     public function beforeAction($action)
     {
-        $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        if(isset($this->req['sno']) && isset($this->req['pwd'])) {
-            $this->sno = $this->req['sno'];
-            $this->pwd = $this->req['pwd'];
-            if($this->sno == Yii::$app->params['schoolMateSnoFlag']){
-                $this->sno = Yii::$app->params['schoolMateSno'];
-                $this->pwd = Yii::$app->params['schoolMatePwd'];
-            }
-            $this->data = [
-                'sno' => $this->sno,
-                'pwd' => $this->pwd,
-            ];
-        }else{
-            //无学号密码则赋值为空，给inner_api判断
-            $this->data['sno'] = $this->data['pwd'] = '';
-        }
         Yii::info($this->req,'request');
         return parent::beforeAction($action);
     }
 
+    //输出json错误，并直接退出
+    public function DieReturn($code,$msg,$data=''){
+        $ret = [
+            'code' => $code,
+            'msg' => $msg,
+            'data' => $data,
+        ];
+        echo json_encode($ret); die();
+    }
+
     public function getReturn($code,$msg,$data='')
     {
-
         if(empty($data)) $data = new StdClass;
         return \Yii::createObject([
             'class' => 'yii\web\Response',

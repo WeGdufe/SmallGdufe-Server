@@ -1,9 +1,11 @@
 # 小广财服务端-安装指南
 
+如果是接入API，而非安装，请看 [API接入文档](./APiAccessGuide.md)
+
 ![](./install_guide/what_server_do.png)
 
 
-requirements: PHP >= 5.5.9 建议直接上php7  Redis >= 3.x  Mysql/MariaDB
+requirements: Redis >= 3.x  Mysql/MariaDB PHP 7(如果不是，修改 AesSecurity )  
 
 clone完代码建议直接全部文件777权限 `chmod -R 777 . `， 同时跑 `git config core.filemode false` 忽略Git的权限变更
 
@@ -61,8 +63,22 @@ PHP7:
     flush privileges;
 
 
-## 可选(使用PHP5)
-如果你目前是PHP5且不想用PHP7，如果是5.3版本请升级到至少5.5.9，所以直接5.6或者7.x就方便
+## PHP7 & 修改代码
+在 `config` 下新建个 `api_center.php`
+```
+<?php
+return  $apiCenter = [
+    'AppIdSecretMap' => [
+        '我是KEY' => '我是纯英文私钥，建议6位'
+    ]
+];
+```
+
+建议直接 PHP7
+
+如果你想用PHP5，最少得是 5.5.9 而且需要修改 `controllers/AesSecurity` 让他与现有的PHP7版反正一致
+
+以下为PHP5升级7教程：
 
 Centos6: https://www.zerostopbits.com/how-to-install-upgrade-php-5-3-to-php-5-5-on-centos-6-7/
 

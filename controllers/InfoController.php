@@ -9,7 +9,7 @@ use Faker\Provider\Base;
 use Yii;
 use yii\web\Controller;
 
-class InfoController extends BaseController
+class InfoController extends AuthBaseController
 {
 
     public function actionTest()
@@ -27,8 +27,7 @@ class InfoController extends BaseController
      *
      * @apiDescription 获取素拓学分信息
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -56,8 +55,7 @@ class InfoController extends BaseController
      *
      * @apiDescription 信息门户右上角那个提醒信息，目前未被使用，返回部分的官方信息，官方完整里有sql语句
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示

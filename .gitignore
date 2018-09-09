@@ -1,3 +1,5 @@
+vendor/
+apidoc/
 vendor.zip
 config/db.php
 .gitconfig

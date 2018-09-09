@@ -9,7 +9,7 @@ use Faker\Provider\Base;
 use Yii;
 use yii\web\Controller;
 
-class JwController  extends BaseController
+class JwController  extends AuthBaseController
 {
 
     public function actionTest()
@@ -30,8 +30,7 @@ class JwController  extends BaseController
      * @apiGroup Jw
      * @apiDescription 获取成绩，显示全部成绩
      *
-     * @apiParam {String} sno       学号
-     * @apiParam {String} pwd       教务系统密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2 和 2014-2015（返回学年成绩），为空则默认返回整个大学（全部已修学期）
      * @apiParam {int} minor        可选，查询辅修成绩为1，查主修为0，默认为0查主修
      *
@@ -77,8 +76,7 @@ class JwController  extends BaseController
      *
      * @apiDescription 获取课程表
      *
-     * @apiParam {String} sno       学号
-     * @apiParam {String} pwd       教务系统密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回当前学期
      * @apiParam {int} split        可选，是否拆分连堂的课程，默认为0表示不拆分（连堂则合并成一个课程）
      * @apiParam {int} week         可选，按周查看，数字1-16，格式：8，默认返回全部
@@ -128,8 +126,7 @@ class JwController  extends BaseController
      *
      * @apiDescription 获取学生个人基本信息
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 教务系统密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -167,8 +164,7 @@ class JwController  extends BaseController
      *
      * @apiDescription 获取考试安排表
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 教务系统密码
+     * @apiParam {String} appid 通用参数，类似的 sign、timestamp、token 等此处省略
      * @apiParam {String} stu_time  可选，学年学期，格式：2014-2015-2，默认返回当前学期
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
@@ -203,8 +199,7 @@ class JwController  extends BaseController
      *
      * @apiDescription 获取空课室
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 教务系统密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} stu_time  学年学期，格式：2014-2015-2
      * @apiParam {String} building  教学楼编号，["J1"=>"第一教学楼","B4"=>"经管实验楼","S1"=>"实验楼","Z1"=>"综合楼","B5"=>"第三教学楼","SJ3"=>"厚德楼","SJ1"=>"励学楼","SS1"=>"拓新楼","SJ2"=>"笃行楼"];
      * @apiParam {int} week  周数

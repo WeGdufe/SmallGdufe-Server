@@ -9,7 +9,7 @@ use Yii;
 use yii\web\Controller;
 
 //校园卡
-class CardController extends BaseController
+class CardController extends AuthBaseController
 {
 
     /**
@@ -20,8 +20,7 @@ class CardController extends BaseController
      *
      * @apiDescription 获取校园卡卡号和余额
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -53,8 +52,7 @@ class CardController extends BaseController
      *
      * @apiDescription 获取校园卡当日交易记录，含充值和消费等（0点跨日）
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} cardNum 校园卡卡号（可从current-cash获取）
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
@@ -88,6 +86,7 @@ class CardController extends BaseController
      *
      * @apiDescription 查用电、购电情况，支持本部23，26，27，29，30，32栋
      *
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} building  宿舍楼号
      * @apiParam {String} room      宿舍房间号
      *

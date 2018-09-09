@@ -6,10 +6,10 @@
 
 namespace app\social\controllers;
 use app\social\base\Error;
-use app\social\base\NoAuthController;
+use app\social\base\NoAuthBaseController;
 use app\social\models\Student;
 
-class StudentController extends NoAuthController
+class StudentBaseController extends NoAuthBaseController
 {
 
     public function actionLogin($user_id)
