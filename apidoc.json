@@ -1,8 +1,8 @@
 
 {
   "name": "小广财",
-  "version": "1.0.7",
-  "description": "服务器端API，接口版本号为新增时的版本",
+  "version": "1.1.0",
+  "description": "API接入，基本上全接口都需要加密验证，接入请先看接入文档",
   "title": "小广财API文档",
   "url" : "http://api.wegdufe.com:82/index.php?r=",
   "_url2" : "http://www.wintercoder.com:82/index.php?r=",

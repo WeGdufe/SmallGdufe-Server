@@ -8,7 +8,7 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 
-class OpacController extends BaseController
+class OpacController extends AuthBaseController
 {
 
     /**
@@ -89,8 +89,7 @@ class OpacController extends BaseController
      *
      * @apiDescription 当前借阅书籍，目前只返回一页的结果
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -124,8 +123,7 @@ class OpacController extends BaseController
      *
      * @apiDescription 历史借阅书籍
      *
-     * @apiParam {String} sno 学号
-     * @apiParam {String} pwd 信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}      code      状态码，0为正常返回
      * @apiSuccess {String}   msg       错误信息，code非0时有错误信息提示
@@ -158,8 +156,7 @@ class OpacController extends BaseController
      *
      * @apiDescription 续借图书
      *
-     * @apiParam {String} sno       学号
-     * @apiParam {String} pwd       信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      * @apiParam {String} barId     条码号
      * @apiParam {String} checkId   不明字段，在当前借阅页面里可获取
      * @apiParam {String} verify    验证码
@@ -199,8 +196,7 @@ class OpacController extends BaseController
      *
      * @apiDescription 获取续借的验证码
      *
-     * @apiParam {String} sno       学号
-     * @apiParam {String} pwd       信息门户密码
+     * @apiParam {String} appid 通用参数，类似参数此处省略
      *
      * @apiSuccess {int}        code      状态码，0为正常返回
      * @apiSuccess {String}     msg       错误信息，code非0时有错误信息提示

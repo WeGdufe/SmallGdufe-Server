@@ -11,7 +11,7 @@ use yii\web\Response;
  * User: xiaoguang
  * Date: 2017/11/12
  */
-class NoAuthController extends Controller
+class NoAuthBaseController extends Controller
 {
     protected $urlConst;
     protected $arrInput;

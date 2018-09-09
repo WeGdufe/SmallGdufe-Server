@@ -4,15 +4,10 @@ $params = array_merge(
     require(__DIR__ . '/params.php'),
     require(__DIR__ . '/url_config.php'),
     require(__DIR__ . '/app_update.php'),
-    require(__DIR__ . '/app_tips.php')
+    require(__DIR__ . '/app_tips.php'),
+    require(__DIR__ . '/api_center.php')
 
 );
-$update_info =
-    require(__DIR__ . '/app_update.php')
-;
-$apiCenter =
-    require(__DIR__ . '/api_center.php')
-;
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),

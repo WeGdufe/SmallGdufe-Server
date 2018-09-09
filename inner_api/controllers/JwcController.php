@@ -12,7 +12,7 @@ use yii\web\Response;
 /**
  * Default controller for the `api` module
  */
-class JwcController extends Controller
+class JwcController extends BaseController
 {
     // const REDIS_JWC_PRE = 'jwc:';
     private $jwcExpire = 1800;   //半小时
@@ -59,8 +59,8 @@ class JwcController extends Controller
         }
         return $this->getReturn(Error::success, '',$res);
     }
-
-    private function newCurl()
+/*
+    private function newCurl2()
     {
         $curl = new Curl();
         $curl->setTimeout(3);
@@ -69,7 +69,7 @@ class JwcController extends Controller
         return $curl;
     }
 
-    private function getReturn($code,$msg='', $data=null)
+    private function getReturn2($code,$msg='', $data=null)
     {
         if ($data == null) $data = new stdClass;
         if(empty($msg)){
@@ -85,7 +85,7 @@ class JwcController extends Controller
             ],
         ]);
     }
-
+*/
     public function actionIndex()
     {
     }
