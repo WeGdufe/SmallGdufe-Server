@@ -21,8 +21,9 @@ class AuthBaseController extends BaseController
     protected $req;
     protected $data=[];
 
+    //根据加密后的参数进行解码， 因遇到 签名不一致 和 强要求PHP 7.0 、 DieReturn 的data必须匹配不同接口（数组还是对象）， 放弃使用没发1.6.0版，白开发了
     public function checkAuth(&$req){
-        if( empty($req['appid']) ) {
+        if( empty($req['appid']) ) {    //支持不带appid的方式，即直接参数 sno 和 pwd
             return null;
         }
         if( empty($req['appid'])  || empty($req['token'])  || empty($req['timestamp'])  || empty($req['sign'])) {
@@ -65,7 +66,7 @@ class AuthBaseController extends BaseController
     public function beforeAction($action)
     {
         $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-        $this->checkAuth($this->req);
+//        $this->checkAuth($this->req);
 
         if(isset($this->req['sno']) && isset($this->req['pwd'])) {
             $this->sno = $this->req['sno'];
