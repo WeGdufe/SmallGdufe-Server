@@ -6,6 +6,7 @@
 
 namespace app\social\controllers;
 
+use app\social\base\AuthController;
 use app\social\base\BaseController;
 use app\social\base\Error;
 use app\social\models\ImFeed;
@@ -13,7 +14,7 @@ use app\social\models\ImFeedReply;
 use yii;
 use yii\web\Response;
 
-class FeedController extends BaseController
+class FeedController extends AuthController
 {
 
     public function actionCreateImFeed($content,$imgUrls = '')
@@ -67,8 +68,8 @@ class FeedController extends BaseController
     public function actionListImFeedReply($parent_id ,$pageNo = 1,$pageNum = 20)
     {
         $model = new ImFeedReply();
-        $feddList = $model->listRecentFeedReply($parent_id,$pageNo,$pageNum);
-        foreach ((array)$feddList as &$feed) {
+        $feedList = $model->listRecentFeedReply($parent_id,$pageNo,$pageNum);
+        foreach ((array)$feedList as &$feed) {
             if(empty($feed['photos'])){
                 $feed['photos'] = [];    
             }else{

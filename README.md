@@ -5,7 +5,7 @@
 ![](./install_guide/what_server_do.png)
 
 
-requirements: Redis >= 3.x  Mysql/MariaDB PHP 7(如果不是，修改 AesSecurity )  
+requirements: Redis >= 3.x  Mysql/MariaDB PHP 7(如果不是，修改 AesSecurity/不使用加密方案可以不改 )  
 
 clone完代码建议直接全部文件777权限 `chmod -R 777 . `， 同时跑 `git config core.filemode false` 忽略Git的权限变更
 
@@ -73,6 +73,8 @@ return  $apiCenter = [
     ]
 ];
 ```
+上面那个文件本来是放 安卓APP 1.6 参数加密使用的，后来放弃了，所以即使不要也OK  
+放弃原因：原计划根据加密后的参数进行解码， 因遇到 签名不一致 和 强要求PHP 7.0 、 DieReturn 的data必须匹配不同接口（数组还是对象）， 所以没发1.6.0版，白开发了
 
 建议直接 PHP7
 
@@ -100,8 +102,8 @@ MySQL [gdufeapp]> exit;
 ```
 
 ## 解决代码库依赖
-代码需要一堆第三方库，在`vendor`目录里，但因`vendor`目录在`.gitignore`里，所以在Github上下载不到，方案有两个。
- - 方案一：在[Github的Release页面下载](https://github.com/WeGdufe/SmallGdufe-Server/releases) 或者 找现有服务器下载copy过来，`unzip vendor.zip` 解压放到项目根目录，这样就不用安装composer了
+代码需要一堆第三方库，在`vendor`目录里，
+ - 方案一：`unzip vendor.zip` 解压放到项目根目录，这样就不用安装composer了
 
  - 方案二：安装`composer`，然后跑命令在线下载，这种方案少了/vender/bower/目录，不过那个是错误页，少了没关系
 

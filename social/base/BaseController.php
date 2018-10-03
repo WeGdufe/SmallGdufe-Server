@@ -21,7 +21,6 @@ class BaseController extends Controller
             $this->urlConst = Yii::$app->params;
             // Yii::warning("访问");
             $this->arrInput = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-            $this->arrInput['user_id'] = $this->arrInput['sno'];
             return true;
         } else {
             return false;
@@ -49,5 +48,15 @@ class BaseController extends Controller
         ]);
     }
 
+
+    //输出json错误，并直接退出
+    public function DieReturn($code,$msg,$data=''){
+        $ret = [
+            'code' => $code,
+            'msg' => $msg,
+            'data' => $data,
+        ];
+        echo json_encode($ret); die();
+    }
 
 }

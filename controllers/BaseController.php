@@ -27,13 +27,15 @@ class BaseController extends Controller
     }
 
     //输出json错误，并直接退出
-    public function DieReturn($code,$msg,$data=''){
+    public function DieReturn($code,$msg,$data=null){
+        if(empty($data)) $data = [];
         $ret = [
             'code' => $code,
             'msg' => $msg,
             'data' => $data,
         ];
-        echo json_encode($ret); die();
+        echo json_encode($ret);
+        die();
     }
 
     public function getReturn($code,$msg,$data='')
