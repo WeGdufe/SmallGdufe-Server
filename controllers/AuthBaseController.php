@@ -66,15 +66,7 @@ class AuthBaseController extends BaseController
     public function beforeAction($action)
     {
         $this->req = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
-<<<<<<< HEAD
-<<<<<<< HEAD
         $this->checkAuth($this->req);
-=======
-//        $this->checkAuth($this->req);
->>>>>>> e64e8f09d681a89cf34bc68072c1f9570e5f99e3
-=======
-//        $this->checkAuth($this->req);
->>>>>>> e64e8f09d681a89cf34bc68072c1f9570e5f99e3
 
         if(isset($this->req['sno']) && isset($this->req['pwd'])) {
             $this->sno = $this->req['sno'];
