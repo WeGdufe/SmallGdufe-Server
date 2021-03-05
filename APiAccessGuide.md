@@ -2,7 +2,7 @@
 
 [TOC]  
 
-[API文档列表戳这](http://www.wegdufe.com/apidoc)
+update by 2021-03-05 ，**文档已废弃，请勿使用，有毕设想法的，建议换个TOPIC**， *[API文档列表（已废弃，不要用）](http://www.wegdufe.com/apidoc)*
 
 小广财API文档自 v1.1.0 开始进行对学号密码的加密，为了保证安全，需要接入方 使用一些通用参数来代替学号密码明文。
 
